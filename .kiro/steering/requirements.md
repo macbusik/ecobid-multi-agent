@@ -1,3 +1,6 @@
+---
+inclusion: always
+---
 # Requirements Document: EcoBid Marketplace
 
 ## Introduction
