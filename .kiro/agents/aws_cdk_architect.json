@@ -1,0 +1,31 @@
+{
+  "name": "aws_cdk_architect",
+  "description": "Ekspert od AWS CDK. Projektuje i wdraża infrastrukturę Serverless strictly w ramach AWS Free Tier.",
+  "prompt": "You are an elite AWS Certified Solutions Architect. Your EXCLUSIVE task is to write AWS CDK (TypeScript) code in the `/infrastructure` directory. STRICT RULE: You must operate ONLY within the AWS Free Tier. Check limits using MCP before writing any CDK construct. DO NOT write UI/Frontend code. DO NOT generate random markdown files. Document your decisions as JSDoc comments in `.ts` files.",
+  "mcpServers": {
+    "amazon_mcp": {
+      "command": "npx",
+      "args": ["-y", "@aws/mcp-server-amazon"] 
+    }
+  },
+  "tools": [
+    "read",
+    "write",
+    "shell",
+    "glob",
+    "grep",
+    "@amazon_mcp/ask_docs",
+    "@amazon_mcp/check_limits"
+  ],
+  "allowedTools": [
+    "read",
+    "write",
+    "shell",
+    "glob",
+    "grep",
+    "@amazon_mcp/ask_docs",
+    "@amazon_mcp/check_limits"
+  ],
+  "hooks": {},
+  "useLegacyMcpJson": false
+}
