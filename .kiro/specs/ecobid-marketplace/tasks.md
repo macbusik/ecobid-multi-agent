@@ -2,43 +2,45 @@
 
 ## Phase 1: Infrastructure Foundation (AWS CDK)
 
-### INFRA-1: Initialize CDK Project Structure
+### INFRA-1: Initialize CDK Project Structure ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 30 minutes
+**Status:** COMPLETED
 
 **Description:**
 Set up the AWS CDK project structure with TypeScript configuration.
 
 **Acceptance Criteria:**
-- [ ] Create `/infrastructure` directory
-- [ ] Initialize CDK project with `cdk init app --language typescript`
-- [ ] Configure `cdk.json` with project context (projectName: "ecobid", environment: "prod")
-- [ ] Create directory structure: `bin/`, `lib/`, `lib/constructs/`, `lib/lambda/handlers/`, `lib/lambda/shared/`
-- [ ] Install required CDK dependencies: `aws-cdk-lib`, `constructs`
-- [ ] Verify CDK synth runs without errors
+- [x] Create `/infrastructure` directory
+- [x] Initialize CDK project with `cdk init app --language typescript`
+- [x] Configure `cdk.json` with project context (projectName: "ecobid", environment: "prod")
+- [x] Create directory structure: `bin/`, `lib/`, `lib/constructs/`, `lib/lambda/handlers/`, `lib/lambda/shared/`
+- [x] Install required CDK dependencies: `aws-cdk-lib`, `constructs`
+- [x] Verify CDK synth runs without errors
 
 **Dependencies:** None
 
 ---
 
-### INFRA-2: Create DynamoDB Table Construct
+### INFRA-2: Create DynamoDB Table Construct ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 45 minutes
+**Status:** COMPLETED
 
 **Description:**
 Create DynamoDB single-table design with GSIs as specified in design.md.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/constructs/database.ts`
-- [ ] Define table with PK (String), SK (String)
-- [ ] Add GSI1: GSI1PK (Partition Key), GSI1SK (Sort Key) for status queries
-- [ ] Add GSI2: GSI2PK (Partition Key), GSI2SK (Sort Key) for category/city filtering
-- [ ] Use On-Demand billing mode
-- [ ] Enable point-in-time recovery
-- [ ] Add removal policy: RETAIN (for production safety)
-- [ ] Export table name and ARN as stack outputs
+- [x] Create `lib/constructs/database.ts`
+- [x] Define table with PK (String), SK (String)
+- [x] Add GSI1: GSI1PK (Partition Key), GSI1SK (Sort Key) for status queries
+- [x] Add GSI2: GSI2PK (Partition Key), GSI2SK (Sort Key) for category/city filtering
+- [x] Use On-Demand billing mode
+- [x] Enable point-in-time recovery
+- [x] Add removal policy: RETAIN (for production safety)
+- [x] Export table name and ARN as stack outputs
 
 **Dependencies:** INFRA-1
 
