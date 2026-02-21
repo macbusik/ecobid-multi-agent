@@ -112,25 +112,26 @@ Create shared TypeScript utilities for Lambda functions.
 
 ---
 
-### INFRA-6: Create Items Lambda Handler
+### INFRA-6: Create Items Lambda Handler ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P1 (Critical)
 **Estimated Time:** 2 hours
+**Status:** COMPLETED
 
 **Description:**
 Implement Items Lambda handler with all item-related operations.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/lambda/handlers/items.ts`
-- [ ] Implement POST /items: upload photo to S3, invoke Rekognition, invoke Bedrock, return AI suggestions
-- [ ] Implement PUT /items/{itemId}: update item details and publish
-- [ ] Implement GET /items: list items with filters (category, search, city) and pagination
-- [ ] Implement GET /items/{itemId}: get item details
-- [ ] Implement POST /items/{itemId}/lottery: add user to lottery entries
-- [ ] Implement POST /items/{itemId}/confirm-pickup: update status to Pickup_Confirmed
-- [ ] Implement POST /items/{itemId}/mark-picked-up: update status to Picked_Up, increment reputation
-- [ ] Add error handling for all operations
-- [ ] Use shared utilities from INFRA-5
+- [x] Create `lib/lambda/handlers/items.ts`
+- [x] Implement POST /items: upload photo to S3, invoke Rekognition, invoke Bedrock, return AI suggestions
+- [x] Implement PUT /items/{itemId}: update item details and publish
+- [x] Implement GET /items: list items with filters (category, search, city) and pagination
+- [x] Implement GET /items/{itemId}: get item details
+- [x] Implement POST /items/{itemId}/lottery: add user to lottery entries
+- [x] Implement POST /items/{itemId}/confirm-pickup: update status to Pickup_Confirmed
+- [x] Implement POST /items/{itemId}/mark-picked-up: update status to Picked_Up, increment reputation
+- [x] Add error handling for all operations
+- [x] Use shared utilities from INFRA-5
 
 **Dependencies:** INFRA-2, INFRA-3, INFRA-5
 
