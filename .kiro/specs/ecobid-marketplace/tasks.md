@@ -221,24 +221,25 @@ Implement Reservation Expiry Lambda handler for expired reservations.
 ---
 
 
-### INFRA-11: Create API Gateway Construct
+### INFRA-11: Create API Gateway Construct ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1.5 hours
+**Status:** COMPLETED
 
 **Description:**
 Create API Gateway HTTP API with Cognito authorizer and Lambda integrations.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/constructs/api.ts`
-- [ ] Define HTTP API (not REST API for cost savings)
-- [ ] Configure Cognito JWT authorizer
-- [ ] Add CORS configuration for frontend domain
-- [ ] Integrate Items Lambda: POST /items, PUT /items/{itemId}, GET /items, GET /items/{itemId}, POST /items/{itemId}/lottery, POST /items/{itemId}/confirm-pickup, POST /items/{itemId}/mark-picked-up
-- [ ] Integrate Messages Lambda: POST /items/{itemId}/messages, GET /items/{itemId}/messages
-- [ ] Integrate Users Lambda: GET /users/{userId}, GET /users/me
-- [ ] Add auth routes (handled by Cognito directly): POST /auth/register, POST /auth/login
-- [ ] Export API endpoint URL as stack output
+- [x] Create `lib/constructs/api.ts`
+- [x] Define HTTP API (not REST API for cost savings)
+- [x] Configure Cognito JWT authorizer
+- [x] Add CORS configuration for frontend domain
+- [x] Integrate Items Lambda: POST /items, PUT /items/{itemId}, GET /items, GET /items/{itemId}, POST /items/{itemId}/lottery, POST /items/{itemId}/confirm-pickup, POST /items/{itemId}/mark-picked-up
+- [x] Integrate Messages Lambda: POST /items/{itemId}/messages, GET /items/{itemId}/messages
+- [x] Integrate Users Lambda: GET /users/{userId}, GET /users/me
+- [x] Add auth routes (handled by Cognito directly): POST /auth/register, POST /auth/login
+- [x] Export API endpoint URL as stack output
 
 **Dependencies:** INFRA-4, INFRA-6, INFRA-8, INFRA-9
 
