@@ -386,21 +386,22 @@ Set up Next.js 14 project with TypeScript and Tailwind CSS.
 
 ---
 
-### FE-2: Create TypeScript Types
+### FE-2: Create TypeScript Types ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 30 minutes
+**Status:** COMPLETED
 
 **Description:**
 Define TypeScript interfaces matching backend data models.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/types/index.ts`
-- [ ] Define User interface
-- [ ] Define Item interface with all status types
-- [ ] Define Message interface
-- [ ] Define API request/response types for all endpoints
-- [ ] Export all types
+- [x] Create `lib/types/index.ts`
+- [x] Define User interface
+- [x] Define Item interface with all status types
+- [x] Define Message interface
+- [x] Define API request/response types for all endpoints
+- [x] Export all types
 
 **Dependencies:** FE-1
 
