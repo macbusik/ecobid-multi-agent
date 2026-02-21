@@ -8,6 +8,7 @@ import { AuthConstruct } from './constructs/auth';
 import { ApiConstruct } from './constructs/api';
 import { SchedulerConstruct } from './constructs/scheduler';
 import { FrontendHosting } from './constructs/frontend';
+import { GitHubActionsRole } from './constructs/github-actions-role';
 
 /**
  * Main EcoBid CDK Stack
@@ -140,6 +141,10 @@ export class InfrastructureStack extends cdk.Stack {
 
     // Frontend hosting
     const frontend = new FrontendHosting(this, 'Frontend');
+
+    // GitHub Actions OIDC Role
+    const githubRepo = process.env.GITHUB_REPOSITORY || 'YOUR_GITHUB_USERNAME/ecobid-multi-agent';
+    new GitHubActionsRole(this, 'GitHubActions', githubRepo);
 
     // Add stack tags
     cdk.Tags.of(this).add('Project', 'EcoBid');

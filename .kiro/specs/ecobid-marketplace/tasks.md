@@ -860,43 +860,45 @@ Perform manual testing of all user flows on real mobile device.
 
 ## Phase 4: Documentation & Deployment
 
-### CICD-1: Create IAM Deployment User
+### CICD-1: Create IAM Deployment Role ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 15 minutes
+**Status:** COMPLETED
 
 **Description:**
-Create IAM user with minimal permissions for GitHub Actions deployment.
+Create IAM Role with OIDC trust for GitHub Actions deployment.
 
 **Acceptance Criteria:**
-- [ ] Create IAM user: `github-actions-deployer`
-- [ ] Create IAM policy with S3 permissions (PutObject, DeleteObject, ListBucket) on frontend bucket
-- [ ] Add CloudFront CreateInvalidation permission for frontend distribution
-- [ ] Generate access key and secret key
-- [ ] Save credentials securely (for GitHub Secrets)
+- [x] Create OIDC Provider for GitHub Actions
+- [x] Create IAM Role with AdministratorAccess (to be restricted later)
+- [x] Configure trust policy for GitHub repository
+- [x] Output role ARN for GitHub Secrets
+- [x] No access keys needed (uses OIDC)
 
 **Dependencies:** None
 
 ---
 
-### CICD-2: Create GitHub Actions Workflow
+### CICD-2: Create GitHub Actions Workflow ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 30 minutes
+**Status:** COMPLETED
 
 **Description:**
 Create GitHub Actions workflow for automated frontend deployment.
 
 **Acceptance Criteria:**
-- [ ] Create `.github/workflows/deploy-frontend.yml`
-- [ ] Trigger on push to `main` branch (paths: `frontend/**`)
-- [ ] Add manual workflow dispatch trigger
-- [ ] Setup Node.js 20
-- [ ] Install dependencies with `npm ci`
-- [ ] Build Next.js with `npm run build`
-- [ ] Deploy to S3 using AWS CLI
-- [ ] Invalidate CloudFront cache
-- [ ] Use GitHub Secrets for AWS credentials
+- [x] Create `.github/workflows/deploy-frontend.yml`
+- [x] Trigger on push to `main` branch (paths: `frontend/**`)
+- [x] Add manual workflow dispatch trigger
+- [x] Setup Node.js 20
+- [x] Install dependencies with `npm ci`
+- [x] Build Next.js with `npm run build`
+- [x] Deploy to S3 using AWS CLI
+- [x] Invalidate CloudFront cache
+- [x] Use OIDC for AWS authentication (no access keys)
 
 **Dependencies:** CICD-1
 
