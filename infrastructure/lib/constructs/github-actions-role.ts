@@ -13,12 +13,12 @@ export class GitHubActionsRole extends Construct {
   constructor(scope: Construct, id: string, githubRepo: string) {
     super(scope, id);
 
-    // GitHub OIDC Provider (create once per account)
-    const provider = new iam.OpenIdConnectProvider(this, 'GitHubProvider', {
-      url: 'https://token.actions.githubusercontent.com',
-      clientIds: ['sts.amazonaws.com'],
-      thumbprints: ['6938fd4d98bab03faadb97b34396831e3780aea1'],
-    });
+    // GitHub OIDC Provider (import existing or create new)
+    const provider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(
+      this,
+      'GitHubProvider',
+      `arn:aws:iam::${cdk.Stack.of(this).account}:oidc-provider/token.actions.githubusercontent.com`
+    );
 
     // IAM Role for GitHub Actions
     this.role = new iam.Role(this, 'GitHubActionsRole', {
