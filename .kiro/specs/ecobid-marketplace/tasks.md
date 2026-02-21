@@ -245,20 +245,21 @@ Create API Gateway HTTP API with Cognito authorizer and Lambda integrations.
 
 ---
 
-### INFRA-12: Configure EventBridge Scheduler
+### INFRA-12: Configure EventBridge Scheduler ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P2 (Important)
 **Estimated Time:** 1 hour
+**Status:** COMPLETED
 
 **Description:**
 Set up EventBridge Scheduler for lottery and reservation expiry.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/constructs/scheduler.ts`
-- [ ] Grant Items Lambda permission to create one-time schedules
-- [ ] Grant Lottery Lambda permission to create one-time schedules
-- [ ] Configure IAM role for EventBridge to invoke Lambda targets
-- [ ] Document schedule creation pattern in JSDoc
+- [x] Create `lib/constructs/scheduler.ts`
+- [x] Grant Items Lambda permission to create one-time schedules
+- [x] Grant Lottery Lambda permission to create one-time schedules
+- [x] Configure IAM role for EventBridge to invoke Lambda targets
+- [x] Document schedule creation pattern in JSDoc
 
 **Dependencies:** INFRA-6, INFRA-7, INFRA-10
 
