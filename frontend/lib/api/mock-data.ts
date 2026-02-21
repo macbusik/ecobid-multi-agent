@@ -28,3 +28,13 @@ export const mockMessages: Message[] = [
   { messageId: 'm1', itemId: 'item1', senderId: 'u1', recipientId: 'u2', content: 'When can you pick it up?', timestamp: new Date(Date.now() - 3600000).toISOString() },
   { messageId: 'm2', itemId: 'item1', senderId: 'u2', recipientId: 'u1', content: 'Tomorrow at 3pm works for me', timestamp: new Date(Date.now() - 1800000).toISOString() },
 ];
+
+// Helper functions
+export const getMockItems = () => mockItems.map(item => {
+  const seller = mockUsers.find(u => u.userId === item.sellerId);
+  return {
+    ...item,
+    sellerName: seller?.name || 'Unknown',
+    sellerReputation: seller?.reputationScore || 0,
+  };
+});
