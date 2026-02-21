@@ -1,0 +1,97 @@
+import type {
+  CreateItemRequest,
+  CreateItemResponse,
+  UpdateItemRequest,
+  ListItemsRequest,
+  ListItemsResponse,
+  SendMessageRequest,
+  Item,
+  User,
+  Message,
+} from '@/lib/types';
+import { mockItems, mockUsers, mockMessages } from './mock-data';
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const mockApi = {
+  auth: {
+    register: async () => { await delay(500); },
+    login: async () => { await delay(500); },
+    logout: async () => { await delay(200); },
+  },
+
+  items: {
+    create: async (data: CreateItemRequest): Promise<CreateItemResponse> => {
+      await delay(1500);
+      return {
+        itemId: `item${Date.now()}`,
+        photoUrl: 'https://picsum.photos/400/300',
+        aiSuggestions: {
+          title: 'Vintage Wooden Chair',
+          description: 'Beautiful vintage wooden chair in excellent condition.',
+          category: 'Furniture',
+        },
+      };
+    },
+
+    update: async (itemId: string, data: UpdateItemRequest): Promise<Item> => {
+      await delay(500);
+      const item = mockItems.find(i => i.itemId === itemId);
+      if (!item) throw new Error('Item not found');
+      return { ...item, ...data, updatedAt: new Date().toISOString() };
+    },
+
+    getById: async (itemId: string): Promise<Item> => {
+      await delay(300);
+      const item = mockItems.find(i => i.itemId === itemId);
+      if (!item) throw new Error('Item not found');
+      return item;
+    },
+
+    list: async (params: ListItemsRequest = {}): Promise<ListItemsResponse> => {
+      await delay(400);
+      let filtered = [...mockItems];
+      if (params.category) filtered = filtered.filter(i => i.category === params.category);
+      if (params.search) filtered = filtered.filter(i => i.title.toLowerCase().includes(params.search!.toLowerCase()));
+      if (params.city) filtered = filtered.filter(i => i.city === params.city);
+      return { items: filtered.slice(0, params.limit || 20) };
+    },
+
+    enterLottery: async () => { await delay(300); return { message: 'Entered lottery' }; },
+    confirmPickup: async () => { await delay(300); return { message: 'Pickup confirmed' }; },
+    markPickedUp: async () => { await delay(300); return { message: 'Marked as picked up' }; },
+  },
+
+  messages: {
+    send: async (itemId: string, data: SendMessageRequest): Promise<Message> => {
+      await delay(400);
+      return {
+        messageId: `m${Date.now()}`,
+        itemId,
+        senderId: 'u1',
+        recipientId: 'u2',
+        content: data.content,
+        timestamp: new Date().toISOString(),
+      };
+    },
+
+    list: async (itemId: string) => {
+      await delay(300);
+      return { messages: mockMessages.filter(m => m.itemId === itemId) };
+    },
+  },
+
+  users: {
+    getProfile: async (userId: string): Promise<User> => {
+      await delay(300);
+      const user = mockUsers.find(u => u.userId === userId);
+      if (!user) throw new Error('User not found');
+      return user;
+    },
+
+    getMe: async (): Promise<User> => {
+      await delay(300);
+      return mockUsers[0];
+    },
+  },
+};

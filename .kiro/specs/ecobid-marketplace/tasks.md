@@ -407,43 +407,45 @@ Define TypeScript interfaces matching backend data models.
 
 ---
 
-### FE-3: Create API Client
+### FE-3: Create API Client ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1.5 hours
+**Status:** COMPLETED
 
 **Description:**
 Create API client with all backend endpoints.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/api/client.ts`
-- [ ] Implement auth methods: register, login
-- [ ] Implement items methods: create, update, getById, list, enterLottery, confirmPickup, markPickedUp
-- [ ] Implement messages methods: send, list
-- [ ] Implement users methods: getProfile, getMe
-- [ ] Add Authorization header injection from Cognito token
-- [ ] Add error handling and response parsing
-- [ ] Add TypeScript types for all methods
+- [x] Create `lib/api/client.ts`
+- [x] Implement auth methods: register, login
+- [x] Implement items methods: create, update, getById, list, enterLottery, confirmPickup, markPickedUp
+- [x] Implement messages methods: send, list
+- [x] Implement users methods: getProfile, getMe
+- [x] Add Authorization header injection from Cognito token
+- [x] Add error handling and response parsing
+- [x] Add TypeScript types for all methods
 
 **Dependencies:** FE-2
 
 ---
 
-### FE-4: Create Mock Data Provider
+### FE-4: Create Mock Data Provider ✅
 **Agent:** `frontend_engineer`
 **Priority:** P1 (Critical)
 **Estimated Time:** 45 minutes
+**Status:** COMPLETED
 
 **Description:**
 Create mock data for testing UI before backend is deployed.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/api/mock-data.ts`
-- [ ] Generate 20+ mock items with realistic data
-- [ ] Generate mock users
-- [ ] Generate mock messages
-- [ ] Create mock API client that returns mock data
-- [ ] Add environment variable to toggle between real and mock API
+- [x] Create `lib/api/mock-data.ts`
+- [x] Generate 20+ mock items with realistic data
+- [x] Generate mock users
+- [x] Generate mock messages
+- [x] Create mock API client that returns mock data
+- [x] Add environment variable to toggle between real and mock API
 
 **Dependencies:** FE-2
 

@@ -12,20 +12,25 @@ import type {
   SendMessageRequest,
   ListMessagesResponse,
 } from '@/lib/types';
+import { mockApi } from './mock-client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
 
 // Configure Amplify
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID!,
-      userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID!,
+if (!USE_MOCK) {
+  Amplify.configure({
+    Auth: {
+      Cognito: {
+        userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID!,
+        userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID!,
+      },
     },
-  },
-});
+  });
+}
 
 async function getAuthToken(): Promise<string> {
+  if (USE_MOCK) return 'mock-token';
   const session = await fetchAuthSession();
   return session.tokens?.idToken?.toString() || '';
 }
@@ -50,7 +55,7 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
 }
 
 // Auth methods
-export const auth = {
+export const auth = USE_MOCK ? mockApi.auth : {
   register: async (email: string, password: string, name: string, city: string) => {
     await signUp({
       username: email,
@@ -71,7 +76,7 @@ export const auth = {
 };
 
 // Items methods
-export const items = {
+export const items = USE_MOCK ? mockApi.items : {
   create: (data: CreateItemRequest) =>
     apiRequest<CreateItemResponse>('/items', {
       method: 'POST',
@@ -107,7 +112,7 @@ export const items = {
 };
 
 // Messages methods
-export const messages = {
+export const messages = USE_MOCK ? mockApi.messages : {
   send: (itemId: string, data: SendMessageRequest) =>
     apiRequest<Message>(`/items/${itemId}/messages`, {
       method: 'POST',
@@ -118,7 +123,7 @@ export const messages = {
 };
 
 // Users methods
-export const users = {
+export const users = USE_MOCK ? mockApi.users : {
   getProfile: (userId: string) => apiRequest<User>(`/users/${userId}`),
   getMe: () => apiRequest<User>('/users/me'),
 };
