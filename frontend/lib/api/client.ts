@@ -1,0 +1,124 @@
+import { Amplify } from 'aws-amplify';
+import { signIn, signUp, signOut, fetchAuthSession } from 'aws-amplify/auth';
+import type {
+  Item,
+  User,
+  Message,
+  CreateItemRequest,
+  CreateItemResponse,
+  UpdateItemRequest,
+  ListItemsRequest,
+  ListItemsResponse,
+  SendMessageRequest,
+  ListMessagesResponse,
+} from '@/lib/types';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL!;
+
+// Configure Amplify
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID!,
+      userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID!,
+    },
+  },
+});
+
+async function getAuthToken(): Promise<string> {
+  const session = await fetchAuthSession();
+  return session.tokens?.idToken?.toString() || '';
+}
+
+async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const token = await getAuthToken();
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Request failed' }));
+    throw new Error(error.message || `HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Auth methods
+export const auth = {
+  register: async (email: string, password: string, name: string, city: string) => {
+    await signUp({
+      username: email,
+      password,
+      options: {
+        userAttributes: { email, name, 'custom:city': city },
+      },
+    });
+  },
+
+  login: async (email: string, password: string) => {
+    await signIn({ username: email, password });
+  },
+
+  logout: async () => {
+    await signOut();
+  },
+};
+
+// Items methods
+export const items = {
+  create: (data: CreateItemRequest) =>
+    apiRequest<CreateItemResponse>('/items', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (itemId: string, data: UpdateItemRequest) =>
+    apiRequest<Item>(`/items/${itemId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  getById: (itemId: string) => apiRequest<Item>(`/items/${itemId}`),
+
+  list: (params: ListItemsRequest = {}) => {
+    const query = new URLSearchParams();
+    if (params.category) query.set('category', params.category);
+    if (params.search) query.set('search', params.search);
+    if (params.city) query.set('city', params.city);
+    if (params.limit) query.set('limit', params.limit.toString());
+    if (params.lastKey) query.set('lastKey', params.lastKey);
+    return apiRequest<ListItemsResponse>(`/items?${query}`);
+  },
+
+  enterLottery: (itemId: string) =>
+    apiRequest<{ message: string }>(`/items/${itemId}/lottery`, { method: 'POST' }),
+
+  confirmPickup: (itemId: string) =>
+    apiRequest<{ message: string }>(`/items/${itemId}/confirm-pickup`, { method: 'POST' }),
+
+  markPickedUp: (itemId: string) =>
+    apiRequest<{ message: string }>(`/items/${itemId}/mark-picked-up`, { method: 'POST' }),
+};
+
+// Messages methods
+export const messages = {
+  send: (itemId: string, data: SendMessageRequest) =>
+    apiRequest<Message>(`/items/${itemId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  list: (itemId: string) => apiRequest<ListMessagesResponse>(`/items/${itemId}/messages`),
+};
+
+// Users methods
+export const users = {
+  getProfile: (userId: string) => apiRequest<User>(`/users/${userId}`),
+  getMe: () => apiRequest<User>('/users/me'),
+};
