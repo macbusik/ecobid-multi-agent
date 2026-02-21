@@ -109,12 +109,6 @@ Create shared TypeScript utilities for Lambda functions.
 - [x] Add JSDoc comments for all exported functions
 
 **Dependencies:** INFRA-1
-- [ ] Create `lib/lambda/shared/s3.ts` with helper functions: uploadImage, getSignedUrl
-- [ ] Create `lib/lambda/shared/response.ts` with API response formatters (success, error)
-- [ ] Add proper TypeScript types for all functions
-- [ ] Add JSDoc comments for all exported functions
-
-**Dependencies:** INFRA-1
 
 ---
 
