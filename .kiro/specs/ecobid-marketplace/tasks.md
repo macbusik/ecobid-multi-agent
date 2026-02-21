@@ -91,17 +91,24 @@ Create Cognito User Pool for authentication.
 
 ---
 
-### INFRA-5: Create Lambda Shared Utilities
+### INFRA-5: Create Lambda Shared Utilities ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1 hour
+**Status:** COMPLETED
 
 **Description:**
 Create shared TypeScript utilities for Lambda functions.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/lambda/shared/types.ts` with all entity interfaces (User, Item, LotteryEntry, Message)
-- [ ] Create `lib/lambda/shared/dynamodb.ts` with helper functions: putItem, getItem, query, updateItem
+- [x] Create `lib/lambda/shared/types.ts` with all entity interfaces (User, Item, LotteryEntry, Message)
+- [x] Create `lib/lambda/shared/dynamodb.ts` with helper functions: putItem, getItem, query, updateItem
+- [x] Create `lib/lambda/shared/s3.ts` with helper functions: uploadImage, getSignedUrl
+- [x] Create `lib/lambda/shared/response.ts` with API response formatters (success, error)
+- [x] Add proper TypeScript types for all functions
+- [x] Add JSDoc comments for all exported functions
+
+**Dependencies:** INFRA-1
 - [ ] Create `lib/lambda/shared/s3.ts` with helper functions: uploadImage, getSignedUrl
 - [ ] Create `lib/lambda/shared/response.ts` with API response formatters (success, error)
 - [ ] Add proper TypeScript types for all functions
