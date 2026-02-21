@@ -200,20 +200,21 @@ Implement Users Lambda handler for profile operations.
 
 ---
 
-### INFRA-10: Create Reservation Expiry Lambda Handler
+### INFRA-10: Create Reservation Expiry Lambda Handler ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P2 (Important)
 **Estimated Time:** 45 minutes
+**Status:** COMPLETED
 
 **Description:**
 Implement Reservation Expiry Lambda handler for expired reservations.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/lambda/handlers/reservation-expiry.ts`
-- [ ] Check if item status is still "Reserved" (not "Pickup_Confirmed")
-- [ ] If expired, update status to "Expired"
-- [ ] Send email to seller notifying expiry
-- [ ] Add error handling
+- [x] Create `lib/lambda/handlers/reservation-expiry.ts`
+- [x] Check if item status is still "Reserved" (not "Pickup_Confirmed")
+- [x] If expired, update status to "Expired"
+- [x] Send email to seller notifying expiry
+- [x] Add error handling
 
 **Dependencies:** INFRA-2, INFRA-5
 
