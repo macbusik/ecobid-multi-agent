@@ -160,21 +160,22 @@ Implement Lottery Lambda handler for winner selection.
 
 ---
 
-### INFRA-8: Create Messages Lambda Handler
+### INFRA-8: Create Messages Lambda Handler ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P1 (Critical)
 **Estimated Time:** 1 hour
+**Status:** COMPLETED
 
 **Description:**
 Implement Messages Lambda handler for in-app messaging.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/lambda/handlers/messages.ts`
-- [ ] Implement POST /items/{itemId}/messages: create message, validate 500 char limit
-- [ ] Implement GET /items/{itemId}/messages: query messages ordered by timestamp
-- [ ] Verify sender is either seller or winner
-- [ ] Send email notification to recipient using SES
-- [ ] Add error handling
+- [x] Create `lib/lambda/handlers/messages.ts`
+- [x] Implement POST /items/{itemId}/messages: create message, validate 500 char limit
+- [x] Implement GET /items/{itemId}/messages: query messages ordered by timestamp
+- [x] Verify sender is either seller or winner
+- [x] Send email notification to recipient using SES
+- [x] Add error handling
 
 **Dependencies:** INFRA-2, INFRA-5
 
