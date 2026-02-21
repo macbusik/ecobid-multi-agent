@@ -7,6 +7,7 @@ import { StorageConstruct } from './constructs/storage';
 import { AuthConstruct } from './constructs/auth';
 import { ApiConstruct } from './constructs/api';
 import { SchedulerConstruct } from './constructs/scheduler';
+import { FrontendHosting } from './constructs/frontend';
 
 /**
  * Main EcoBid CDK Stack
@@ -136,6 +137,9 @@ export class InfrastructureStack extends cdk.Stack {
       messagesFunction,
       usersFunction
     );
+
+    // Frontend hosting
+    const frontend = new FrontendHosting(this, 'Frontend');
 
     // Add stack tags
     cdk.Tags.of(this).add('Project', 'EcoBid');
