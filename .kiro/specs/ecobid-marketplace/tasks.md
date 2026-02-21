@@ -860,6 +860,68 @@ Perform manual testing of all user flows on real mobile device.
 
 ## Phase 4: Documentation & Deployment
 
+### CICD-1: Create IAM Deployment User
+**Agent:** `aws_cdk_architect`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 15 minutes
+
+**Description:**
+Create IAM user with minimal permissions for GitHub Actions deployment.
+
+**Acceptance Criteria:**
+- [ ] Create IAM user: `github-actions-deployer`
+- [ ] Create IAM policy with S3 permissions (PutObject, DeleteObject, ListBucket) on frontend bucket
+- [ ] Add CloudFront CreateInvalidation permission for frontend distribution
+- [ ] Generate access key and secret key
+- [ ] Save credentials securely (for GitHub Secrets)
+
+**Dependencies:** None
+
+---
+
+### CICD-2: Create GitHub Actions Workflow
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 30 minutes
+
+**Description:**
+Create GitHub Actions workflow for automated frontend deployment.
+
+**Acceptance Criteria:**
+- [ ] Create `.github/workflows/deploy-frontend.yml`
+- [ ] Trigger on push to `main` branch (paths: `frontend/**`)
+- [ ] Add manual workflow dispatch trigger
+- [ ] Setup Node.js 20
+- [ ] Install dependencies with `npm ci`
+- [ ] Build Next.js with `npm run build`
+- [ ] Deploy to S3 using AWS CLI
+- [ ] Invalidate CloudFront cache
+- [ ] Use GitHub Secrets for AWS credentials
+
+**Dependencies:** CICD-1
+
+---
+
+### CICD-3: Test Deployment Pipeline
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 15 minutes
+
+**Description:**
+Test the CI/CD pipeline end-to-end.
+
+**Acceptance Criteria:**
+- [ ] Make a small change to frontend (e.g., update page title)
+- [ ] Push to `main` branch
+- [ ] Verify GitHub Actions workflow runs successfully
+- [ ] Verify deployment completes in < 5 minutes
+- [ ] Verify CloudFront shows updated content
+- [ ] Document any issues and fixes
+
+**Dependencies:** CICD-2
+
+---
+
 ### DOC-1: Create README.md
 **Agent:** `business_analyst`
 **Priority:** P2 (Important)
