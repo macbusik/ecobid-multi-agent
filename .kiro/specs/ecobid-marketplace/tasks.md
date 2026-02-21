@@ -68,23 +68,24 @@ Create S3 bucket for item photos with public read access.
 
 ---
 
-### INFRA-4: Create Cognito User Pool Construct
+### INFRA-4: Create Cognito User Pool Construct ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 45 minutes
+**Status:** COMPLETED
 
 **Description:**
 Create Cognito User Pool for authentication.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/constructs/auth.ts`
-- [ ] Configure email as username
-- [ ] Set password policy: min 8 chars, uppercase, lowercase, number, special char
-- [ ] Enable email verification (required)
-- [ ] Add custom attributes: name (String), city (String)
-- [ ] Create User Pool Client with auth flows: USER_PASSWORD_AUTH
-- [ ] Set token expiry: 24 hours
-- [ ] Export User Pool ID, Client ID, and ARN as stack outputs
+- [x] Create `lib/constructs/auth.ts`
+- [x] Configure email as username
+- [x] Set password policy: min 8 chars, uppercase, lowercase, number, special char
+- [x] Enable email verification (required)
+- [x] Add custom attributes: name (String), city (String)
+- [x] Create User Pool Client with auth flows: USER_PASSWORD_AUTH
+- [x] Set token expiry: 24 hours
+- [x] Export User Pool ID, Client ID, and ARN as stack outputs
 
 **Dependencies:** INFRA-1
 
