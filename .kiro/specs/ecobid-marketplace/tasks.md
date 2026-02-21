@@ -137,23 +137,24 @@ Implement Items Lambda handler with all item-related operations.
 
 ---
 
-### INFRA-7: Create Lottery Lambda Handler
+### INFRA-7: Create Lottery Lambda Handler ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P1 (Critical)
 **Estimated Time:** 1.5 hours
+**Status:** COMPLETED
 
 **Description:**
 Implement Lottery Lambda handler for winner selection.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/lambda/handlers/lottery.ts`
-- [ ] Implement selectWinner function: query all lottery entries, select random winner
-- [ ] Update item status to "Reserved"
-- [ ] Store winnerUserId and reservationExpiryTime (24 hours from now)
-- [ ] Send email to winner using SES with item details
-- [ ] Send email to seller using SES with winner contact info
-- [ ] Create EventBridge schedule for reservation expiry check
-- [ ] Add error handling and logging
+- [x] Create `lib/lambda/handlers/lottery.ts`
+- [x] Implement selectWinner function: query all lottery entries, select random winner
+- [x] Update item status to "Reserved"
+- [x] Store winnerUserId and reservationExpiryTime (24 hours from now)
+- [x] Send email to winner using SES with item details
+- [x] Send email to seller using SES with winner contact info
+- [x] Create EventBridge schedule for reservation expiry check
+- [x] Add error handling and logging
 
 **Dependencies:** INFRA-2, INFRA-5
 
