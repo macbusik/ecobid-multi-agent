@@ -265,42 +265,44 @@ Set up EventBridge Scheduler for lottery and reservation expiry.
 
 ---
 
-### INFRA-13: Configure Amazon SES
+### INFRA-13: Configure Amazon SES ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P2 (Important)
 **Estimated Time:** 30 minutes
+**Status:** COMPLETED
 
 **Description:**
 Configure Amazon SES for email notifications.
 
 **Acceptance Criteria:**
-- [ ] Add SES email identity (use sandbox mode for MVP)
-- [ ] Grant Lottery Lambda permission to send emails
-- [ ] Grant Messages Lambda permission to send emails
-- [ ] Grant Reservation Expiry Lambda permission to send emails
-- [ ] Document email verification requirement in JSDoc
-- [ ] Add SES_FROM_EMAIL to Lambda environment variables
+- [x] Add SES email identity (use sandbox mode for MVP)
+- [x] Grant Lottery Lambda permission to send emails
+- [x] Grant Messages Lambda permission to send emails
+- [x] Grant Reservation Expiry Lambda permission to send emails
+- [x] Document email verification requirement in JSDoc
+- [x] Add SES_FROM_EMAIL to Lambda environment variables
 
 **Dependencies:** INFRA-7, INFRA-8, INFRA-10
 
 ---
 
-### INFRA-14: Create Main CDK Stack
+### INFRA-14: Create Main CDK Stack ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1 hour
+**Status:** COMPLETED
 
 **Description:**
 Assemble all constructs into the main EcoBid stack.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/ecobid-stack.ts`
-- [ ] Instantiate all constructs: database, storage, auth, api, scheduler
-- [ ] Wire up dependencies between constructs
-- [ ] Pass environment variables to Lambda functions (TABLE_NAME, BUCKET_NAME, etc.)
-- [ ] Configure Lambda functions: ARM64 architecture, Node.js 20.x runtime, 512MB memory, 30s timeout
-- [ ] Add stack tags: Project=EcoBid, Environment=Prod
-- [ ] Export all critical outputs (API URL, User Pool ID, Client ID, Bucket Name)
+- [x] Create `lib/ecobid-stack.ts`
+- [x] Instantiate all constructs: database, storage, auth, api, scheduler
+- [x] Wire up dependencies between constructs
+- [x] Pass environment variables to Lambda functions (TABLE_NAME, BUCKET_NAME, etc.)
+- [x] Configure Lambda functions: ARM64 architecture, Node.js 20.x runtime, 512MB memory, 30s timeout
+- [x] Add stack tags: Project=EcoBid, Environment=Prod
+- [x] Export all critical outputs (API URL, User Pool ID, Client ID, Bucket Name)
 
 **Dependencies:** INFRA-2, INFRA-3, INFRA-4, INFRA-11, INFRA-12, INFRA-13
 
