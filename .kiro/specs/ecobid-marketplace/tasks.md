@@ -181,19 +181,20 @@ Implement Messages Lambda handler for in-app messaging.
 
 ---
 
-### INFRA-9: Create Users Lambda Handler
+### INFRA-9: Create Users Lambda Handler ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P1 (Critical)
 **Estimated Time:** 45 minutes
+**Status:** COMPLETED
 
 **Description:**
 Implement Users Lambda handler for profile operations.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/lambda/handlers/users.ts`
-- [ ] Implement GET /users/{userId}: get user profile
-- [ ] Implement GET /users/me: get current user profile from Cognito token
-- [ ] Add error handling
+- [x] Create `lib/lambda/handlers/users.ts`
+- [x] Implement GET /users/{userId}: get user profile
+- [x] Implement GET /users/me: get current user profile from Cognito token
+- [x] Add error handling
 
 **Dependencies:** INFRA-2, INFRA-4, INFRA-5
 
