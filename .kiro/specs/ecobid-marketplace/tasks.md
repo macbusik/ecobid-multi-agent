@@ -364,22 +364,23 @@ Deploy the CDK stack to AWS and verify all resources.
 
 ## Phase 2: Frontend Foundation (Next.js)
 
-### FE-1: Initialize Next.js Project
+### FE-1: Initialize Next.js Project ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 30 minutes
+**Status:** COMPLETED
 
 **Description:**
 Set up Next.js 14 project with TypeScript and Tailwind CSS.
 
 **Acceptance Criteria:**
-- [ ] Create `/frontend` directory
-- [ ] Initialize Next.js with `npx create-next-app@latest` (App Router, TypeScript, Tailwind, ESLint)
-- [ ] Configure `tailwind.config.js` with mobile-first breakpoints
-- [ ] Configure `next.config.js` for image optimization
-- [ ] Install additional dependencies: `aws-amplify` (for Cognito auth)
-- [ ] Create `.env.local` with placeholder values for API_URL, COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID
-- [ ] Verify `npm run dev` starts successfully
+- [x] Create `/frontend` directory
+- [x] Initialize Next.js with `npx create-next-app@latest` (App Router, TypeScript, Tailwind, ESLint)
+- [x] Configure `tailwind.config.js` with mobile-first breakpoints
+- [x] Configure `next.config.js` for image optimization
+- [x] Install additional dependencies: `aws-amplify` (for Cognito auth)
+- [x] Create `.env.local` with placeholder values for API_URL, COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID
+- [x] Verify `npm run dev` starts successfully
 
 **Dependencies:** None
 
