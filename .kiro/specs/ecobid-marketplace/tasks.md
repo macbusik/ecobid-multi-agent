@@ -46,22 +46,23 @@ Create DynamoDB single-table design with GSIs as specified in design.md.
 
 ---
 
-### INFRA-3: Create S3 Bucket Construct
+### INFRA-3: Create S3 Bucket Construct ✅
 **Agent:** `aws_cdk_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 30 minutes
+**Status:** COMPLETED
 
 **Description:**
 Create S3 bucket for item photos with public read access.
 
 **Acceptance Criteria:**
-- [ ] Create `lib/constructs/storage.ts`
-- [ ] Define S3 bucket with unique name: `ecobid-items-<account-id>`
-- [ ] Configure public read access for objects
-- [ ] Enable CORS for frontend uploads
-- [ ] Set lifecycle policy: delete objects after 365 days
-- [ ] Block public ACLs but allow public bucket policies
-- [ ] Export bucket name and ARN as stack outputs
+- [x] Create `lib/constructs/storage.ts`
+- [x] Define S3 bucket with unique name: `ecobid-items-<account-id>`
+- [x] Configure public read access for objects
+- [x] Enable CORS for frontend uploads
+- [x] Set lifecycle policy: delete objects after 365 days
+- [x] Block public ACLs but allow public bucket policies
+- [x] Export bucket name and ARN as stack outputs
 
 **Dependencies:** INFRA-1
 
