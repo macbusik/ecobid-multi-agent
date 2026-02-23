@@ -13,7 +13,17 @@ export async function handler(event: any): Promise<APIGatewayProxyResult> {
     const pathParams = event.pathParameters || {};
     const userId = event.requestContext.authorizer?.claims?.sub;
 
+    console.log('🔍 Favorites Handler Debug:', {
+      method,
+      path,
+      userId_from_jwt: userId,
+      pathUserId: pathParams.userId,
+      itemId: pathParams.itemId,
+      match: pathParams.userId === userId,
+    });
+
     if (!userId) {
+      console.error('❌ No userId in JWT claims');
       return errorResponse('Unauthorized', 403);
     }
 
@@ -21,6 +31,7 @@ export async function handler(event: any): Promise<APIGatewayProxyResult> {
 
     // Verify user can only access their own favorites
     if (pathUserId !== userId) {
+      console.error('❌ User ID mismatch:', { pathUserId, userId });
       return errorResponse('Unauthorized', 403);
     }
 
