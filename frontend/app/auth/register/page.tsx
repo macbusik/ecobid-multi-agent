@@ -18,6 +18,13 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    minLength: false,
+    hasUpper: false,
+    hasLower: false,
+    hasNumber: false,
+    hasSpecial: false,
+  });
 
   const validatePassword = (password: string) => {
     const minLength = password.length >= 8;
@@ -26,7 +33,13 @@ export default function RegisterPage() {
     const hasNumber = /\d/.test(password);
     const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     
+    setPasswordRequirements({ minLength, hasUpper, hasLower, hasNumber, hasSpecial });
     return minLength && hasUpper && hasLower && hasNumber && hasSpecial;
+  };
+
+  const handlePasswordChange = (password: string) => {
+    setFormData({ ...formData, password });
+    validatePassword(password);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -215,10 +228,34 @@ export default function RegisterPage() {
               id="password"
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) => handlePasswordChange(e.target.value)}
               className="w-full h-11 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            {formData.password && (
+              <div className="mt-2 space-y-1 text-sm">
+                <div className={`flex items-center gap-2 ${passwordRequirements.minLength ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordRequirements.minLength ? '✓' : '○'}</span>
+                  <span>At least 8 characters</span>
+                </div>
+                <div className={`flex items-center gap-2 ${passwordRequirements.hasUpper ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordRequirements.hasUpper ? '✓' : '○'}</span>
+                  <span>One uppercase letter (A-Z)</span>
+                </div>
+                <div className={`flex items-center gap-2 ${passwordRequirements.hasLower ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordRequirements.hasLower ? '✓' : '○'}</span>
+                  <span>One lowercase letter (a-z)</span>
+                </div>
+                <div className={`flex items-center gap-2 ${passwordRequirements.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordRequirements.hasNumber ? '✓' : '○'}</span>
+                  <span>One number (0-9)</span>
+                </div>
+                <div className={`flex items-center gap-2 ${passwordRequirements.hasSpecial ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span>{passwordRequirements.hasSpecial ? '✓' : '○'}</span>
+                  <span>One special character (!@#$%^&*)</span>
+                </div>
+              </div>
+            )}
             {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
           </div>
 

@@ -97,6 +97,9 @@ export const users = USE_MOCK ? mockApi.users : {
 
 // Favorites methods
 export const favorites = USE_MOCK ? mockApi.favorites : {
+  list: (userId: string) =>
+    apiRequest<Item[]>(`/users/${userId}/favorites`, { method: 'GET' }),
+  
   add: (userId: string, itemId: string) =>
     apiRequest<{ message: string }>(`/users/${userId}/favorites/${itemId}`, { method: 'POST' }),
   

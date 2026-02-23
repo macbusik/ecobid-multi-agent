@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Item } from '@/lib/types';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { useToast } from '@/lib/toast/ToastContext';
 import { favorites } from '@/lib/api/client';
 
 interface ItemCardProps {
@@ -15,6 +16,7 @@ interface ItemCardProps {
 
 export default function ItemCard({ item, isFavorited = false }: ItemCardProps) {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const router = useRouter();
   const [favorited, setFavorited] = useState(isFavorited);
   const [loading, setLoading] = useState(false);
@@ -39,11 +41,17 @@ export default function ItemCard({ item, isFavorited = false }: ItemCardProps) {
     try {
       if (favorited) {
         await favorites.remove(user.userId, item.itemId);
+        console.log('✓ Removed from favorites:', item.itemId);
+        showToast('Removed from favorites', 'success');
       } else {
         await favorites.add(user.userId, item.itemId);
+        console.log('✓ Added to favorites:', item.itemId);
+        showToast('Added to favorites', 'success');
       }
     } catch (error) {
+      console.error('✗ Favorites API error:', error);
       setFavorited(originalState);
+      showToast('Failed to update favorites', 'error');
     } finally {
       setLoading(false);
     }
@@ -69,19 +77,26 @@ export default function ItemCard({ item, isFavorited = false }: ItemCardProps) {
             className="absolute top-2 left-2 w-11 h-11 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors disabled:opacity-50"
             aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <svg
-              className={`w-6 h-6 ${favorited ? 'text-red-500 fill-current' : 'text-gray-400'}`}
-              fill={favorited ? 'currentColor' : 'none'}
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
+            {loading ? (
+              <svg className="w-5 h-5 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : (
+              <svg
+                className={`w-6 h-6 ${favorited ? 'text-red-500 fill-current' : 'text-gray-400'}`}
+                fill={favorited ? 'currentColor' : 'none'}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            )}
           </button>
         </div>
         
