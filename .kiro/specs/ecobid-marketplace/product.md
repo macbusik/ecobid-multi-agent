@@ -25,3 +25,34 @@ EcoBid is a mobile-first AI-powered marketplace for free household item giveaway
 - Individuals giving away household items (Kitchen, Furniture, Electronics, Books, Clothing, Toys, Other)
 - Individuals seeking free household items in their local area
 - Environmentally conscious users promoting reuse and waste reduction
+
+---
+
+## Feature Planning
+
+### Iteration 1: Minimal Backend - Show Offer Details
+
+**Goal:** Enable users to view detailed information about a listed item.
+
+**Rationale:** This is the most basic read operation needed to validate the infrastructure works end-to-end. Before building complex features (AI listing, lottery system, messaging), we need to prove we can store and retrieve item data.
+
+**Scope:**
+- Backend: Lambda handler to fetch item by ID from DynamoDB
+- Frontend: Item detail page that calls the API and displays data
+- Data: Use mock/seed data initially (manually inserted into DynamoDB)
+
+**Success Criteria:**
+- User can navigate to `/items/{itemId}` and see item title, description, photo, category, city, status
+- API returns proper error handling (404 for non-existent items)
+- Response time < 500ms
+
+**Out of Scope (for this iteration):**
+- Creating items (AI listing)
+- Lottery/reservation logic
+- User authentication (can be added later)
+- Messaging
+
+**Next Steps After Completion:**
+- Iteration 2: Create item (manual form, no AI yet)
+- Iteration 3: List items (feed with filtering)
+- Iteration 4: AI-powered listing

@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { putItem, getItem, query } from '../shared/dynamodb';
 import { successResponse, errorResponse } from '../shared/response';
@@ -64,7 +64,7 @@ async function sendMessage(event: APIGatewayProxyEvent, itemId: string): Promise
   const recipientId = isSeller ? item.winnerUserId : item.sellerId;
 
   // Create message
-  const messageId = uuidv4();
+  const messageId = randomUUID();
   const timestamp = new Date().toISOString();
   
   const message: Message = {

@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { putItem, getItem, query, updateItem } from '../shared/dynamodb';
 import { uploadImage } from '../shared/s3';
 import { successResponse, errorResponse } from '../shared/response';
@@ -9,11 +9,14 @@ import { Item, ItemStatus, ItemCategory, LotteryEntry } from '../shared/types';
  * Items Lambda Handler
  * Handles all item-related operations for EcoBid marketplace.
  */
-export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+export async function handler(event: any): Promise<APIGatewayProxyResult> {
   try {
-    const method = event.httpMethod;
-    const path = event.path;
+    console.log('Event:', JSON.stringify(event, null, 2));
+    // HTTP API v2 uses different event structure
+    const method = event.requestContext?.http?.method || event.httpMethod;
+    const path = event.requestContext?.http?.path || event.path;
     const pathParams = event.pathParameters || {};
+    console.log('Method:', method, 'Path:', path, 'PathParams:', pathParams);
 
     // Route to appropriate handler
     if (method === 'POST' && path === '/items') {
@@ -52,7 +55,7 @@ async function createItem(event: APIGatewayProxyEvent): Promise<APIGatewayProxyR
   }
 
   // Upload photo to S3
-  const itemId = uuidv4();
+  const itemId = randomUUID();
   const photoKey = `items/${itemId}/${Date.now()}.jpg`;
   const photoBuffer = Buffer.from(photoBase64, 'base64');
   const photoUrl = await uploadImage(photoKey, photoBuffer, 'image/jpeg');
