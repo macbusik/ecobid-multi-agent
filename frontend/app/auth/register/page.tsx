@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function RegisterPage() {
-  const { register } = useAuth();
+  const { register, confirmRegistration } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -13,8 +13,10 @@ export default function RegisterPage() {
     name: '',
     city: ''
   });
+  const [verificationCode, setVerificationCode] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const validatePassword = (password: string) => {
@@ -53,7 +55,7 @@ export default function RegisterPage() {
     setIsLoading(true);
     try {
       await register(formData.email, formData.password, formData.name, formData.city);
-      setSuccess(true);
+      setNeedsVerification(true);
     } catch (error: any) {
       if (error.message?.includes('already exists') || error.message?.includes('duplicate')) {
         setErrors({ email: 'An account with this email already exists' });
@@ -65,15 +67,84 @@ export default function RegisterPage() {
     }
   };
 
+  const handleVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({});
+    
+    if (!verificationCode) {
+      setErrors({ code: 'Verification code is required' });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await confirmRegistration(formData.email, verificationCode);
+      setSuccess(true);
+    } catch (error: any) {
+      setErrors({ code: error.message || 'Verification failed' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-green-600 mb-4">Registration Successful!</h1>
-          <p className="text-gray-600 mb-6">Check your email for verification</p>
-          <Link href="/auth/login" className="text-blue-600 hover:underline">
-            Continue to Login
+          <h1 className="text-2xl font-bold text-green-600 mb-4">Account Verified!</h1>
+          <p className="text-gray-600 mb-6">You can now log in with your credentials</p>
+          <Link href="/auth/login" className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+            Go to Login
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (needsVerification) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <h1 className="text-2xl font-bold mb-2">Verify Your Email</h1>
+          <p className="text-gray-600 mb-6">
+            We sent a verification code to <strong>{formData.email}</strong>
+          </p>
+
+          <form onSubmit={handleVerification} className="space-y-4">
+            <div>
+              <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
+                Verification Code
+              </label>
+              <input
+                id="code"
+                type="text"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Enter 6-digit code"
+                maxLength={6}
+              />
+              {errors.code && <p className="text-red-600 text-sm mt-1">{errors.code}</p>}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 disabled:bg-gray-400"
+            >
+              {isLoading ? 'Verifying...' : 'Verify Email'}
+            </button>
+          </form>
+
+          <p className="text-sm text-gray-600 mt-4 text-center">
+            Didn't receive the code?{' '}
+            <button
+              onClick={() => setNeedsVerification(false)}
+              className="text-green-600 hover:underline"
+            >
+              Try again
+            </button>
+          </p>
         </div>
       </div>
     );
