@@ -126,6 +126,32 @@ This project follows **Spec-Driven Development (SDD)** with specialized AI agent
 
 See [AGENTS.md](./AGENTS.md) for detailed agent directives.
 
+### Git Workflow
+
+**Commit after each task:**
+```bash
+./scripts/complete-task.sh ITER2-1 "Create item form UI"
+```
+
+**Manual commit:**
+```bash
+git add -A
+git commit -m "feat(ITER2-1): create item form UI
+
+- Add form component with validation
+- Implement file upload
+- Add error handling"
+```
+
+**Commit format:**
+```
+feat(ITER1-1): implement getItemById handler
+
+- Add DynamoDB query logic
+- Implement error handling
+- Add unit tests
+```
+
 ## Cost Optimization
 
 **Target:** $0/month (AWS Free Tier)
