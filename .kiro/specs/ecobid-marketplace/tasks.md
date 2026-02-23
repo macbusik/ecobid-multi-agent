@@ -1199,3 +1199,347 @@ Manually test the complete flow from frontend to backend.
 - `senior_test_engineer`: 5 tasks (~10 hours)
 - `business_analyst`: 1 task (~30 minutes)
 - `project_journalist`: 1 task (~20 minutes)
+
+
+---
+
+## Phase 6: Iteration 2 - Authentication + Favorites + UX Fixes
+
+### ITER2-1: Integrate Cognito Authentication
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 3 hours
+**Status:** TODO
+
+**Description:**
+Add AWS Amplify library and create authentication context for the frontend.
+
+**Acceptance Criteria:**
+- [ ] Install `aws-amplify` and `@aws-amplify/ui-react` packages
+- [ ] Create `lib/auth/AuthContext.tsx` with auth state management
+- [ ] Configure Amplify with Cognito User Pool ID and Client ID
+- [ ] Implement login, register, logout functions
+- [ ] Handle token storage and automatic refresh
+- [ ] Add auth state to root layout
+- [ ] Protect routes that require authentication
+
+**Dependencies:** INFRA-4 (Cognito User Pool)
+
+---
+
+### ITER2-2: Build Login Page
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Create mobile-first login page with proper validation and error handling.
+
+**Acceptance Criteria:**
+- [ ] Create `app/auth/login/page.tsx`
+- [ ] Form with email and password fields (44px touch targets)
+- [ ] Client-side validation (email format, required fields)
+- [ ] Call AuthContext login function
+- [ ] Show loading state during authentication
+- [ ] Display error messages for invalid credentials
+- [ ] Redirect to home page after successful login
+- [ ] Add "Forgot password?" link (placeholder for now)
+- [ ] Add "Don't have an account? Register" link
+
+**Dependencies:** ITER2-1
+
+---
+
+### ITER2-3: Build Register Page
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Create registration page with email verification flow.
+
+**Acceptance Criteria:**
+- [ ] Create `app/auth/register/page.tsx`
+- [ ] Form with email, password, name, city fields
+- [ ] Password strength validation (min 8 chars, uppercase, lowercase, number, special)
+- [ ] Confirm password field with matching validation
+- [ ] Call AuthContext register function
+- [ ] Show success message with "Check your email for verification"
+- [ ] Handle duplicate email errors
+- [ ] Add "Already have an account? Login" link
+- [ ] Mobile-first responsive design
+
+**Dependencies:** ITER2-1
+
+---
+
+### ITER2-4: Build Profile Page
+**Agent:** `frontend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Create user profile page with view/edit functionality.
+
+**Acceptance Criteria:**
+- [ ] Create `app/profile/page.tsx`
+- [ ] Fetch current user data from Cognito
+- [ ] Display name, email, city (read-only for now)
+- [ ] Add logout button
+- [ ] Add navigation to favorites page
+- [ ] Show loading state while fetching user data
+- [ ] Redirect to login if not authenticated
+- [ ] Mobile-first responsive design
+
+**Dependencies:** ITER2-1
+
+---
+
+### ITER2-5: Create Favorites Lambda Handler
+**Agent:** `backend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Implement Lambda handler for favorites operations.
+
+**Acceptance Criteria:**
+- [ ] Create or update `lib/lambda/handlers/favorites.ts`
+- [ ] Implement POST /users/{userId}/favorites/{itemId} - Add favorite
+- [ ] Implement DELETE /users/{userId}/favorites/{itemId} - Remove favorite
+- [ ] Implement GET /users/{userId}/favorites - List all favorites
+- [ ] Use DynamoDB with PK=`USER#{userId}`, SK=`FAVORITE#{itemId}`
+- [ ] Verify user is authenticated (check JWT token)
+- [ ] Return proper HTTP responses (200, 404, 403, 500)
+- [ ] Add error handling and logging
+- [ ] Write unit tests (3+ test cases)
+
+**Dependencies:** INFRA-2 (DynamoDB Table), INFRA-4 (Cognito)
+
+---
+
+### ITER2-6: Add Heart Icon to Item Cards
+**Agent:** `frontend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 1 hour
+**Status:** TODO
+
+**Description:**
+Add favorite toggle button to item cards with optimistic UI updates.
+
+**Acceptance Criteria:**
+- [ ] Update `components/item/ItemCard.tsx`
+- [ ] Add heart icon button (44x44px touch target)
+- [ ] Show filled heart if item is favorited, empty if not
+- [ ] Call favorites API on click
+- [ ] Implement optimistic UI update (toggle immediately)
+- [ ] Revert on API error
+- [ ] Show login prompt if user not authenticated
+- [ ] Add loading state during API call
+- [ ] Add ARIA label for accessibility
+
+**Dependencies:** ITER2-1, ITER2-5
+
+---
+
+### ITER2-7: Build Favorites Page
+**Agent:** `frontend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Create favorites page showing all saved items.
+
+**Acceptance Criteria:**
+- [ ] Create `app/favorites/page.tsx`
+- [ ] Fetch user's favorites from API
+- [ ] Display items in grid layout (same as home page)
+- [ ] Reuse ItemCard component
+- [ ] Show empty state with message and CTA when no favorites
+- [ ] Add remove from favorites functionality
+- [ ] Show loading state while fetching
+- [ ] Redirect to login if not authenticated
+- [ ] Mobile-first responsive design
+
+**Dependencies:** ITER2-1, ITER2-5, ITER2-6
+
+---
+
+### ITER2-8: Fix Category Filter Touch Targets
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 30 minutes
+**Status:** TODO
+
+**Description:**
+Increase category button size to meet 44px minimum touch target.
+
+**Acceptance Criteria:**
+- [ ] Update `components/item/CategoryFilter.tsx`
+- [ ] Change button height to `min-h-[44px]`
+- [ ] Add category icons (🏠📱🪑👕📚🧸🍳⚽📦)
+- [ ] Increase gap between buttons to `gap-3`
+- [ ] Add `role="navigation"` and `aria-label="Item categories"`
+- [ ] Add `aria-label` to each button
+- [ ] Test on mobile device (easy to tap)
+
+**Dependencies:** None
+
+---
+
+### ITER2-9: Improve Item Card Visual Hierarchy
+**Agent:** `frontend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 1 hour
+**Status:** TODO
+
+**Description:**
+Redesign item cards with better visual hierarchy and proper icons.
+
+**Acceptance Criteria:**
+- [ ] Update `components/item/ItemCard.tsx`
+- [ ] Make title larger and bolder (`text-lg font-bold`)
+- [ ] Replace location emoji with SVG icon
+- [ ] Replace time emoji with SVG icon
+- [ ] Improve status badge styling (green background, pulse animation)
+- [ ] Add proper spacing between elements (`space-y-3`)
+- [ ] Ensure all text is readable on mobile
+- [ ] Test visual hierarchy (title → location → status)
+
+**Dependencies:** None
+
+---
+
+### ITER2-10: Add ARIA Labels Throughout
+**Agent:** `frontend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 30 minutes
+**Status:** TODO
+
+**Description:**
+Add ARIA labels to all interactive elements for screen reader accessibility.
+
+**Acceptance Criteria:**
+- [ ] Add `aria-label` to category filter buttons
+- [ ] Add `aria-label` to item card links
+- [ ] Add `aria-label` to back button on detail page
+- [ ] Add `aria-label` to navigation links
+- [ ] Add `aria-label` to form inputs (if not using label element)
+- [ ] Test with screen reader (VoiceOver or NVDA)
+- [ ] Run Lighthouse accessibility audit (score >90)
+
+**Dependencies:** None
+
+---
+
+### ITER2-11: Update Navigation for Auth State
+**Agent:** `frontend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 1 hour
+**Status:** TODO
+
+**Description:**
+Update navigation to show different links based on authentication state.
+
+**Acceptance Criteria:**
+- [ ] Update `app/layout.tsx` navigation
+- [ ] Show "Login" and "Register" links for guests
+- [ ] Show "Profile" and "Favorites" links for authenticated users
+- [ ] Show "Logout" button for authenticated users
+- [ ] Add mobile hamburger menu
+- [ ] Highlight active page in navigation
+- [ ] Test navigation on mobile and desktop
+
+**Dependencies:** ITER2-1
+
+---
+
+### ITER2-12: Manual Testing on Mobile Device
+**Agent:** `frontend_engineer` or `backend_engineer`
+**Priority:** P1 (Critical)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Test all Iteration 2 features on real mobile device.
+
+**Acceptance Criteria:**
+- [ ] Test registration flow end-to-end
+- [ ] Test login flow end-to-end
+- [ ] Test favorites add/remove functionality
+- [ ] Test favorites page
+- [ ] Verify all touch targets are easy to tap (44px minimum)
+- [ ] Verify visual hierarchy improvements
+- [ ] Test with screen reader
+- [ ] Document any bugs found
+- [ ] Verify performance (auth <2s, favorites <500ms)
+
+**Dependencies:** ITER2-1 through ITER2-11
+
+---
+
+### ITER2-13: Write Unit Tests for Favorites
+**Agent:** `backend_engineer`
+**Priority:** P2 (Important)
+**Estimated Time:** 2 hours
+**Status:** TODO
+
+**Description:**
+Write comprehensive unit tests for favorites Lambda handler.
+
+**Acceptance Criteria:**
+- [ ] Create `test/lambda/handlers/favorites.test.ts`
+- [ ] Test add favorite (success case)
+- [ ] Test remove favorite (success case)
+- [ ] Test list favorites (success case)
+- [ ] Test unauthorized access (no JWT token)
+- [ ] Test invalid itemId format
+- [ ] Test DynamoDB errors
+- [ ] Achieve >80% code coverage
+- [ ] All tests pass with `npm test`
+
+**Dependencies:** ITER2-5
+
+---
+
+### ITER2-14: Update README with Iteration 2 Features
+**Agent:** `frontend_engineer`
+**Priority:** P2 (Important)
+**Estimated Time:** 30 minutes
+**Status:** TODO
+
+**Description:**
+Update README to document new authentication and favorites features.
+
+**Acceptance Criteria:**
+- [ ] Update feature list with authentication and favorites
+- [ ] Add setup instructions for Cognito configuration
+- [ ] Update screenshots (if applicable)
+- [ ] Document environment variables needed
+- [ ] Update "Getting Started" section
+
+**Dependencies:** ITER2-12
+
+---
+
+## Task Summary
+
+**Total Tasks:** 66
+- **Phase 1 (Infrastructure):** 16 tasks ✅
+- **Phase 2 (Frontend):** 17 tasks ✅
+- **Phase 3 (Testing):** 5 tasks
+- **Phase 4 (Documentation & Deployment):** 4 tasks
+- **Phase 5 (Iteration 1):** 5 tasks ✅
+- **Phase 6 (Iteration 2):** 14 tasks
+
+**Iteration 2 Priority Breakdown:**
+- **P0 (Blocker):** 4 tasks - Auth foundation + UX fixes
+- **P1 (Critical):** 8 tasks - Favorites + visual improvements
+- **P2 (Important):** 2 tasks - Testing + documentation
+
+**Estimated Total Time for Iteration 2:** ~18 hours
