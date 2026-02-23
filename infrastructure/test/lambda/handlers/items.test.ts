@@ -8,6 +8,7 @@ jest.mock('../../../lib/lambda/shared/dynamodb');
 jest.mock('../../../lib/lambda/shared/response');
 
 const mockGetItem = dynamodb.getItem as jest.MockedFunction<typeof dynamodb.getItem>;
+const mockQuery = dynamodb.query as jest.MockedFunction<typeof dynamodb.query>;
 const mockSuccessResponse = response.successResponse as jest.MockedFunction<typeof response.successResponse>;
 const mockErrorResponse = response.errorResponse as jest.MockedFunction<typeof response.errorResponse>;
 
@@ -138,5 +139,117 @@ describe('Items Handler - getItemById', () => {
     expect(responseBody).toHaveProperty('description');
     expect(responseBody).toHaveProperty('category');
     expect(responseBody).toHaveProperty('status');
+  });
+});
+
+describe('listItems', () => {
+  it('should return all available items', async () => {
+    const mockItems = [
+      {
+        PK: 'ITEM#item-001',
+        SK: 'METADATA',
+        itemId: 'item-001',
+        title: 'Test Item 1',
+        status: 'Available',
+        GSI1PK: 'STATUS#Available',
+      },
+      {
+        PK: 'ITEM#item-002',
+        SK: 'METADATA',
+        itemId: 'item-002',
+        title: 'Test Item 2',
+        status: 'Available',
+        GSI1PK: 'STATUS#Available',
+      },
+    ];
+
+    mockQuery.mockResolvedValue(mockItems);
+
+    const event = {
+      requestContext: { http: { method: 'GET', path: '/items' } },
+      pathParameters: {},
+      queryStringParameters: { limit: '10' },
+    } as any;
+
+    const result = await handler(event);
+    const body = JSON.parse(result.body);
+
+    expect(result.statusCode).toBe(200);
+    expect(body.items).toHaveLength(2);
+    expect(body.count).toBe(2);
+    expect(mockQuery).toHaveBeenCalledWith(
+      'GSI1PK = :gsi1pk',
+      { ':gsi1pk': 'STATUS#Available' },
+      'GSI1',
+      10
+    );
+  });
+
+  it('should filter items by category and city', async () => {
+    const mockItems = [
+      {
+        PK: 'ITEM#item-001',
+        SK: 'METADATA',
+        itemId: 'item-001',
+        title: 'Furniture Item',
+        category: 'Furniture',
+        city: 'New York',
+        GSI2PK: 'CATEGORY#Furniture#CITY#New York',
+      },
+    ];
+
+    mockQuery.mockResolvedValue(mockItems);
+
+    const event = {
+      requestContext: { http: { method: 'GET', path: '/items' } },
+      pathParameters: {},
+      queryStringParameters: { category: 'Furniture', city: 'New York', limit: '10' },
+    } as any;
+
+    const result = await handler(event);
+    const body = JSON.parse(result.body);
+
+    expect(result.statusCode).toBe(200);
+    expect(body.items).toHaveLength(1);
+    expect(mockQuery).toHaveBeenCalledWith(
+      'GSI2PK = :gsi2pk',
+      { ':gsi2pk': 'CATEGORY#Furniture#CITY#New York' },
+      'GSI2',
+      10
+    );
+  });
+
+  it('should filter items by search keyword', async () => {
+    const mockItems = [
+      {
+        PK: 'ITEM#item-001',
+        SK: 'METADATA',
+        itemId: 'item-001',
+        title: 'Vintage Coffee Table',
+        description: 'Beautiful oak table',
+      },
+      {
+        PK: 'ITEM#item-002',
+        SK: 'METADATA',
+        itemId: 'item-002',
+        title: 'Modern Chair',
+        description: 'Comfortable seating',
+      },
+    ];
+
+    mockQuery.mockResolvedValue(mockItems);
+
+    const event = {
+      requestContext: { http: { method: 'GET', path: '/items' } },
+      pathParameters: {},
+      queryStringParameters: { search: 'coffee', limit: '10' },
+    } as any;
+
+    const result = await handler(event);
+    const body = JSON.parse(result.body);
+
+    expect(result.statusCode).toBe(200);
+    expect(body.items).toHaveLength(1);
+    expect(body.items[0].title).toBe('Vintage Coffee Table');
   });
 });

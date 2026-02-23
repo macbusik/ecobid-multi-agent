@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import ItemCard from '@/components/item/ItemCard';
 import CategoryFilter from '@/components/item/CategoryFilter';
 import Input from '@/components/ui/Input';
-import { getMockItems } from '@/lib/api/mock-data';
+import { items as itemsApi } from '@/lib/api/client';
 import { Item } from '@/lib/types';
 
 export default function Home() {
@@ -13,15 +13,22 @@ export default function Home() {
   const [category, setCategory] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadItems = async () => {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const mockItems = getMockItems();
-      setItems(mockItems);
-      setFilteredItems(mockItems);
-      setLoading(false);
+      setError(null);
+      try {
+        const response = await itemsApi.list({ limit: 50 });
+        setItems(response.items);
+        setFilteredItems(response.items);
+      } catch (err) {
+        console.error('Error loading items:', err);
+        setError('Failed to load items. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
     };
     loadItems();
   }, []);
@@ -72,6 +79,16 @@ export default function Home() {
           {[...Array(6)].map((_, i) => (
             <div key={i} className="bg-gray-200 rounded-xl h-80 animate-pulse" />
           ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-12">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            Retry
+          </button>
         </div>
       ) : filteredItems.length === 0 ? (
         <div className="text-center py-12">
