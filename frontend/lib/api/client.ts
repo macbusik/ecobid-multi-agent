@@ -1,5 +1,4 @@
-import { Amplify } from 'aws-amplify';
-import { signIn, signUp, signOut, fetchAuthSession } from 'aws-amplify/auth';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import type {
   Item,
   User,
@@ -16,18 +15,6 @@ import { mockApi } from './mock-client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
-
-// Configure Amplify
-if (!USE_MOCK) {
-  Amplify.configure({
-    Auth: {
-      Cognito: {
-        userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID!,
-        userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID!,
-      },
-    },
-  });
-}
 
 async function getAuthToken(): Promise<string> {
   if (USE_MOCK) return 'mock-token';
@@ -53,27 +40,6 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
 
   return response.json();
 }
-
-// Auth methods
-export const auth = USE_MOCK ? mockApi.auth : {
-  register: async (email: string, password: string, name: string, city: string) => {
-    await signUp({
-      username: email,
-      password,
-      options: {
-        userAttributes: { email, name, 'custom:city': city },
-      },
-    });
-  },
-
-  login: async (email: string, password: string) => {
-    await signIn({ username: email, password });
-  },
-
-  logout: async () => {
-    await signOut();
-  },
-};
 
 // Items methods
 export const items = USE_MOCK ? mockApi.items : {
