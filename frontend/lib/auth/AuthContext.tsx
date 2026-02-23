@@ -46,8 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const currentUser = await getCurrentUser();
       const attributes = await fetchUserAttributes();
       
+      // Use username (which is the sub claim) as userId
       setUser({
-        userId: currentUser.userId,
+        userId: currentUser.username,
         email: attributes.email || '',
         name: attributes.name,
         city: attributes['custom:city'],
