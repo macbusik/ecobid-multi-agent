@@ -24,6 +24,14 @@ async function getAuthToken(): Promise<string> {
 
 async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = await getAuthToken();
+  
+  console.log('🌐 API Request:', {
+    endpoint,
+    method: options.method || 'GET',
+    hasToken: !!token,
+    tokenPreview: token ? `${token.substring(0, 20)}...` : 'none',
+  });
+  
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -33,12 +41,21 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     },
   });
 
+  console.log('📡 API Response:', {
+    endpoint,
+    status: response.status,
+    ok: response.ok,
+  });
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'Request failed' }));
+    console.error('❌ API Error Response:', error);
     throw new Error(error.message || `HTTP ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('✅ API Success:', { endpoint, data });
+  return data;
 }
 
 // Items methods

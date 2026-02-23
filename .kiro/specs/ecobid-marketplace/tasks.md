@@ -1934,3 +1934,73 @@ Add React Error Boundary and improve error handling across the app.
 - **P2 (Medium):** 2 tasks - Loading states + error handling
 
 **Estimated Total Time for Iteration 3:** ~3 hours
+
+
+---
+
+### ITER3-6: Debug Favorites API Calls ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Critical - Debugging)
+**Estimated Time:** 30 minutes
+**Status:** COMPLETED
+
+**Description:**
+Add detailed console logging to debug why favorites API calls are failing.
+
+**Implementation:**
+- Added debug logging to ItemCard handleFavoriteClick
+- Added API request/response logging to client.ts
+- Logs user ID, item ID, action, API URL
+- Logs token presence and preview
+- Logs full error details including stack trace
+- Shows specific error message in toast
+
+**Acceptance Criteria:**
+- [x] Console shows exact API call being made
+- [x] Can see if request succeeds or fails
+- [x] Can see exact error message if fails
+- [x] Deployed to production for testing
+
+**Dependencies:** ITER3-5
+
+---
+
+### ITER3-7: Fix Favorites Based on Debug Results ⏳
+**Agent:** `frontend_engineer` + `backend_engineer`
+**Priority:** P0 (Critical)
+**Estimated Time:** 30 minutes
+**Status:** READY FOR DEBUGGING
+
+**Description:**
+Fix favorites functionality based on debug console output.
+
+**Tasks:**
+1. Test in production and check browser console
+2. Identify exact failure point from logs
+3. Implement appropriate fix
+4. Test end-to-end
+
+**Acceptance Criteria:**
+- [ ] Favorites add works
+- [ ] Favorites remove works
+- [ ] No console errors
+
+**Dependencies:** ITER3-6
+
+---
+
+### ITER3-8: Improve Registration Form UX ⏳
+**Agent:** `ux_ui_expert`
+**Priority:** P2 (Medium)
+**Estimated Time:** 30 minutes
+**Status:** PLANNED
+
+**Description:**
+Additional improvements to registration form.
+
+**Possible Improvements:**
+- Better spacing
+- Show/hide password toggle
+- Improved mobile keyboard handling
+
+**Dependencies:** ITER3-2
