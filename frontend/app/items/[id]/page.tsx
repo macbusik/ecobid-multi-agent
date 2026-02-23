@@ -23,7 +23,7 @@ async function getItem(id: string): Promise<Item | null> {
 
   try {
     const res = await fetch(`${apiUrl}/items/${id}`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 }, // Revalidate every hour
     });
 
     if (!res.ok) {
