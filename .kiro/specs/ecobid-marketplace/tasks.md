@@ -14,6 +14,8 @@
 
 **Current Status:** Iteration 2 complete and deployed to production. Authentication and favorites system fully functional.
 
+**Next Iteration:** Iteration 3 - UX/UI improvements and bug fixes (5 tasks planned)
+
 ---
 
 ## Phase 1: Infrastructure Foundation (AWS CDK)
@@ -1765,19 +1767,187 @@ Update README to document new authentication and favorites features.
 
 ---
 
+## Phase 7: Iteration 3 - UX/UI Improvements & Bug Fixes
+
+### ITER3-1: Fix Favorites API Integration ⏳
+**Agent:** `backend_engineer` + `frontend_engineer`
+**Priority:** P0 (Critical - Feature Broken)
+**Estimated Time:** 1 hour
+**Status:** PLANNED
+
+**Description:**
+Fix broken favorites functionality - add/remove not working in production.
+
+**Root Cause Analysis:**
+- Missing `list` method in favorites API client
+- JWT token may not be sent correctly
+- API Gateway authorization issues
+- User ID extraction from token failing
+- No error feedback to user
+
+**Subtasks:**
+1. Add `list` method to favorites API client
+2. Verify JWT token in Authorization header
+3. Test API calls and check for errors
+4. Add error logging and user feedback
+5. Fix heart icon state persistence
+6. Test add/remove/list flow end-to-end
+
+**Acceptance Criteria:**
+- [ ] Favorites add works without errors
+- [ ] Favorites remove works without errors
+- [ ] Heart icon state persists on reload
+- [ ] Error messages shown if API fails
+- [ ] Favorites page loads user's favorites
+- [ ] Console shows no errors
+
+**Dependencies:** ITER2-12
+
+---
+
+### ITER3-2: Add Dynamic Password Validation ⏳
+**Agent:** `frontend_engineer`
+**Priority:** P1 (High - UX Issue)
+**Estimated Time:** 45 minutes
+**Status:** PLANNED
+
+**Description:**
+Add real-time password validation with visual feedback during registration.
+
+**Current Problem:**
+- Validation only on submit
+- No feedback as user types
+- Users don't know requirements
+- Frustrating registration experience
+
+**Implementation:**
+1. Add real-time validation on password change
+2. Show requirements checklist below field
+3. Visual indicators (✓/✗) for each requirement
+4. Update as user types
+5. Disable submit until all requirements met
+
+**Requirements to Display:**
+- ✓ At least 8 characters
+- ✓ One uppercase letter (A-Z)
+- ✓ One lowercase letter (a-z)
+- ✓ One number (0-9)
+- ✓ One special character (!@#$%^&*)
+
+**Acceptance Criteria:**
+- [ ] Requirements list visible below password field
+- [ ] Each requirement updates in real-time
+- [ ] Green checkmark when requirement met
+- [ ] Red X when requirement not met
+- [ ] Submit button disabled until all met
+- [ ] Smooth, non-intrusive UX
+
+**Dependencies:** None
+
+---
+
+### ITER3-3: Improve Category Filter Mobile UX ⏳
+**Agent:** `ux_ui_expert` + `frontend_engineer`
+**Priority:** P1 (High - Mobile UX Issue)
+**Estimated Time:** 30 minutes
+**Status:** PLANNED
+
+**Description:**
+Improve category filter usability on mobile devices.
+
+**Current Problems:**
+- Horizontal scroll not obvious
+- Active state not clear enough
+- No visual scroll indicators
+- Users don't know it's scrollable
+
+**Implementation:**
+1. Add fade gradient on left/right edges
+2. Improve active state contrast
+3. Add smooth scroll behavior
+4. Increase touch target padding
+5. Add scroll snap points
+
+**Acceptance Criteria:**
+- [ ] Fade gradient visible on edges when scrollable
+- [ ] Active category clearly visible (higher contrast)
+- [ ] Smooth momentum scrolling
+- [ ] All touch targets minimum 48px height
+- [ ] Scrollable area obvious to users
+- [ ] Scroll snaps to categories
+
+**Dependencies:** None
+
+---
+
+### ITER3-4: Add Loading States to Favorites ⏳
+**Agent:** `frontend_engineer`
+**Priority:** P2 (Medium - UX Enhancement)
+**Estimated Time:** 20 minutes
+**Status:** PLANNED
+
+**Description:**
+Add loading indicators and toast notifications for favorites actions.
+
+**Implementation:**
+1. Add spinner to heart icon while loading
+2. Disable heart button during API call
+3. Show toast notification on success/error
+4. Optimistic UI updates (instant feedback)
+
+**Acceptance Criteria:**
+- [ ] Heart icon shows loading spinner
+- [ ] Button disabled during API call
+- [ ] Success toast: "Added to favorites"
+- [ ] Error toast: "Failed to add favorite"
+- [ ] Optimistic update reverts on error
+- [ ] Smooth animations
+
+**Dependencies:** ITER3-1
+
+---
+
+### ITER3-5: Add Error Boundary and Better Error Handling ⏳
+**Agent:** `frontend_engineer`
+**Priority:** P2 (Medium - Stability)
+**Estimated Time:** 30 minutes
+**Status:** PLANNED
+
+**Description:**
+Add React Error Boundary and improve error handling across the app.
+
+**Implementation:**
+1. Create Error Boundary component
+2. Add error logging to console
+3. Show user-friendly error messages
+4. Add retry button for failed API calls
+5. Wrap app in Error Boundary
+
+**Acceptance Criteria:**
+- [ ] App doesn't crash on errors
+- [ ] Errors logged to console for debugging
+- [ ] User sees friendly error message
+- [ ] Retry button for API failures
+- [ ] Error boundary catches all errors
+
+**Dependencies:** None
+
+---
+
 ## Task Summary
 
-**Total Tasks:** 66
+**Total Tasks:** 71
 - **Phase 1 (Infrastructure):** 16 tasks ✅
 - **Phase 2 (Frontend):** 17 tasks ✅
 - **Phase 3 (Testing):** 5 tasks
 - **Phase 4 (Documentation & Deployment):** 4 tasks
 - **Phase 5 (Iteration 1):** 5 tasks ✅
-- **Phase 6 (Iteration 2):** 14 tasks
+- **Phase 6 (Iteration 2):** 14 tasks ✅
+- **Phase 7 (Iteration 3):** 5 tasks ⏳
 
-**Iteration 2 Priority Breakdown:**
-- **P0 (Blocker):** 4 tasks - Auth foundation + UX fixes
-- **P1 (Critical):** 8 tasks - Favorites + visual improvements
-- **P2 (Important):** 2 tasks - Testing + documentation
+**Iteration 3 Priority Breakdown:**
+- **P0 (Critical):** 1 task - Fix favorites
+- **P1 (High):** 2 tasks - Password validation + category filter
+- **P2 (Medium):** 2 tasks - Loading states + error handling
 
-**Estimated Total Time for Iteration 2:** ~18 hours
+**Estimated Total Time for Iteration 3:** ~3 hours
