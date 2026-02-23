@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // output: 'export', // Disabled for development with dynamic routes
+  output: 'export',
   images: {
     unoptimized: true,
   },

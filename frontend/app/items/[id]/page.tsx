@@ -38,6 +38,25 @@ async function getItem(id: string): Promise<Item | null> {
   }
 }
 
+export async function generateStaticParams() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  if (!apiUrl) return [];
+
+  try {
+    const res = await fetch(`${apiUrl}/items?limit=50`);
+    if (!res.ok) return [];
+    
+    const data = await res.json();
+    return data.items.map((item: Item) => ({
+      id: item.itemId,
+    }));
+  } catch (error) {
+    console.error('Error fetching items for static generation:', error);
+    return [];
+  }
+}
+
 export default async function ItemDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const item = await getItem(id);
