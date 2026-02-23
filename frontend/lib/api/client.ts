@@ -126,4 +126,14 @@ export const messages = USE_MOCK ? mockApi.messages : {
 export const users = USE_MOCK ? mockApi.users : {
   getProfile: (userId: string) => apiRequest<User>(`/users/${userId}`),
   getMe: () => apiRequest<User>('/users/me'),
+  getFavorites: (userId: string) => apiRequest<ListItemsResponse>(`/users/${userId}/favorites`),
+};
+
+// Favorites methods
+export const favorites = USE_MOCK ? mockApi.favorites : {
+  add: (userId: string, itemId: string) =>
+    apiRequest<{ message: string }>(`/users/${userId}/favorites/${itemId}`, { method: 'POST' }),
+  
+  remove: (userId: string, itemId: string) =>
+    apiRequest<{ message: string }>(`/users/${userId}/favorites/${itemId}`, { method: 'DELETE' }),
 };

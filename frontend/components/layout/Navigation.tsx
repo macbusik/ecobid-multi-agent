@@ -2,37 +2,64 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path ? 'text-green-600' : 'text-gray-700 hover:text-green-600';
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2" aria-label="EcoBid home">
             <span className="text-2xl">🌱</span>
             <span className="text-xl font-bold text-green-600">EcoBid</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden sm:flex items-center space-x-4">
-            <Link href="/" className="text-gray-700 hover:text-green-600 px-3 py-2">
+            <Link href="/" className={`${isActive('/')} px-3 py-2`} aria-label="Browse items">
               Browse
             </Link>
-            <Link href="/items/new" className="text-gray-700 hover:text-green-600 px-3 py-2">
+            <Link href="/items/new" className={`${isActive('/items/new')} px-3 py-2`} aria-label="Give away an item">
               Give Item
             </Link>
-            <Link href="/profile" className="text-gray-700 hover:text-green-600 px-3 py-2">
-              Profile
-            </Link>
-            <Link 
-              href="/auth/login" 
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-            >
-              Login
-            </Link>
+            {user ? (
+              <>
+                <Link href="/profile" className={`${isActive('/profile')} px-3 py-2`} aria-label="View profile">
+                  Profile
+                </Link>
+                <Link href="/favorites" className={`${isActive('/favorites')} px-3 py-2`} aria-label="View favorites">
+                  Favorites
+                </Link>
+                <button 
+                  onClick={logout}
+                  className="text-gray-700 hover:text-green-600 px-3 py-2"
+                  aria-label="Logout"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" className={`${isActive('/auth/login')} px-3 py-2`} aria-label="Login to account">
+                  Login
+                </Link>
+                <Link 
+                  href="/auth/register" 
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                  aria-label="Register account"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,32 +100,69 @@ export default function Navigation() {
           <div className="px-4 py-2 space-y-1">
             <Link
               href="/"
-              className="block px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700"
+              className={`block px-3 py-2 rounded-lg hover:bg-gray-100 ${isActive('/')}`}
               onClick={() => setIsMenuOpen(false)}
+              aria-label="Browse items"
             >
               Browse
             </Link>
             <Link
               href="/items/new"
-              className="block px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700"
+              className={`block px-3 py-2 rounded-lg hover:bg-gray-100 ${isActive('/items/new')}`}
               onClick={() => setIsMenuOpen(false)}
+              aria-label="Give away an item"
             >
               Give Item
             </Link>
-            <Link
-              href="/profile"
-              className="block px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Profile
-            </Link>
-            <Link
-              href="/auth/login"
-              className="block px-3 py-2 rounded-lg bg-green-600 text-white text-center hover:bg-green-700"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Login
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className={`block px-3 py-2 rounded-lg hover:bg-gray-100 ${isActive('/profile')}`}
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-label="View profile"
+                >
+                  Profile
+                </Link>
+                <Link
+                  href="/favorites"
+                  className={`block px-3 py-2 rounded-lg hover:bg-gray-100 ${isActive('/favorites')}`}
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-label="View favorites"
+                >
+                  Favorites
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="block w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700"
+                  aria-label="Logout"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className={`block px-3 py-2 rounded-lg hover:bg-gray-100 ${isActive('/auth/login')}`}
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-label="Login to account"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="block px-3 py-2 rounded-lg bg-green-600 text-white text-center hover:bg-green-700"
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-label="Register account"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

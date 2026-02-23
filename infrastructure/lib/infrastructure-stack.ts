@@ -68,6 +68,14 @@ export class InfrastructureStack extends cdk.Stack {
       handler: 'handlers/users.handler',
     });
 
+    // Favorites Lambda
+    const favoritesFunction = new lambda.Function(this, 'FavoritesFunction', {
+      ...lambdaProps,
+      functionName: 'EcoBid-Favorites',
+      code: lambda.Code.fromAsset('lib/lambda'),
+      handler: 'handlers/favorites.handler',
+    });
+
     // Lottery Lambda
     const lotteryFunction = new lambda.Function(this, 'LotteryFunction', {
       ...lambdaProps,
@@ -102,6 +110,7 @@ export class InfrastructureStack extends cdk.Stack {
     database.table.grantReadWriteData(itemsFunction);
     database.table.grantReadWriteData(messagesFunction);
     database.table.grantReadWriteData(usersFunction);
+    database.table.grantReadWriteData(favoritesFunction);
     database.table.grantReadWriteData(lotteryFunction);
     database.table.grantReadWriteData(reservationExpiryFunction);
 
@@ -136,7 +145,8 @@ export class InfrastructureStack extends cdk.Stack {
       auth.userPoolClient,
       itemsFunction,
       messagesFunction,
-      usersFunction
+      usersFunction,
+      favoritesFunction
     );
 
     // Frontend hosting

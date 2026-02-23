@@ -93,5 +93,21 @@ export const mockApi = {
       await delay(300);
       return mockUsers[0];
     },
+
+    getFavorites: async () => {
+      await delay(300);
+      return { items: mockItems.slice(0, 3) };
+    },
+  },
+
+  favorites: {
+    add: async (userId: string, itemId: string) => { 
+      await delay(300); 
+      return { message: 'Added to favorites' }; 
+    },
+    remove: async (userId: string, itemId: string) => { 
+      await delay(300); 
+      return { message: 'Removed from favorites' }; 
+    },
   },
 };

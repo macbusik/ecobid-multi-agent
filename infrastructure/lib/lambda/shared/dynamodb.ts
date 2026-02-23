@@ -5,10 +5,12 @@ import {
   GetCommand, 
   QueryCommand, 
   UpdateCommand,
+  DeleteCommand,
   PutCommandInput,
   GetCommandInput,
   QueryCommandInput,
-  UpdateCommandInput
+  UpdateCommandInput,
+  DeleteCommandInput
 } from '@aws-sdk/lib-dynamodb';
 
 const client = new DynamoDBClient({});
@@ -79,4 +81,15 @@ export async function updateItem(
   };
   const result = await docClient.send(new UpdateCommand(params));
   return result.Attributes || {};
+}
+
+/**
+ * Delete an item from DynamoDB table.
+ */
+export async function deleteItem(pk: string, sk: string): Promise<void> {
+  const params: DeleteCommandInput = {
+    TableName: TABLE_NAME,
+    Key: { PK: pk, SK: sk },
+  };
+  await docClient.send(new DeleteCommand(params));
 }

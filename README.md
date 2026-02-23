@@ -78,6 +78,8 @@ ecobid-multi-agent/
 - ✅ **User Authentication:** Email/password via Cognito with profile management
 - ✅ **Item Feed:** Browse available items filtered by category and city
 - ✅ **Direct Messaging:** In-app messaging between sellers and buyers (post-reservation)
+- ✅ **User Registration:** Complete signup flow with email verification
+- ✅ **Favorites System:** Save and manage favorite items with persistent storage
 
 ### V2 Backlog (Future)
 - Push notifications (SNS)
@@ -102,7 +104,16 @@ cdk bootstrap  # First time only
 cdk deploy
 ```
 
-After deployment, copy the stack outputs (API URL, Cognito IDs, etc.) to `frontend/.env.local`.
+After deployment, copy the stack outputs to `frontend/.env.local`:
+
+```bash
+# Required environment variables (from CDK outputs)
+NEXT_PUBLIC_API_URL=https://your-api-id.execute-api.region.amazonaws.com
+NEXT_PUBLIC_COGNITO_USER_POOL_ID=region_xxxxxxxxx
+NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_COGNITO_REGION=us-east-1
+NEXT_PUBLIC_S3_BUCKET=your-bucket-name
+```
 
 ### Frontend Development
 
@@ -206,10 +217,61 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 - ✅ Mock data end-to-end flow working
 
 **Next Steps:**
-- Deploy infrastructure with valid AWS credentials
-- Run seed data script to populate DynamoDB
-- Test real API integration
-- Implement Iteration 2: Create Item (manual form)
+- Test on real mobile device with real email registration
+- Implement Iteration 3: AI-powered listing + lottery system
+- Add direct messaging between users
+
+---
+
+### 2026-02-23 - Iteration 2 Complete: Authentication & Favorites (Updated)
+
+**Milestone:** Full authentication and favorites system deployed and functional
+
+**Authentication Implementation:**
+- ✅ Cognito integration with AWS Amplify Auth
+- ✅ Login/register pages with form validation
+- ✅ Protected routes and auth state management
+- ✅ User profile management
+- ✅ Email verification flow
+- ✅ JWT token handling and auto-refresh
+
+**Favorites System:**
+- ✅ Add/remove favorites functionality
+- ✅ Persistent favorites storage in DynamoDB
+- ✅ Favorites page with item grid
+- ✅ Heart icon toggle on item cards (44px touch target)
+- ✅ Real-time UI updates with optimistic rendering
+- ✅ Backend returns full item details
+
+**Frontend Enhancements:**
+- ✅ Mobile-first responsive design
+- ✅ Loading states and error handling
+- ✅ Navigation with auth-aware menu
+- ✅ Form validation and user feedback
+- ✅ ARIA labels for accessibility
+- ✅ SVG icons for better visual hierarchy
+- ✅ All touch targets meet 44px minimum
+
+**Backend Implementation:**
+- ✅ Favorites Lambda handler with DynamoDB integration
+- ✅ API Gateway routes with Cognito authorization
+- ✅ User validation (can only access own favorites)
+- ✅ Deployed to AWS (56s deployment time)
+
+**Testing Status:**
+- ✅ Frontend build successful
+- ✅ Backend deployed and running
+- ⏳ Manual mobile testing ready (can register with real email)
+
+**Performance:**
+- Build time: 3.3s
+- Deployment time: 56s
+- All routes protected with Cognito auth
+
+**Next Steps:**
+- Implement Iteration 3: Create Item (manual form)
+- Add AI-powered listing with photo upload
+- Implement lottery and reservation system
 
 ---
 

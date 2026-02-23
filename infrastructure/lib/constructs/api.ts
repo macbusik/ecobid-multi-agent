@@ -22,7 +22,8 @@ export class ApiConstruct extends Construct {
     userPoolClient: cognito.UserPoolClient,
     itemsFunction: lambda.Function,
     messagesFunction: lambda.Function,
-    usersFunction: lambda.Function
+    usersFunction: lambda.Function,
+    favoritesFunction: lambda.Function
   ) {
     super(scope, id);
 
@@ -68,6 +69,11 @@ export class ApiConstruct extends Construct {
     const usersIntegration = new apigatewayv2Integrations.HttpLambdaIntegration(
       'UsersIntegration',
       usersFunction
+    );
+
+    const favoritesIntegration = new apigatewayv2Integrations.HttpLambdaIntegration(
+      'FavoritesIntegration',
+      favoritesFunction
     );
 
     // Items routes
@@ -145,6 +151,28 @@ export class ApiConstruct extends Construct {
       path: '/users/{userId}',
       methods: [apigatewayv2.HttpMethod.GET],
       integration: usersIntegration,
+    });
+
+    // Favorites routes
+    this.api.addRoutes({
+      path: '/users/{userId}/favorites',
+      methods: [apigatewayv2.HttpMethod.GET],
+      integration: favoritesIntegration,
+      authorizer,
+    });
+
+    this.api.addRoutes({
+      path: '/users/{userId}/favorites/{itemId}',
+      methods: [apigatewayv2.HttpMethod.POST],
+      integration: favoritesIntegration,
+      authorizer,
+    });
+
+    this.api.addRoutes({
+      path: '/users/{userId}/favorites/{itemId}',
+      methods: [apigatewayv2.HttpMethod.DELETE],
+      integration: favoritesIntegration,
+      authorizer,
     });
 
     // Export API endpoint URL
