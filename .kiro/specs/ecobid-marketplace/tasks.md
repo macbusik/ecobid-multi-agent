@@ -1558,6 +1558,37 @@ Test all Iteration 2 features on real mobile device.
 
 ---
 
+### ITER2-BUGFIX-1: Fix Duplicate Amplify Configuration ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker - Production Issue)
+**Estimated Time:** 15 minutes
+**Status:** COMPLETED
+
+**Description:**
+Remove duplicate Amplify configuration causing "Auth UserPool not configured" error in production.
+
+**Root Cause:**
+- `lib/api/client.ts` was configuring Amplify with wrong env var name (`NEXT_PUBLIC_COGNITO_CLIENT_ID`)
+- `lib/auth/amplify-config.ts` had correct configuration (`NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID`)
+- Duplicate configuration caused conflicts
+
+**Acceptance Criteria:**
+- [x] Remove Amplify.configure() from `lib/api/client.ts`
+- [x] Remove unused auth methods from API client
+- [x] Keep only amplify-config.ts as single source of truth
+- [x] Rebuild and redeploy frontend
+- [x] Verify registration works in production
+
+**Implementation Notes:**
+- Removed lines 22-31 from api/client.ts
+- Removed unused signIn, signUp, signOut imports
+- Build successful (3.1s)
+- Deployed to CloudFront with cache invalidation
+
+**Dependencies:** ITER2-1
+
+---
+
 ### ITER2-13: Write Unit Tests for Favorites
 **Agent:** `backend_engineer`
 **Priority:** P2 (Important)

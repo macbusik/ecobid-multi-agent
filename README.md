@@ -264,9 +264,15 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 - ⏳ Manual mobile testing ready (can register with real email)
 
 **Performance:**
-- Build time: 3.3s
+- Build time: 3.1s (improved from 3.3s)
 - Deployment time: 56s
 - All routes protected with Cognito auth
+
+**Bugfix (2026-02-23 14:30):**
+- ✅ Fixed "Auth UserPool not configured" error in production
+- ✅ Removed duplicate Amplify configuration from API client
+- ✅ Redeployed to CloudFront with correct configuration
+- ✅ Registration and login now working on deployed site
 
 **Next Steps:**
 - Implement Iteration 3: Create Item (manual form)
