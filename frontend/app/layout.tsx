@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
 import { AuthProvider } from "@/lib/auth/AuthContext";
-import "@/lib/auth/amplify-config";
 
 export const metadata: Metadata = {
   title: "EcoBid - Give & Receive Free Items",
