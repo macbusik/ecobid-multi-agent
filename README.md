@@ -26,10 +26,15 @@ ecobid-multi-agent/
 │   ├── specs/ecobid-marketplace/    # SDD specifications
 │   │   ├── requirements.md          # Business requirements
 │   │   ├── design.md                # System design & API contracts
-│   │   ├── tasks.md                 # Granular task breakdown
-│   │   └── cicd-pipeline.md         # CI/CD specifications
+│   │   ├── tasks.md                 # Master task list (all iterations)
+│   │   └── product-roadmap.md       # Product roadmap & iteration plans
 │   └── steering/
 │       ├── personas/                # Agent role definitions
+│       │   ├── aws_architect.md
+│       │   ├── backend_engineer.md
+│       │   ├── business_analyst.md
+│       │   ├── frontend_engineer.md
+│       │   └── ux_ui_expert.md
 │       └── tech.md                  # Technology stack constraints
 ├── infrastructure/                  # AWS CDK project
 │   ├── bin/                         # CDK app entry point
