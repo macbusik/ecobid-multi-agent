@@ -42,9 +42,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadUser = async () => {
+    console.log('🔐 AuthContext: Loading user session...');
     try {
       const currentUser = await getCurrentUser();
       const attributes = await fetchUserAttributes();
+      
+      console.log('✅ AuthContext: User session found', {
+        userId: attributes.sub,
+        email: attributes.email,
+        name: attributes.name,
+      });
       
       // Use 'sub' attribute (Cognito user ID) as userId to match JWT claims
       setUser({
@@ -53,10 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: attributes.name,
         city: attributes['custom:city'],
       });
-    } catch {
+    } catch (error) {
+      console.log('❌ AuthContext: No active session', error);
       setUser(null);
     } finally {
       setIsLoading(false);
+      console.log('🔐 AuthContext: Loading complete');
     }
   };
 

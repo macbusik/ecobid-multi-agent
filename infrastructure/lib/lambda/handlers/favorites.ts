@@ -117,5 +117,5 @@ async function listFavorites(userId: string): Promise<APIGatewayProxyResult> {
   // Filter out any null items (in case item was deleted)
   const validItems = items.filter(item => item !== null);
 
-  return successResponse({ items: validItems, count: validItems.length });
+  return successResponse(validItems);
 }

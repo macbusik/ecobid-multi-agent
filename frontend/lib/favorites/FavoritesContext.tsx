@@ -21,6 +21,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
   // Load favorites when user logs in
   useEffect(() => {
+    console.log('❤️ FavoritesContext: User changed', { hasUser: !!user, userId: user?.userId });
     if (user) {
       loadFavorites();
     } else {
@@ -31,13 +32,15 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const loadFavorites = async () => {
     if (!user) return;
     
+    console.log('❤️ FavoritesContext: Loading favorites for user', user.userId);
     setIsLoading(true);
     try {
       const items = await favorites.list(user.userId);
       const ids = new Set(items.map(item => item.itemId));
+      console.log('✅ FavoritesContext: Loaded favorites', { count: ids.size, ids: Array.from(ids) });
       setFavoriteIds(ids);
     } catch (error) {
-      console.error('Failed to load favorites:', error);
+      console.error('❌ FavoritesContext: Failed to load favorites', error);
     } finally {
       setIsLoading(false);
     }
