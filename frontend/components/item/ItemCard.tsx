@@ -7,19 +7,20 @@ import { useRouter } from 'next/navigation';
 import { Item } from '@/lib/types';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { useToast } from '@/lib/toast/ToastContext';
-import { favorites } from '@/lib/api/client';
+import { useFavorites } from '@/lib/favorites/FavoritesContext';
 
 interface ItemCardProps {
   item: Item;
-  isFavorited?: boolean;
 }
 
-export default function ItemCard({ item, isFavorited = false }: ItemCardProps) {
+export default function ItemCard({ item }: ItemCardProps) {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { isFavorited, addFavorite, removeFavorite } = useFavorites();
   const router = useRouter();
-  const [favorited, setFavorited] = useState(isFavorited);
   const [loading, setLoading] = useState(false);
+
+  const favorited = isFavorited(item.itemId);
 
   const timeLeft = new Date(item.lotteryCloseTime).getTime() - Date.now();
   const hoursLeft = Math.max(0, Math.floor(timeLeft / (1000 * 60 * 60)));
@@ -34,31 +35,16 @@ export default function ItemCard({ item, isFavorited = false }: ItemCardProps) {
       return;
     }
 
-    console.log('🔍 Favorites Debug:');
-    console.log('  User ID:', user.userId);
-    console.log('  Item ID:', item.itemId);
-    console.log('  Action:', favorited ? 'REMOVE' : 'ADD');
-    console.log('  API URL:', process.env.NEXT_PUBLIC_API_URL);
-
     setLoading(true);
-    const originalState = favorited;
-    setFavorited(!favorited);
-
     try {
       if (favorited) {
-        const response = await favorites.remove(user.userId, item.itemId);
-        console.log('✓ Removed from favorites:', item.itemId, response);
+        await removeFavorite(item.itemId);
         showToast('Removed from favorites', 'success');
       } else {
-        const response = await favorites.add(user.userId, item.itemId);
-        console.log('✓ Added to favorites:', item.itemId, response);
+        await addFavorite(item.itemId);
         showToast('Added to favorites', 'success');
       }
     } catch (error: any) {
-      console.error('✗ Favorites API error:', error);
-      console.error('  Error message:', error.message);
-      console.error('  Error stack:', error.stack);
-      setFavorited(originalState);
       showToast(`Failed: ${error.message || 'Unknown error'}`, 'error');
     } finally {
       setLoading(false);

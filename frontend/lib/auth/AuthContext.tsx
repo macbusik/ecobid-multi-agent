@@ -46,9 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const currentUser = await getCurrentUser();
       const attributes = await fetchUserAttributes();
       
-      // Use username (which is the sub claim) as userId
+      // Use 'sub' attribute (Cognito user ID) as userId to match JWT claims
       setUser({
-        userId: currentUser.username,
+        userId: attributes.sub || currentUser.userId,
         email: attributes.email || '',
         name: attributes.name,
         city: attributes['custom:city'],

@@ -3,6 +3,7 @@ import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { ToastProvider } from "@/lib/toast/ToastContext";
+import { FavoritesProvider } from "@/lib/favorites/FavoritesContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
@@ -23,12 +24,14 @@ export default function RootLayout({
       <body className="min-h-screen bg-gray-50 antialiased">
         <ErrorBoundary>
           <AuthProvider>
-            <ToastProvider>
-              <Navigation />
-              <main className="pb-16 sm:pb-0">
-                {children}
-              </main>
-            </ToastProvider>
+            <FavoritesProvider>
+              <ToastProvider>
+                <Navigation />
+                <main className="pb-16 sm:pb-0">
+                  {children}
+                </main>
+              </ToastProvider>
+            </FavoritesProvider>
           </AuthProvider>
         </ErrorBoundary>
       </body>

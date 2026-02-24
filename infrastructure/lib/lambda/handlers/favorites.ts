@@ -8,10 +8,15 @@ import { successResponse, errorResponse } from '../shared/response';
  */
 export async function handler(event: any): Promise<APIGatewayProxyResult> {
   try {
+    console.log('🔍 FULL EVENT:', JSON.stringify(event, null, 2));
+    
     const method = event.requestContext?.http?.method || event.httpMethod;
     const path = event.requestContext?.http?.path || event.path;
     const pathParams = event.pathParameters || {};
-    const userId = event.requestContext.authorizer?.claims?.sub;
+    
+    // HTTP API v2 stores JWT claims in event.requestContext.authorizer.jwt.claims
+    const userId = event.requestContext?.authorizer?.jwt?.claims?.sub || 
+                   event.requestContext?.authorizer?.claims?.sub;
 
     console.log('🔍 Favorites Handler Debug:', {
       method,
@@ -20,6 +25,7 @@ export async function handler(event: any): Promise<APIGatewayProxyResult> {
       pathUserId: pathParams.userId,
       itemId: pathParams.itemId,
       match: pathParams.userId === userId,
+      authorizerStructure: event.requestContext?.authorizer,
     });
 
     if (!userId) {

@@ -101,6 +101,10 @@ export const mockApi = {
   },
 
   favorites: {
+    list: async (userId: string) => { 
+      await delay(300); 
+      return mockItems.slice(0, 3); 
+    },
     add: async (userId: string, itemId: string) => { 
       await delay(300); 
       return { message: 'Added to favorites' }; 

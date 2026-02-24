@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ItemCard from '@/components/item/ItemCard';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { users } from '@/lib/api/client';
+import { useFavorites } from '@/lib/favorites/FavoritesContext';
+import { items as itemsApi } from '@/lib/api/client';
 import { Item } from '@/lib/types';
 
 export default function FavoritesPage() {
@@ -13,6 +14,7 @@ export default function FavoritesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user, isLoading } = useAuth();
+  const { favoriteIds } = useFavorites();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,13 +24,18 @@ export default function FavoritesPage() {
     }
 
     const loadFavorites = async () => {
-      if (!user?.userId) return;
+      if (!user?.userId || favoriteIds.size === 0) {
+        setItems([]);
+        setLoading(false);
+        return;
+      }
       
       setLoading(true);
       setError(null);
       try {
-        const response = await users.getFavorites(user.userId);
-        setItems(response.items);
+        const itemPromises = Array.from(favoriteIds).map(id => itemsApi.getById(id));
+        const loadedItems = await Promise.all(itemPromises);
+        setItems(loadedItems.filter(Boolean));
       } catch (err) {
         console.error('Error loading favorites:', err);
         setError('Failed to load favorites. Please try again later.');
@@ -38,7 +45,7 @@ export default function FavoritesPage() {
     };
 
     loadFavorites();
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, favoriteIds]);
 
   if (!user) {
     return null;

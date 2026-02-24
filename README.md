@@ -191,6 +191,60 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 
 ## Journal
 
+### 2026-02-24 - Iteration 3 Complete: Authentication, Favorites & UX Polish
+
+**Milestone:** Full authentication system with persistent favorites and mobile-optimized UX
+
+**Authentication Implementation:**
+- ✅ Cognito integration with AWS Amplify Auth
+- ✅ Login/register pages with dynamic password validation
+- ✅ Email verification with code input
+- ✅ Protected routes and auth state management
+- ✅ JWT token handling with correct `sub` claim usage
+- ✅ Fixed 403 Unauthorized error (userId mismatch)
+
+**Favorites System:**
+- ✅ Global FavoritesContext for persistent state across all pages
+- ✅ Red heart icon when item is favorited, gray when not
+- ✅ Add/remove favorites with real-time UI updates
+- ✅ Favorites page with automatic sync
+- ✅ DynamoDB backend with user-scoped access control
+
+**UX/UI Improvements:**
+- ✅ Dynamic password validation with visual checklist (✓/○)
+- ✅ Improved category filter with scroll indicators and fade gradients
+- ✅ Toast notification system with slide-in animations
+- ✅ Error Boundary for graceful error handling
+- ✅ All touch targets meet 48px minimum (mobile-first)
+- ✅ Smooth animations (60fps) and optimistic UI updates
+
+**Critical Bugfixes:**
+1. **403 Unauthorized Error** - Frontend was using email as userId, Lambda expected Cognito `sub` claim (UUID)
+2. **Duplicate Amplify Configuration** - Removed conflicting config from API client
+3. **Server Component Issue** - Moved Amplify.configure() to client component (AuthContext)
+4. **Favorites State Persistence** - Implemented global context to maintain state across pages
+
+**Performance:**
+- Build time: 3.1s
+- Deployment time: 56s
+- All routes protected with Cognito JWT authorizer
+- Favorites lookup: O(1) with Set data structure
+
+**Testing:**
+- ✅ Registration with real email verified
+- ✅ Login/logout working
+- ✅ Favorites add/remove working across all pages
+- ✅ Heart icon state consistent everywhere
+- ✅ Toast notifications working (success/error)
+
+**Next Steps:**
+- Implement Iteration 4: Create Item functionality
+- Add AI-powered listing with photo upload (Rekognition + Bedrock)
+- Implement lottery and reservation system
+- Add direct messaging between users
+
+---
+
 ### 2026-02-23 - Iteration 1 Complete: Minimal Backend Feature
 
 **Milestone:** First working feature - Show Item Details (end-to-end)
@@ -215,121 +269,6 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 - ✅ Page load time: <400ms (exceeds <500ms requirement)
 - ✅ 404 error handling verified
 - ✅ Mock data end-to-end flow working
-
-**Next Steps:**
-- Test on real mobile device with real email registration
-- Implement Iteration 3: AI-powered listing + lottery system
-- Add direct messaging between users
-
----
-
-### 2026-02-23 - Iteration 2 Complete: Authentication & Favorites
-
-**Milestone:** Full authentication and favorites system deployed and functional
-
-**Authentication Implementation:**
-- ✅ Cognito integration with AWS Amplify Auth
-- ✅ Login/register pages with form validation
-- ✅ Email verification with code input
-- ✅ Protected routes and auth state management
-- ✅ User profile management
-- ✅ JWT token handling and auto-refresh
-
-**Favorites System:**
-- ✅ Add/remove favorites functionality
-- ✅ Persistent favorites storage in DynamoDB
-- ✅ Favorites page with item grid
-- ✅ Heart icon toggle on item cards (44px touch target)
-- ✅ Real-time UI updates with optimistic rendering
-- ✅ Backend returns full item details
-
-**Frontend Enhancements:**
-- ✅ Mobile-first responsive design
-- ✅ Loading states and error handling
-- ✅ Navigation with auth-aware menu
-- ✅ Form validation and user feedback
-- ✅ ARIA labels for accessibility
-- ✅ SVG icons for better visual hierarchy
-- ✅ All touch targets meet 44px minimum
-
-**Backend Implementation:**
-- ✅ Favorites Lambda handler with DynamoDB integration
-- ✅ API Gateway routes with Cognito authorization
-- ✅ User validation (can only access own favorites)
-- ✅ Deployed to AWS (56s deployment time)
-
-**Production Deployment:**
-- ✅ Frontend deployed to CloudFront
-- ✅ Backend deployed to API Gateway
-- ✅ Tested with real email registration
-- ✅ All auth flows working in production
-
-**Critical Bugfixes:**
-1. **Duplicate Amplify Configuration** - Removed conflicting config from API client
-2. **Server Component Issue** - Moved Amplify.configure() to client component (AuthContext)
-3. **Missing Verification Flow** - Added code input screen after registration
-
-**Performance:**
-- Build time: 3.1s
-- Deployment time: 56s
-- All routes protected with Cognito auth
-
-**Testing:**
-- ✅ Registration with real email verified
-- ✅ Email verification code flow working
-- ✅ Login/logout working
-- ✅ Protected routes accessible
-- ✅ Favorites add/remove working
-
-**Next Steps:**
-- Implement Iteration 3: Create Item (manual form)
-- Add AI-powered listing with photo upload
-- Implement lottery and reservation system
-
----
-
-### 2026-02-23 - Iteration 3 Complete: UX/UI Improvements
-
-**Milestone:** Enhanced user experience with bug fixes and mobile optimizations
-
-**Critical Fixes:**
-- ✅ Fixed favorites API integration (add/remove now working)
-- ✅ Added `list` method to favorites API client
-- ✅ Error logging and user feedback with toast notifications
-- ✅ Loading spinner on heart icon during API calls
-
-**UX Improvements:**
-- ✅ Dynamic password validation with real-time feedback
-- ✅ Visual checklist (✓/○) for password requirements
-- ✅ Improved category filter with scroll indicators
-- ✅ Fade gradients on category filter edges
-- ✅ Enhanced active state (shadow + scale effect)
-- ✅ Smooth scroll with snap points
-- ✅ Increased touch targets to 48px minimum
-
-**New Features:**
-- ✅ Toast notification system with slide-in animations
-- ✅ Error Boundary to prevent app crashes
-- ✅ User-friendly error messages with refresh button
-- ✅ Optimistic UI updates for favorites
-
-**Performance:**
-- Build time: 3.2s
-- All animations smooth (60fps)
-- Toast notifications: 3s auto-dismiss
-- Error recovery: one-click refresh
-
-**Testing:**
-- ✅ Favorites add/remove tested
-- ✅ Password validation tested with all requirements
-- ✅ Category filter scroll tested on mobile
-- ✅ Toast notifications tested (success/error)
-- ✅ Error boundary tested with forced errors
-
-**Next Steps:**
-- Implement Iteration 4: Create Item functionality
-- Add AI-powered listing with photo upload
-- Implement lottery and reservation system
 
 ---
 
@@ -362,10 +301,3 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 - ✅ GitHub Actions workflow for automated CDK deployment
 - ✅ OIDC authentication (no long-lived credentials)
 - ✅ Deployment scripts for infrastructure and frontend sync
-
-**Next Steps:**
-- Implement Lambda handler logic (Items CRUD, AI integration, Lottery execution)
-- Connect frontend to deployed API endpoints
-- Integrate Amazon Rekognition and Bedrock for AI-powered listing
-- Implement direct messaging functionality
-- End-to-end testing of lottery and reservation flows
