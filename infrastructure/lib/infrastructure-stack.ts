@@ -84,6 +84,15 @@ export class InfrastructureStack extends cdk.Stack {
       handler: 'handlers/generatePresignedUrl.handler',
     });
 
+    // Analyze Item Lambda
+    const analyzeItemFunction = new lambda.Function(this, 'AnalyzeItemFunction', {
+      ...lambdaProps,
+      functionName: 'EcoBid-AnalyzeItem',
+      code: lambda.Code.fromAsset('lib/lambda'),
+      handler: 'handlers/analyzeItem.handler',
+      timeout: cdk.Duration.seconds(60), // Longer timeout for AI processing
+    });
+
     // Lottery Lambda
     const lotteryFunction = new lambda.Function(this, 'LotteryFunction', {
       ...lambdaProps,
@@ -125,6 +134,7 @@ export class InfrastructureStack extends cdk.Stack {
     // Grant S3 permissions
     storage.bucket.grantReadWrite(itemsFunction);
     storage.bucket.grantPut(generatePresignedUrlFunction); // Only needs PUT for presigned URLs
+    storage.bucket.grantRead(analyzeItemFunction); // Only needs READ for Nova Lite
 
     // Grant AI service permissions to Items Lambda
     // Amazon Bedrock - for AI vision and text generation (Nova Lite)
@@ -133,7 +143,18 @@ export class InfrastructureStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ['bedrock:InvokeModel'],
         resources: [
-          `arn:aws:bedrock:${region}::foundation-model/us.amazon.nova-lite-v1:0`,
+          `arn:aws:bedrock:${region}::foundation-model/eu.amazon.nova-lite-v1:0`,
+        ],
+      })
+    );
+
+    // Grant AI service permissions to Analyze Lambda
+    analyzeItemFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          `arn:aws:bedrock:${region}::foundation-model/eu.amazon.nova-lite-v1:0`,
         ],
       })
     );
@@ -168,7 +189,8 @@ export class InfrastructureStack extends cdk.Stack {
       messagesFunction,
       usersFunction,
       favoritesFunction,
-      generatePresignedUrlFunction
+      generatePresignedUrlFunction,
+      analyzeItemFunction
     );
 
     // Frontend hosting

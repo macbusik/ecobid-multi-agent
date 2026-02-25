@@ -24,7 +24,8 @@ export class ApiConstruct extends Construct {
     messagesFunction: lambda.Function,
     usersFunction: lambda.Function,
     favoritesFunction: lambda.Function,
-    generatePresignedUrlFunction: lambda.Function
+    generatePresignedUrlFunction: lambda.Function,
+    analyzeItemFunction: lambda.Function
   ) {
     super(scope, id);
 
@@ -82,6 +83,11 @@ export class ApiConstruct extends Construct {
       generatePresignedUrlFunction
     );
 
+    const analyzeItemIntegration = new apigatewayv2Integrations.HttpLambdaIntegration(
+      'AnalyzeItemIntegration',
+      analyzeItemFunction
+    );
+
     // Items routes
     this.api.addRoutes({
       path: '/items',
@@ -135,6 +141,14 @@ export class ApiConstruct extends Construct {
       path: '/items/upload-url',
       methods: [apigatewayv2.HttpMethod.POST],
       integration: generatePresignedUrlIntegration,
+      authorizer,
+    });
+
+    // AI analyze route
+    this.api.addRoutes({
+      path: '/items/analyze',
+      methods: [apigatewayv2.HttpMethod.POST],
+      integration: analyzeItemIntegration,
       authorizer,
     });
 

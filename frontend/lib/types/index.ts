@@ -59,8 +59,13 @@ export interface Message {
 
 // API Request types
 export interface CreateItemRequest {
-  photoBase64: string;
+  title: string;
+  description: string;
+  category: string;
+  city: string;
+  photoUrl: string;
   lotteryWindowHours: number;
+  aiGenerated?: boolean;
 }
 
 export interface UpdateItemRequest {

@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import PhotoUpload from '@/components/item/PhotoUpload';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { photos, items } from '@/lib/api/client';
+import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function NewItemPage() {
   const router = useRouter();
-  const [photo, setPhoto] = useState<{ file: File; preview: string } | null>(null);
+  const { user } = useAuth();
+  const [photo, setPhoto] = useState<{ file: File; preview: string; s3Key?: string } | null>(null);
   const [lotteryHours, setLotteryHours] = useState('6');
   const [aiSuggestions, setAiSuggestions] = useState<any>(null);
   const [formData, setFormData] = useState({
@@ -17,46 +20,69 @@ export default function NewItemPage() {
     category: 'Electronics',
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handlePhotoSelect = (file: File, preview: string) => {
     setPhoto({ file, preview });
+    setAiSuggestions(null); // Reset AI suggestions when new photo selected
   };
 
   const handleGenerateAI = async () => {
     if (!photo) return;
 
     setLoading(true);
+    setError('');
+    
     try {
-      // TODO: Call API
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Step 1: Get presigned URL
+      const { uploadUrl, s3Key } = await photos.getUploadUrl(photo.file.name, photo.file.type);
       
-      // Mock AI response
-      setAiSuggestions({
-        title: 'Vintage Wooden Chair',
-        description: 'Beautiful vintage wooden chair in good condition. Perfect for dining room or office.',
-        category: 'Furniture',
-      });
+      // Step 2: Upload photo to S3
+      await photos.upload(uploadUrl, photo.file);
       
+      // Step 3: Analyze with AI
+      const result = await photos.analyze(s3Key);
+      
+      setAiSuggestions(result);
       setFormData({
-        title: 'Vintage Wooden Chair',
-        description: 'Beautiful vintage wooden chair in good condition. Perfect for dining room or office.',
-        category: 'Furniture',
+        title: result.title,
+        description: result.description,
+        category: result.category,
       });
-    } catch (err) {
-      console.error(err);
+      
+      // Store s3Key for later
+      setPhoto({ ...photo, s3Key });
+    } catch (err: any) {
+      console.error('AI generation error:', err);
+      setError(err.message || 'Failed to generate AI description');
     } finally {
       setLoading(false);
     }
   };
 
   const handlePublish = async () => {
+    if (!photo?.s3Key || !user) return;
+
     setLoading(true);
+    setError('');
+    
     try {
-      // TODO: Call API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const photoUrl = `https://${process.env.NEXT_PUBLIC_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_COGNITO_REGION}.amazonaws.com/${photo.s3Key}`;
+      
+      await items.create({
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        city: user.city || 'Unknown',
+        photoUrl,
+        lotteryWindowHours: parseInt(lotteryHours),
+        aiGenerated: aiSuggestions?.aiGenerated || false,
+      });
+      
       router.push('/');
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('Publish error:', err);
+      setError(err.message || 'Failed to publish item');
     } finally {
       setLoading(false);
     }
@@ -68,6 +94,12 @@ export default function NewItemPage() {
         List a New Item
       </h1>
 
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          {error}
+        </div>
+      )}
+
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -78,7 +110,7 @@ export default function NewItemPage() {
 
         {photo && !aiSuggestions && (
           <Button onClick={handleGenerateAI} fullWidth loading={loading}>
-            Generate AI Description
+            {loading ? 'Analyzing with AI...' : 'Generate AI Description'}
           </Button>
         )}
 
@@ -119,7 +151,6 @@ export default function NewItemPage() {
                 <option>Books</option>
                 <option>Toys</option>
                 <option>Kitchen</option>
-                <option>Sports</option>
                 <option>Other</option>
               </select>
             </div>
@@ -139,7 +170,7 @@ export default function NewItemPage() {
             </div>
 
             <Button onClick={handlePublish} fullWidth loading={loading}>
-              Publish Item
+              {loading ? 'Publishing...' : 'Publish Item'}
             </Button>
           </>
         )}

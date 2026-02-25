@@ -123,3 +123,39 @@ export const favorites = USE_MOCK ? mockApi.favorites : {
   remove: (userId: string, itemId: string) =>
     apiRequest<{ message: string }>(`/users/${userId}/favorites/${itemId}`, { method: 'DELETE' }),
 };
+
+// Photo upload methods
+export const photos = {
+  getUploadUrl: async (fileName: string, fileType: string) => {
+    return apiRequest<{ uploadUrl: string; s3Key: string; expiresIn: number }>('/items/upload-url', {
+      method: 'POST',
+      body: JSON.stringify({ fileName, fileType }),
+    });
+  },
+
+  upload: async (uploadUrl: string, file: File) => {
+    const response = await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload photo');
+    }
+  },
+
+  analyze: async (s3Key: string) => {
+    return apiRequest<{
+      title: string;
+      description: string;
+      category: string;
+      aiGenerated: boolean;
+    }>('/items/analyze', {
+      method: 'POST',
+      body: JSON.stringify({ s3Key }),
+    });
+  },
+};
