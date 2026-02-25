@@ -23,7 +23,8 @@ export class ApiConstruct extends Construct {
     itemsFunction: lambda.Function,
     messagesFunction: lambda.Function,
     usersFunction: lambda.Function,
-    favoritesFunction: lambda.Function
+    favoritesFunction: lambda.Function,
+    generatePresignedUrlFunction: lambda.Function
   ) {
     super(scope, id);
 
@@ -76,6 +77,11 @@ export class ApiConstruct extends Construct {
       favoritesFunction
     );
 
+    const generatePresignedUrlIntegration = new apigatewayv2Integrations.HttpLambdaIntegration(
+      'GeneratePresignedUrlIntegration',
+      generatePresignedUrlFunction
+    );
+
     // Items routes
     this.api.addRoutes({
       path: '/items',
@@ -121,6 +127,14 @@ export class ApiConstruct extends Construct {
       path: '/items/{itemId}/mark-picked-up',
       methods: [apigatewayv2.HttpMethod.POST],
       integration: itemsIntegration,
+      authorizer,
+    });
+
+    // Photo upload route
+    this.api.addRoutes({
+      path: '/items/upload-url',
+      methods: [apigatewayv2.HttpMethod.POST],
+      integration: generatePresignedUrlIntegration,
       authorizer,
     });
 

@@ -38,6 +38,7 @@ export class StorageConstruct extends Construct {
           ],
           allowedOrigins: ['*'], // TODO: Restrict to frontend domain in production
           allowedHeaders: ['*'],
+          exposedHeaders: ['ETag'], // Required for multipart uploads
           maxAge: 3000,
         },
       ],
@@ -46,6 +47,12 @@ export class StorageConstruct extends Construct {
           id: 'DeleteOldObjects',
           enabled: true,
           expiration: cdk.Duration.days(365),
+        },
+        {
+          id: 'DeleteCompletedItemPhotos',
+          enabled: true,
+          prefix: 'items/',
+          expiration: cdk.Duration.days(90), // Delete item photos after 90 days
         },
       ],
       removalPolicy: cdk.RemovalPolicy.RETAIN,

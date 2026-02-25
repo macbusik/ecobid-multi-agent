@@ -76,6 +76,14 @@ export class InfrastructureStack extends cdk.Stack {
       handler: 'handlers/favorites.handler',
     });
 
+    // Generate Presigned URL Lambda
+    const generatePresignedUrlFunction = new lambda.Function(this, 'GeneratePresignedUrlFunction', {
+      ...lambdaProps,
+      functionName: 'EcoBid-GeneratePresignedUrl',
+      code: lambda.Code.fromAsset('lib/lambda'),
+      handler: 'handlers/generatePresignedUrl.handler',
+    });
+
     // Lottery Lambda
     const lotteryFunction = new lambda.Function(this, 'LotteryFunction', {
       ...lambdaProps,
@@ -116,6 +124,19 @@ export class InfrastructureStack extends cdk.Stack {
 
     // Grant S3 permissions
     storage.bucket.grantReadWrite(itemsFunction);
+    storage.bucket.grantPut(generatePresignedUrlFunction); // Only needs PUT for presigned URLs
+
+    // Grant AI service permissions to Items Lambda
+    // Amazon Bedrock - for AI vision and text generation (Nova Lite)
+    itemsFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          `arn:aws:bedrock:${region}::foundation-model/us.amazon.nova-lite-v1:0`,
+        ],
+      })
+    );
 
     // Grant SES permissions (sandbox mode)
     const sesPolicy = new iam.PolicyStatement({
@@ -146,7 +167,8 @@ export class InfrastructureStack extends cdk.Stack {
       itemsFunction,
       messagesFunction,
       usersFunction,
-      favoritesFunction
+      favoritesFunction,
+      generatePresignedUrlFunction
     );
 
     // Frontend hosting
