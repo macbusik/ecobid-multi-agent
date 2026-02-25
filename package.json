@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.998.0",
+    "@aws-sdk/client-s3": "^3.998.0"
+  }
+}

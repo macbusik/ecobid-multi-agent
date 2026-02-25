@@ -5,8 +5,8 @@ const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION 
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 
-// Amazon Nova Lite model ID
-const NOVA_LITE_MODEL_ID = 'us.amazon.nova-lite-v1:0';
+// Amazon Nova Lite model ID (cross-region inference profile for EU)
+const NOVA_LITE_MODEL_ID = 'eu.amazon.nova-lite-v1:0';
 
 interface ItemListing {
   title: string;
@@ -92,7 +92,15 @@ Return ONLY valid JSON, no other text.`,
     }
 
     // Parse JSON response
-    const jsonText = textBlock.text.trim();
+    let jsonText = textBlock.text.trim();
+    
+    // Remove markdown code blocks if present
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/```\n?/g, '').trim();
+    }
+    
     const listing: ItemListing = JSON.parse(jsonText);
 
     // Validate required fields
