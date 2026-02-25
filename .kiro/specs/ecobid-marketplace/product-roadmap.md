@@ -1,8 +1,8 @@
 # EcoBid Product Roadmap
 
-**Last Updated:** 2026-02-23  
+**Last Updated:** 2026-02-24  
 **Product Owner:** User  
-**Current Status:** Iteration 1 Complete ✅
+**Current Status:** Iteration 3 Complete ✅
 
 ---
 
@@ -12,92 +12,119 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 
 ---
 
-## Current State (Iteration 1 Complete)
+## Current State (Iteration 3 Complete)
 
 ### ✅ What's Working
-- Item listing with category filtering
-- Item detail pages with full information
-- Backend API (Lambda + API Gateway + DynamoDB)
-- Frontend (Next.js 15 on CloudFront + S3)
-- Performance: <400ms page load, 145ms API response
-- 100% AWS Free Tier compliant
+- **Authentication:** Login/register with Cognito, email verification, session persistence
+- **Favorites:** Add/remove favorites with persistent storage, red heart indicators
+- **Item Browsing:** Category filtering with scroll indicators, mobile-optimized UX
+- **UX Polish:** Toast notifications, loading states, error boundaries, dynamic password validation
+- **Backend API:** Lambda + API Gateway + DynamoDB with JWT authorization
+- **Frontend:** Next.js 15 on CloudFront + S3
+- **Performance:** <400ms page load, <100ms favorites API, 60fps animations
+- **100% AWS Free Tier compliant**
 
-### ⚠️ Known Issues
-- Category buttons too small (32px vs 44px minimum)
-- Item cards lack clear visual hierarchy
-- Missing ARIA labels for accessibility
-- No user authentication
-- No user-specific features
+### 🎯 Recent Fixes (Iteration 3.2)
+- Fixed 403 Unauthorized error (userId mismatch between frontend email and JWT sub claim)
+- Favorites now load correctly after logout/login
+- Session persistence working automatically via Amplify localStorage
+
+### 📋 Next Priority
+- **Iteration 4:** Create Item functionality (manual form or AI-powered listing)
 
 ---
 
-## Iteration 2: Authentication + Favorites + UX Fixes
+## Iteration 3: Authentication + Favorites + UX Polish ✅
 
 **Timeline:** 1 week  
 **Priority:** P0 (Critical for MVP)  
-**Status:** Planning
+**Status:** Complete
 
-### Goals
-1. Enable user authentication (login/register)
-2. Add favorites feature for logged-in users
-3. Fix critical mobile UX issues
-4. Improve accessibility compliance
+### Completed Features
+- ✅ User authentication (login/register with Cognito)
+- ✅ Email verification with code input
+- ✅ Session persistence (automatic via Amplify localStorage)
+- ✅ Favorites system with DynamoDB backend
+- ✅ Dynamic password validation with visual checklist
+- ✅ Category filter with scroll indicators and fade gradients
+- ✅ Toast notification system with slide-in animations
+- ✅ Error boundary for graceful error handling
+- ✅ All touch targets ≥48px (mobile-first)
+- ✅ Loading states and optimistic UI updates
 
-### User Stories
+### Key Bugfixes
+- ✅ Fixed 403 Unauthorized error (userId mismatch: email vs JWT sub claim)
+- ✅ Fixed favorites loading after logout/login
+- ✅ Fixed duplicate Amplify configuration
+- ✅ Fixed server component issue with Amplify.configure()
 
-**Authentication:**
-- As a new user, I want to register with email/password
-- As a returning user, I want to log in to access my account
-- As a logged-in user, I want to view/edit my profile
+### Performance Achieved
+- Auth flows: <2 seconds ✅
+- Favorites API: <100ms ✅
+- All touch targets: 48px ✅
+- Animations: 60fps ✅
 
-**Favorites:**
-- As a logged-in user, I want to save items to favorites
-- As a logged-in user, I want to view my favorites list
-- As a logged-in user, I want to remove items from favorites
-
-**UX Improvements:**
-- As a mobile user, I want larger touch targets (44px minimum)
-- As a mobile user, I want clear visual hierarchy on item cards
-- As a screen reader user, I want proper ARIA labels
-
-### Success Metrics
-- Auth flows complete in <2 seconds
-- Favorites toggle in <500ms
-- All touch targets ≥44px
-- Lighthouse accessibility score >90
-
-### Out of Scope
-- AI-powered item listing (Iteration 3)
-- Lottery system (Iteration 3)
-- Direct messaging (Iteration 4)
-
-**Detailed tasks:** See `tasks.md` (ITER2-* tasks)
+**Detailed tasks:** See `tasks.md` (ITER3-* tasks marked complete)
 
 ---
 
-## Iteration 3: AI Listing + Lottery System
+## Iteration 4: Create Item Functionality
+
+**Timeline:** 1-2 weeks  
+**Priority:** P0 (Core MVP feature)  
+**Status:** Next Up
+
+### Goals
+1. Manual item creation form (title, description, category, city, photos)
+2. Photo upload to S3 with presigned URLs
+3. Item listing management (edit/delete own items)
+4. Form validation and error handling
+
+### User Stories
+- As a seller, I want to create a new item listing with photos
+- As a seller, I want to edit my item listings
+- As a seller, I want to delete my item listings
+- As a seller, I want to see all my active listings
+
+### Option A: Manual Form (Simpler, faster)
+- Standard form with text inputs
+- Manual photo upload
+- User writes title/description
+- Estimated: 3-4 days
+
+### Option B: AI-Powered Listing (More impressive)
+- Upload photo → AI generates title/description
+- Amazon Rekognition for object detection
+- Amazon Bedrock (Claude Haiku) for text generation
+- Estimated: 5-7 days
+
+**Detailed tasks:** See `tasks.md` (ITER4-* tasks)
+
+---
+
+## Iteration 5: Lottery System + Reservations
 
 **Timeline:** 2 weeks  
 **Priority:** P1 (Core MVP feature)  
 **Status:** Planned
 
 ### Goals
-1. AI-powered item listing with photo upload
-2. Automated lottery system for fair distribution
+1. Automated lottery system for fair distribution
+2. 24-hour reservation window for winners
 3. Email notifications for winners
-4. 24-hour reservation window
+4. Automatic re-listing if reservation expires
 
 ### User Stories
-- As a seller, I want to upload a photo and get AI-generated title/description
 - As a buyer, I want to enter a lottery for items I'm interested in
 - As a winner, I want to receive email notification and confirm pickup
 - As a seller, I want automated winner selection after lottery closes
+- As a seller, I want items automatically re-listed if winner doesn't confirm
 
-**Detailed tasks:** See `tasks.md` (ITER3-* tasks)
+**Detailed tasks:** See `tasks.md` (ITER5-* tasks)
 
 ---
 
-## Iteration 4: Messaging + Notifications
+## Iteration 6: Messaging + Notifications
 
 **Timeline:** 1 week  
 **Priority:** P2 (Important for UX)  
@@ -108,11 +135,11 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 2. Email notifications for new messages
 3. Message history and threading
 
-**Detailed tasks:** See `tasks.md` (ITER4-* tasks)
+**Detailed tasks:** See `tasks.md` (ITER6-* tasks)
 
 ---
 
-## Iteration 5: Polish + Analytics
+## Iteration 7: Polish + Analytics
 
 **Timeline:** 1 week  
 **Priority:** P3 (Nice to have)  
@@ -123,7 +150,7 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 2. User reputation system
 3. Analytics dashboard
 
-**Detailed tasks:** See `tasks.md` (ITER5-* tasks)
+**Detailed tasks:** See `tasks.md` (ITER7-* tasks)
 
 ---
 
@@ -161,20 +188,20 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 
 ## Next Steps
 
-### This Week (Iteration 2)
-1. Review and approve scope
-2. Start with UX fixes (quick wins)
-3. Implement authentication
-4. Build favorites feature
+### This Week (Iteration 4)
+1. Decide: Manual form vs AI-powered listing
+2. Implement item creation form
+3. Add photo upload to S3
+4. Build item management page
 
 ### This Month
-1. Complete Iteration 2
-2. Plan Iteration 3 (AI + lottery)
+1. Complete Iteration 4 (Create Item)
+2. Start Iteration 5 (Lottery System)
 3. Test on real mobile devices
 4. Update documentation
 
 ### This Quarter
-1. Complete MVP (Iterations 2-4)
+1. Complete MVP (Iterations 4-6)
 2. Launch beta testing
 3. Gather user feedback
 4. Prepare competition submission
