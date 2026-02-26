@@ -91,6 +91,10 @@ export class InfrastructureStack extends cdk.Stack {
       code: lambda.Code.fromAsset('lib/lambda'),
       handler: 'handlers/analyzeItem.handler',
       timeout: cdk.Duration.seconds(60), // Longer timeout for AI processing
+      environment: {
+        ...lambdaProps.environment,
+        AWS_ACCOUNT_ID: this.account,
+      },
     });
 
     // Lottery Lambda
@@ -138,13 +142,12 @@ export class InfrastructureStack extends cdk.Stack {
 
     // Grant AI service permissions to Items Lambda
     // Amazon Bedrock - for AI vision and text generation (Nova Lite)
+    // Use wildcard for resources since inference profiles route to different regions
     itemsFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ['bedrock:InvokeModel'],
-        resources: [
-          `arn:aws:bedrock:${region}::foundation-model/eu.amazon.nova-lite-v1:0`,
-        ],
+        resources: ['*'], // Required for cross-region inference profiles
       })
     );
 
@@ -153,9 +156,7 @@ export class InfrastructureStack extends cdk.Stack {
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ['bedrock:InvokeModel'],
-        resources: [
-          `arn:aws:bedrock:${region}::foundation-model/eu.amazon.nova-lite-v1:0`,
-        ],
+        resources: ['*'], // Required for cross-region inference profiles
       })
     );
 

@@ -5,8 +5,9 @@ const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION 
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 
-// Amazon Nova Lite model ID (cross-region inference profile for EU)
-const NOVA_LITE_MODEL_ID = 'eu.amazon.nova-lite-v1:0';
+// Amazon Nova Lite inference profile ARN (required for on-demand throughput)
+// Using full ARN to prevent SDK from resolving to wrong region
+const NOVA_LITE_MODEL_ID = `arn:aws:bedrock:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT_ID}:inference-profile/eu.amazon.nova-lite-v1:0`;
 
 interface ItemListing {
   title: string;
