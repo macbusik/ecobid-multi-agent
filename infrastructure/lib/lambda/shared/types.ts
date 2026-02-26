@@ -49,6 +49,7 @@ export interface Item {
   lotteryCloseTime: string;
   winnerUserId?: string;
   reservationExpiryTime?: string;
+  aiGenerated?: boolean;
   createdAt: string;
   updatedAt: string;
   // GSI1 attributes

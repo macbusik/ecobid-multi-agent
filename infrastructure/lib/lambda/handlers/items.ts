@@ -43,34 +43,24 @@ export async function handler(event: any): Promise<APIGatewayProxyResult> {
 }
 
 /**
- * POST /items - Create new item with photo upload and AI generation
+ * POST /items - Create new item listing
  */
 async function createItem(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const body = JSON.parse(event.body || '{}');
-  const { photoBase64, lotteryWindowHours } = body;
-  const userId = event.requestContext.authorizer?.claims?.sub;
+  const { title, description, category, city, photoUrl, lotteryWindowHours, aiGenerated } = body;
+  const userId = event.requestContext.authorizer?.jwt?.claims?.sub || event.requestContext.authorizer?.claims?.sub;
 
-  if (!photoBase64 || !lotteryWindowHours) {
-    return errorResponse('Missing required fields: photoBase64, lotteryWindowHours', 400);
+  if (!title || !description || !category || !city || !photoUrl || !lotteryWindowHours || !userId) {
+    return errorResponse('Missing required fields: title, description, category, city, photoUrl, lotteryWindowHours', 400);
   }
 
-  // Upload photo to S3
+  // Validate lottery window (3-12 hours)
+  if (lotteryWindowHours < 3 || lotteryWindowHours > 12) {
+    return errorResponse('Lottery window must be between 3 and 12 hours', 400);
+  }
+
+  // Create item
   const itemId = randomUUID();
-  const photoKey = `items/${itemId}/${Date.now()}.jpg`;
-  const photoBuffer = Buffer.from(photoBase64, 'base64');
-  const photoUrl = await uploadImage(photoKey, photoBuffer, 'image/jpeg');
-
-  // TODO: Invoke Rekognition for image analysis
-  // TODO: Invoke Bedrock for AI-generated title and description
-  
-  // For now, return mock AI suggestions
-  const aiSuggestions = {
-    title: 'Item from photo',
-    description: 'AI-generated description will appear here',
-    category: 'Other' as ItemCategory,
-  };
-
-  // Create draft item
   const now = new Date().toISOString();
   const lotteryCloseTime = new Date(Date.now() + lotteryWindowHours * 60 * 60 * 1000).toISOString();
 
@@ -79,25 +69,26 @@ async function createItem(event: APIGatewayProxyEvent): Promise<APIGatewayProxyR
     SK: 'METADATA',
     itemId,
     sellerId: userId,
-    title: aiSuggestions.title,
-    description: aiSuggestions.description,
-    category: aiSuggestions.category,
+    title,
+    description,
+    category: category as ItemCategory,
+    city,
     photoUrl,
-    city: '', // Will be set on publish
-    status: 'Draft',
+    status: 'Available' as ItemStatus,
     lotteryWindowHours,
     lotteryCloseTime,
+    aiGenerated: aiGenerated || false,
     createdAt: now,
     updatedAt: now,
-    GSI1PK: `STATUS#Draft`,
+    GSI1PK: `STATUS#Available`,
     GSI1SK: now,
-    GSI2PK: `CATEGORY#Other#CITY#`,
+    GSI2PK: `CATEGORY#${category}#CITY#${city}`,
     GSI2SK: now,
   };
 
   await putItem(item);
 
-  return successResponse({ itemId, photoUrl, aiSuggestions }, 201);
+  return successResponse({ itemId, item }, 201);
 }
 
 /**
