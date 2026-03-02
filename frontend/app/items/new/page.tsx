@@ -34,14 +34,17 @@ export default function NewItemPage() {
     setError('');
     
     try {
-      // Step 1: Get presigned URL
+      console.log('🔵 Step 1: Getting presigned URL...');
       const { uploadUrl, s3Key } = await photos.getUploadUrl(photo.file.name, photo.file.type);
+      console.log('✅ Presigned URL received:', { s3Key, uploadUrl: uploadUrl.substring(0, 50) + '...' });
       
-      // Step 2: Upload photo to S3
+      console.log('🔵 Step 2: Uploading to S3...');
       await photos.upload(uploadUrl, photo.file);
+      console.log('✅ Photo uploaded successfully');
       
-      // Step 3: Analyze with AI
+      console.log('🔵 Step 3: Analyzing with AI...');
       const result = await photos.analyze(s3Key);
+      console.log('✅ AI analysis complete:', result);
       
       setAiSuggestions(result);
       setFormData({
@@ -50,10 +53,10 @@ export default function NewItemPage() {
         category: result.category,
       });
       
-      // Store s3Key for later
       setPhoto({ ...photo, s3Key });
+      console.log('✅ All steps complete');
     } catch (err: any) {
-      console.error('AI generation error:', err);
+      console.error('❌ AI generation error:', err);
       setError(err.message || 'Failed to generate AI description');
     } finally {
       setLoading(false);
@@ -67,9 +70,10 @@ export default function NewItemPage() {
     setError('');
     
     try {
-      const photoUrl = `https://${process.env.NEXT_PUBLIC_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_COGNITO_REGION}.amazonaws.com/${photo.s3Key}`;
+      console.log('🔵 Step 4: Publishing item...');
+      const photoUrl = `https://ecobid-items-191138354216.s3.eu-central-1.amazonaws.com/${photo.s3Key}`;
       
-      await items.create({
+      const itemData = {
         title: formData.title,
         description: formData.description,
         category: formData.category,
@@ -77,11 +81,15 @@ export default function NewItemPage() {
         photoUrl,
         lotteryWindowHours: parseInt(lotteryHours),
         aiGenerated: aiSuggestions?.aiGenerated || false,
-      });
+      };
+      
+      console.log('📤 Sending item data:', itemData);
+      const response = await items.create(itemData);
+      console.log('✅ Item created:', response);
       
       router.push('/');
     } catch (err: any) {
-      console.error('Publish error:', err);
+      console.error('❌ Publish error:', err);
       setError(err.message || 'Failed to publish item');
     } finally {
       setLoading(false);

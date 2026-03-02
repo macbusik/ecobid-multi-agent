@@ -21,6 +21,11 @@ export default function ItemCard({ item }: ItemCardProps) {
   const [loading, setLoading] = useState(false);
 
   const favorited = isFavorited(item.itemId);
+  
+  // Fix malformed S3 URLs
+  const photoUrl = item.photoUrl.includes('undefined.s3.undefined')
+    ? item.photoUrl.replace('https://undefined.s3.undefined.amazonaws.com/', 'https://ecobid-items-191138354216.s3.eu-central-1.amazonaws.com/')
+    : item.photoUrl;
 
   const timeLeft = new Date(item.lotteryCloseTime).getTime() - Date.now();
   const hoursLeft = Math.max(0, Math.floor(timeLeft / (1000 * 60 * 60)));
@@ -56,7 +61,7 @@ export default function ItemCard({ item }: ItemCardProps) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
         <div className="relative aspect-square">
           <Image
-            src={item.photoUrl}
+            src={photoUrl}
             alt={item.title}
             fill
             className="object-cover"
