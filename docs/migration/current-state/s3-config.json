@@ -1,0 +1,8 @@
+{
+  "BucketName": "ecobid-frontend-191138354216",
+  "Region": "eu-central-1",
+  "Purpose": "Static Next.js export hosting",
+  "PublicAccess": "Blocked (CloudFront OAC only)",
+  "Versioning": "Disabled",
+  "Encryption": "AES256 (default)"
+}

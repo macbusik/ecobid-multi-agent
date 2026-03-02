@@ -1,0 +1,31 @@
+{
+  "DistributionId": "E2YVRTARUE0FFS",
+  "DomainName": "d29wjvb8fy6ptl.cloudfront.net",
+  "ETag": "E23ZP02F085DFQ",
+  "Status": "Deployed",
+  "Origins": {
+    "S3Bucket": "ecobid-frontend-191138354216.s3.eu-central-1.amazonaws.com",
+    "OriginAccessControlId": "ER0FONNU505ZU"
+  },
+  "DefaultRootObject": "index.html",
+  "CacheBehavior": {
+    "ViewerProtocolPolicy": "redirect-to-https",
+    "Compress": true,
+    "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6"
+  },
+  "CustomErrorResponses": [
+    {
+      "ErrorCode": 403,
+      "ResponsePagePath": "/index.html",
+      "ResponseCode": "200"
+    },
+    {
+      "ErrorCode": 404,
+      "ResponsePagePath": "/index.html",
+      "ResponseCode": "200"
+    }
+  ],
+  "PriceClass": "PriceClass_100",
+  "HttpVersion": "http2",
+  "IsIPV6Enabled": true
+}
