@@ -46,16 +46,22 @@ export async function handler(event: any): Promise<APIGatewayProxyResult> {
  * POST /items - Create new item listing
  */
 async function createItem(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+  console.log('🔵 createItem called');
   const body = JSON.parse(event.body || '{}');
+  console.log('📥 Request body:', JSON.stringify(body, null, 2));
+  
   const { title, description, category, city, photoUrl, lotteryWindowHours, aiGenerated } = body;
   const userId = event.requestContext.authorizer?.jwt?.claims?.sub || event.requestContext.authorizer?.claims?.sub;
+  console.log('👤 User ID:', userId);
 
   if (!title || !description || !category || !city || !photoUrl || !lotteryWindowHours || !userId) {
+    console.error('❌ Missing required fields:', { title: !!title, description: !!description, category: !!category, city: !!city, photoUrl: !!photoUrl, lotteryWindowHours: !!lotteryWindowHours, userId: !!userId });
     return errorResponse('Missing required fields: title, description, category, city, photoUrl, lotteryWindowHours', 400);
   }
 
   // Validate lottery window (3-12 hours)
   if (lotteryWindowHours < 3 || lotteryWindowHours > 12) {
+    console.error('❌ Invalid lottery window:', lotteryWindowHours);
     return errorResponse('Lottery window must be between 3 and 12 hours', 400);
   }
 
@@ -86,7 +92,9 @@ async function createItem(event: APIGatewayProxyEvent): Promise<APIGatewayProxyR
     GSI2SK: now,
   };
 
+  console.log('💾 Saving item to DynamoDB:', itemId);
   await putItem(item);
+  console.log('✅ Item saved successfully');
 
   return successResponse({ itemId, item }, 201);
 }

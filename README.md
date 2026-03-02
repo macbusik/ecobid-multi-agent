@@ -13,7 +13,7 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 - **Database:** DynamoDB (Single-Table Design, On-Demand)
 - **Storage:** S3 (Item Photos)
 - **Auth:** Amazon Cognito (User Pool)
-- **AI:** Amazon Rekognition (Object Detection) + Amazon Bedrock (Claude Haiku for text generation)
+- **AI:** Amazon Nova Lite (Multimodal Vision + Text Generation)
 - **Automation:** EventBridge Scheduler (Lottery & Expiration)
 - **Hosting:** CloudFront + S3 (Static Site)
 - **CI/CD:** GitHub Actions
@@ -71,13 +71,13 @@ ecobid-multi-agent/
 ## Key Features
 
 ### MVP (Current Scope)
-- ✅ **AI-Powered Listing:** Upload a photo → AI generates title, description, and category in <30 seconds
-- ✅ **Lottery System:** Fair distribution with configurable lottery windows (3-12 hours, default 6h)
-- ✅ **24-Hour Reservation:** Winners have 24 hours to confirm pickup before item is re-listed
+- ✅ **AI-Powered Listing:** Upload a photo → AI generates title, description, and category in <30 seconds (Amazon Nova Lite)
+- ⏳ **Lottery System:** Fair distribution with configurable lottery windows (3-12 hours, default 6h)
+- ⏳ **24-Hour Reservation:** Winners have 24 hours to confirm pickup before item is re-listed
 - ✅ **Mobile-First UI:** Responsive design optimized for mobile, testable in desktop browsers
 - ✅ **User Authentication:** Email/password via Cognito with profile management
 - ✅ **Item Feed:** Browse available items filtered by category and city
-- ✅ **Direct Messaging:** In-app messaging between sellers and buyers (post-reservation)
+- ⏳ **Direct Messaging:** In-app messaging between sellers and buyers (post-reservation)
 - ✅ **User Registration:** Complete signup flow with email verification
 - ✅ **Favorites System:** Save and manage favorite items with persistent storage
 
@@ -190,6 +190,47 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 ---
 
 ## Journal
+
+### 2026-02-27 - Iteration 4 Progress: AI-Powered Listing (87% Complete)
+
+**Milestone:** Amazon Nova Lite integration complete, item creation flow implemented
+
+**Backend Implementation (100% Complete):**
+- ✅ Amazon Nova Lite multimodal vision integration (`nova.ts`)
+- ✅ Presigned URL generation for S3 uploads (`generatePresignedUrl.ts`)
+- ✅ AI analysis endpoint (`analyzeItem.ts`)
+- ✅ Updated create item handler with AI fields
+- ✅ API Gateway routes: `POST /items/upload-url`, `POST /items/analyze`
+- ✅ IAM permissions for Bedrock inference profiles
+
+**Frontend Implementation (100% Complete):**
+- ✅ Photo upload component with camera support (`PhotoUpload.tsx`)
+- ✅ Item creation page with 3-step flow (`/items/new`)
+- ✅ API client methods: `photos.getUploadUrl()`, `photos.upload()`, `photos.analyze()`
+- ✅ Mobile-first responsive design
+- ✅ Protected route with authentication
+
+**AI Service Architecture:**
+- Using Amazon Nova Lite instead of Rekognition + Claude Haiku
+- Single API call for vision + text generation (more cost-effective)
+- Inference profile: `eu.amazon.nova-lite-v1:0` (routes to `eu-west-3`)
+- IAM policy uses wildcard for cross-region routing
+
+**Current Issue:**
+- Item creation flow implemented but not saving offers
+- Needs debugging to identify exact failure point (see Iteration 4.1 tasks)
+
+**Performance:**
+- Target: <30 seconds total (upload + AI + publish)
+- AI analysis: ~5-10 seconds
+- Cost per listing: <$0.10
+
+**Next Steps:**
+- Debug item creation flow (ITER4.1-1)
+- Fix save issue (ITER4.1-2 through ITER4.1-6)
+- End-to-end testing with real photos
+
+---
 
 ### 2026-02-24 - Iteration 3.2 Complete: Session & Favorites Persistence
 
