@@ -7,7 +7,7 @@ import { StorageConstruct } from './constructs/storage';
 import { AuthConstruct } from './constructs/auth';
 import { ApiConstruct } from './constructs/api';
 import { SchedulerConstruct } from './constructs/scheduler';
-import { FrontendHosting } from './constructs/frontend';
+// import { FrontendHosting } from './constructs/frontend'; // REMOVED: Migrated to Amplify Gen 2
 import { GitHubActionsRole } from './constructs/github-actions-role';
 
 /**
@@ -194,8 +194,10 @@ export class InfrastructureStack extends cdk.Stack {
       analyzeItemFunction
     );
 
-    // Frontend hosting
-    const frontend = new FrontendHosting(this, 'Frontend');
+    // Frontend hosting - REMOVED: Migrated to AWS Amplify Gen 2
+    // const frontend = new FrontendHosting(this, 'Frontend');
+    // Frontend is now deployed via Amplify Console
+    // See: docs/migration/AMPLIFY_CONSOLE_SETUP.md
 
     // GitHub Actions OIDC Role
     const githubRepo = process.env.GITHUB_REPOSITORY || 'YOUR_GITHUB_USERNAME/ecobid-multi-agent';
