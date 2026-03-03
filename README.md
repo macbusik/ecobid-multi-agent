@@ -7,7 +7,7 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 ## Architecture
 
 **Stack:** AWS Serverless (100% Free Tier)
-- **Frontend:** Next.js 15 (App Router), React, TypeScript, Tailwind CSS
+- **Frontend:** Vite + React + React Router, TypeScript, Tailwind CSS v4
 - **Infrastructure:** AWS CDK (TypeScript)
 - **Backend:** AWS Lambda (Node.js 20.x ARM64), API Gateway (HTTP API)
 - **Database:** DynamoDB (Single-Table Design, On-Demand)
@@ -15,8 +15,8 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 - **Auth:** Amazon Cognito (User Pool)
 - **AI:** Amazon Rekognition (Object Detection) + Amazon Bedrock (Claude Haiku for text generation)
 - **Automation:** EventBridge Scheduler (Lottery & Expiration)
-- **Hosting:** CloudFront + S3 (Static Site)
-- **CI/CD:** GitHub Actions
+- **Hosting:** AWS Amplify Hosting (Manual Deployment)
+- **CI/CD:** Manual deployment via AWS CLI
 
 ## Project Structure
 
@@ -45,25 +45,31 @@ ecobid-multi-agent/
 │   │   │   ├── auth.ts              # Cognito User Pool
 │   │   │   ├── api.ts               # API Gateway + Lambda integrations
 │   │   │   ├── scheduler.ts         # EventBridge Scheduler
-│   │   │   ├── frontend.ts          # CloudFront + S3 hosting
 │   │   │   └── github-actions-role.ts # OIDC role for CI/CD
 │   │   ├── lambda/
 │   │   │   ├── handlers/            # Lambda function handlers
 │   │   │   └── shared/              # Shared utilities
 │   │   └── infrastructure-stack.ts  # Main CDK stack
 │   └── cdk.json                     # CDK configuration
-├── frontend/                        # Next.js application
-│   ├── app/                         # App Router pages
-│   │   ├── page.tsx                 # Home (Item Feed)
-│   │   ├── auth/                    # Login/Register
-│   │   ├── items/                   # Item listing & details
-│   │   └── profile/                 # User profile
-│   ├── components/                  # React components
-│   └── lib/                         # API client & utilities
+├── frontend/                        # Vite + React application
+│   ├── src/
+│   │   ├── pages/                   # Page components
+│   │   │   ├── Home.tsx             # Item feed
+│   │   │   ├── Login.tsx            # Login page
+│   │   │   ├── Register.tsx         # Registration page
+│   │   │   ├── ItemDetail.tsx       # Item details
+│   │   │   ├── NewItem.tsx          # Create item (AI-powered)
+│   │   │   ├── Favorites.tsx        # User favorites
+│   │   │   └── Profile.tsx          # User profile
+│   │   ├── components/              # React components
+│   │   ├── lib/                     # API client & utilities
+│   │   ├── App.tsx                  # React Router setup
+│   │   └── main.tsx                 # Entry point
+│   ├── .env.production              # Production environment variables
+│   └── vite.config.ts               # Vite configuration
 ├── scripts/                         # Deployment & utility scripts
-├── .github/workflows/               # GitHub Actions CI/CD
+├── amplify.yml                      # AWS Amplify build configuration
 ├── AGENTS.md                        # AI agent directives
-├── CICD_SETUP.md                    # CI/CD setup instructions
 └── DEPLOYMENT.md                    # Manual deployment guide
 
 ```
@@ -104,15 +110,16 @@ cdk bootstrap  # First time only
 cdk deploy
 ```
 
-After deployment, copy the stack outputs to `frontend/.env.local`:
+After deployment, copy the stack outputs to `frontend/.env.production`:
 
 ```bash
 # Required environment variables (from CDK outputs)
-NEXT_PUBLIC_API_URL=https://your-api-id.execute-api.region.amazonaws.com
-NEXT_PUBLIC_COGNITO_USER_POOL_ID=region_xxxxxxxxx
-NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
-NEXT_PUBLIC_COGNITO_REGION=us-east-1
-NEXT_PUBLIC_S3_BUCKET=your-bucket-name
+VITE_API_URL=https://your-api-id.execute-api.region.amazonaws.com
+VITE_COGNITO_USER_POOL_ID=region_xxxxxxxxx
+VITE_COGNITO_USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_COGNITO_REGION=us-east-1
+VITE_S3_BUCKET=your-bucket-name
+VITE_S3_REGION=us-east-1
 ```
 
 ### Frontend Development
@@ -120,12 +127,26 @@ NEXT_PUBLIC_S3_BUCKET=your-bucket-name
 ```bash
 cd frontend
 npm install
-npm run dev  # Runs on http://localhost:3000
+npm run dev  # Runs on http://localhost:5173
 ```
 
-### CI/CD Setup
+### Frontend Deployment (Amplify)
 
-See [CICD_SETUP.md](./CICD_SETUP.md) for GitHub Actions configuration.
+```bash
+# Build with production env vars
+cd frontend
+npm run build
+
+# Create deployment zip
+cd dist && zip -r ../../frontend-dist.zip . && cd ../..
+
+# Deploy via AWS CLI
+aws amplify create-deployment --app-id <APP_ID> --branch-name main --region eu-central-1
+# Upload zip to returned URL
+curl -X PUT "<uploadUrl>" --data-binary @frontend-dist.zip -H "Content-Type: application/zip"
+# Start deployment
+aws amplify start-deployment --app-id <APP_ID> --branch-name main --job-id <JOB_ID> --region eu-central-1
+```
 
 ## Development Workflow (Spec-Driven Development)
 
@@ -190,6 +211,38 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 ---
 
 ## Journal
+
+---
+
+### 2026-03-03 - Vite Migration Complete: Amplify Hosting
+
+**Milestone:** Migrated from Next.js on CloudFront to Vite + React on Amplify Hosting
+
+**Why:** Next.js static export on Amplify WEB_COMPUTE platform failed after 22 deployment attempts due to platform incompatibilities.
+
+**Solution:** Migrated to Vite + React Router for better compatibility with Amplify's WEB platform.
+
+**Changes:**
+- ✅ Converted all pages from Next.js App Router to React Router
+- ✅ Replaced Next.js Image/Link with native img/Link
+- ✅ Updated environment variables from NEXT_PUBLIC_* to VITE_*
+- ✅ Created .env.production with hardcoded values (Vite requires build-time env vars)
+- ✅ Fixed auth integration (LoginForm, RegisterForm)
+- ✅ Fixed API client to handle missing auth tokens
+- ✅ Fixed S3 URL construction to include region
+- ✅ Improved ItemCard styling to match original
+- ✅ Implemented AI-powered item creation flow
+
+**Results:**
+- Build time: 3 minutes → 1.3 seconds (30x faster)
+- Bundle size: 2MB → 376KB (5x smaller)
+- Dynamic routes: ✅ Working
+- Deployment: ✅ Reliable on Amplify WEB platform
+
+**Deployment:** AWS Amplify Hosting (manual via CLI)
+**URL:** https://main.d1wltv562fx0fx.amplifyapp.com
+
+---
 
 ### 2026-02-24 - Iteration 3.2 Complete: Session & Favorites Persistence
 

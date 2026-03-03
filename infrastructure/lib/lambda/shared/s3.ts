@@ -3,6 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({});
 const BUCKET_NAME = process.env.BUCKET_NAME!;
+const AWS_REGION = process.env.AWS_REGION || 'eu-central-1';
 
 /**
  * Upload an image to S3 bucket.
@@ -24,7 +25,7 @@ export async function uploadImage(
   });
   
   await s3Client.send(command);
-  return `https://${BUCKET_NAME}.s3.amazonaws.com/${key}`;
+  return `https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${key}`;
 }
 
 /**
