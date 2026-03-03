@@ -1,14 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 
-const navigate = useNavigate();
-
 export default function LoginForm() {
-  const router = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +17,6 @@ export default function LoginForm() {
 
     try {
       // TODO: Integrate with Cognito
-      // For now, mock successful login
       await new Promise(resolve => setTimeout(resolve, 1000));
       navigate('/');
     } catch (err) {
@@ -40,26 +35,31 @@ export default function LoginForm() {
       )}
       
       <Input
-        label="Email"
         type="email"
+        label="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        placeholder="you@example.com"
       />
       
       <Input
-        label="Password"
         type="password"
+        label="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
-        placeholder="••••••••"
       />
       
-      <Button type="submit" fullWidth loading={loading}>
-        Login
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? 'Logging in...' : 'Login'}
       </Button>
+      
+      <p className="text-center text-sm text-gray-600">
+        Don't have an account?{' '}
+        <a href="/auth/register" className="text-green-600 hover:underline">
+          Register
+        </a>
+      </p>
     </form>
   );
 }

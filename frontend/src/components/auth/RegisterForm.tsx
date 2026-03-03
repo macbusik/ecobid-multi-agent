@@ -1,40 +1,28 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 
-const navigate = useNavigate();
-
 export default function RegisterForm() {
-  const router = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    city: '',
-  });
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // Client-side validation
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
-      return;
-    }
-
     setLoading(true);
+
     try {
       // TODO: Integrate with Cognito
       await new Promise(resolve => setTimeout(resolve, 1000));
-      navigate('/');
+      navigate('/auth/login');
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      setError('Registration failed');
     } finally {
       setLoading(false);
     }
@@ -49,44 +37,47 @@ export default function RegisterForm() {
       )}
       
       <Input
-        label="Email"
         type="email"
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        label="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
-        placeholder="you@example.com"
       />
       
       <Input
-        label="Password"
         type="password"
-        value={formData.password}
-        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+        label="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         required
-        placeholder="Min 8 characters"
       />
       
       <Input
+        type="text"
         label="Name"
-        type="text"
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
         required
-        placeholder="Your name"
       />
       
       <Input
-        label="City"
         type="text"
-        value={formData.city}
-        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+        label="City"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
         required
-        placeholder="Your city"
       />
       
-      <Button type="submit" fullWidth loading={loading}>
-        Register
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? 'Registering...' : 'Register'}
       </Button>
+      
+      <p className="text-center text-sm text-gray-600">
+        Already have an account?{' '}
+        <a href="/auth/login" className="text-green-600 hover:underline">
+          Login
+        </a>
+      </p>
     </form>
   );
 }
