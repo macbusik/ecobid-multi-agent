@@ -15,8 +15,14 @@ Your tendency to generate summary, log, or reflection Markdown files is strictly
 
 ## 3. SDD Workflow Enforcement
 * **Respect the Plan Phase:** Never write application code until `requirements.md`, `design.md`, and `tasks.md` are fully generated, reviewed, and approved by the user.
+* **CRITICAL RULE:** Before implementing ANY feature or fix, you MUST:
+  1. Create a task in `tasks.md` with acceptance criteria
+  2. Get user approval
+  3. ONLY THEN implement the code
+  4. Mark task as complete after verification
 * **Single Task Focus:** When executing a task from `tasks.md`, implement ONLY the code required for that specific task. Do not preemptively implement future tasks.
 * **Verify Before Completing:** Before marking a task as done, verify that the code compiles/runs and meets the acceptance criteria defined in the spec.
+* **NO AD-HOC CODING:** If the user requests a feature that is not in `tasks.md`, you MUST stop and create the task specification FIRST, then wait for approval before coding.
 
 ## 4. Code Constraints
 * **SINGLE SOURCE OF TRUTH:** You MUST NOT guess, assume, or invent the technology stack. Your absolute source of truth for all technologies, libraries, and architectural patterns is `.kiro/steering/tech.md`.

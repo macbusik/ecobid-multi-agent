@@ -101,6 +101,17 @@ ecobid-multi-agent/
 - AWS CDK CLI: `npm install -g aws-cdk`
 - Docker (for local Lambda testing)
 
+### Setup
+
+```bash
+# 1. Install SDD pre-commit hook (enforces workflow)
+./scripts/setup-hooks.sh
+
+# 2. Install dependencies
+cd infrastructure && npm install
+cd ../frontend && npm install
+```
+
 ### Infrastructure Deployment
 
 ```bash
@@ -156,12 +167,16 @@ This project follows **Spec-Driven Development (SDD)** with specialized AI agent
 2. **Build Phase:** Specialized agents (Frontend Engineer, AWS Architect) implement tasks
 3. **Verify Phase:** Each task is verified against acceptance criteria before marking complete
 
+**CRITICAL RULE:** All code changes MUST have corresponding tasks in `tasks.md` BEFORE implementation.
+
+**Enforcement:** Pre-commit hook blocks commits that violate SDD workflow.
+
 **Agent Roles:**
 - **Business Analyst:** Requirements gathering, MVP scoping, task breakdown
 - **AWS Architect:** CDK infrastructure, Free Tier compliance, IAM policies
-- **Frontend Engineer:** Next.js UI, mobile-first design, API integration
+- **Frontend Engineer:** Vite + React UI, mobile-first design, API integration
 
-See [AGENTS.md](./AGENTS.md) for detailed agent directives.
+See [AGENTS.md](./AGENTS.md) for detailed agent directives and [scripts/hooks/README.md](./scripts/hooks/README.md) for hook documentation.
 
 ### Git Workflow
 
