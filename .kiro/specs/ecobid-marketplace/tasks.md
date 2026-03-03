@@ -2034,11 +2034,214 @@ Additional improvements to registration form.
 
 ---
 
-### ITER4-1: Add AI Service Permissions to Lambda IAM Role ⏳
+### ITER4-1: Add AI Service Permissions to Lambda IAM Role ✅
 **Agent:** `aws_architect`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 30 minutes
-**Status:** PLANNED
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Added Bedrock permissions for Nova Lite model
+- Used inference profile ARN for on-demand throughput
+- Scoped to minimum required permissions
+
+---
+
+### ITER4-2: Configure S3 Bucket for Item Photos ✅
+**Agent:** `aws_architect`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 45 minutes
+**Status:** COMPLETE
+
+**Completion Notes:**
+- CORS configured for photo uploads
+- Bucket structure: `items/{userId}/{timestamp}-{uuid}.jpg`
+- Lambda permissions granted for presigned URLs and object access
+
+---
+
+### ITER4-3: Implement S3 Presigned URL Lambda Handler ✅
+**Agent:** `backend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1 hour
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Handler: `generatePresignedUrl.ts`
+- Validates file type (JPEG/PNG) and size (5MB max)
+- Returns presigned URL with 5-minute expiry
+- File: `infrastructure/lib/lambda/handlers/generatePresignedUrl.ts`
+
+---
+
+### ITER4-4: Implement Rekognition Integration ✅
+**Agent:** `backend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1.5 hours
+**Status:** COMPLETE (Modified)
+
+**Completion Notes:**
+- **Changed approach:** Using Amazon Nova Lite instead of Rekognition + Bedrock
+- Nova Lite provides multimodal vision (image analysis + text generation in one call)
+- More cost-effective and simpler than two-service approach
+
+---
+
+### ITER4-5: Implement Bedrock Integration ✅
+**Agent:** `backend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 2 hours
+**Status:** COMPLETE (Modified)
+
+**Completion Notes:**
+- **Changed approach:** Using Amazon Nova Lite multimodal model
+- Single API call replaces Rekognition + Claude Haiku
+- File: `infrastructure/lib/lambda/shared/nova.ts`
+
+---
+
+### ITER4-6: Implement AI Analysis Lambda Handler ✅
+**Agent:** `backend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1.5 hours
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Handler: `analyzeItem.ts`
+- Uses Nova Lite for image analysis
+- Returns title, description, category
+- File: `infrastructure/lib/lambda/handlers/analyzeItem.ts`
+
+---
+
+### ITER4-7: Update Create Item Lambda Handler ✅
+**Agent:** `backend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1 hour
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Added fields: photoUrl, aiGenerated, lotteryEndTime
+- Calculates lottery end time from window hours
+- Validates all required fields
+- File: `infrastructure/lib/lambda/handlers/items.ts`
+
+---
+
+### ITER4-8: Add API Gateway Routes for AI Endpoints ✅
+**Agent:** `aws_architect`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 30 minutes
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Added: `POST /items/upload-url`
+- Added: `POST /items/analyze`
+- Both routes require Cognito JWT authorization
+- CORS configured
+
+---
+
+### ITER4-9: Create Item Creation Page Structure ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1 hour
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Page: `frontend/src/pages/NewItem.tsx`
+- 3-step flow: Upload → AI Processing → Review & Edit
+- Mobile-first responsive layout
+- Protected route (requires authentication)
+
+---
+
+### ITER4-10: Implement Photo Upload Component ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 2 hours
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Component: `PhotoUpload.tsx`
+- Supports file picker and camera (mobile)
+- Validates file type and size
+- Shows preview with replace option
+- File: `frontend/src/components/item/PhotoUpload.tsx`
+
+---
+
+### ITER4-11: Implement AI Processing Component ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1 hour
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Integrated into NewItem page
+- Shows loading state during AI analysis
+- Handles errors with user-friendly messages
+
+---
+
+### ITER4-12: Implement Item Form Component ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 2 hours
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Integrated into NewItem page
+- Pre-fills with AI-generated data
+- All fields editable (title, description, category, lottery window)
+- Real-time validation
+- Mobile-optimized inputs
+
+---
+
+### ITER4-13: Integrate API Client for Item Creation ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 1.5 hours
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Added: `photos.getUploadUrl()`
+- Added: `photos.upload()`
+- Added: `photos.analyze()`
+- Updated: `items.create()`
+- File: `frontend/src/lib/api/client.ts`
+
+---
+
+### ITER4-14: Implement End-to-End Flow ✅
+**Agent:** `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 2 hours
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Complete flow: PhotoUpload → AI Analysis → Form → Publish
+- Success: redirects to home page
+- Error handling with retry option
+- Loading states for all async operations
+- Tested on mobile and desktop
+
+---
+
+### ITER4-15: End-to-End Testing & Production Deployment ✅
+**Agent:** `backend_engineer` + `frontend_engineer`
+**Priority:** P0 (Blocker)
+**Estimated Time:** 3 hours
+**Status:** COMPLETE
+
+**Completion Notes:**
+- Backend deployed via CDK
+- Frontend deployed to AWS Amplify
+- Tested with multiple item types
+- AI accuracy verified
+- Performance: <30 seconds total time
+- Production URL: https://main.d1wltv562fx0fx.amplifyapp.com
 
 **Description:**
 Add IAM permissions for Rekognition and Bedrock to Lambda execution role.
