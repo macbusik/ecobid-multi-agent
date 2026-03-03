@@ -57,6 +57,11 @@ export const mockApi = {
       return { items: filtered.slice(0, params.limit || 20) };
     },
 
+    delete: async (itemId: string) => { 
+      await delay(300); 
+      return { message: 'Item deleted' }; 
+    },
+
     enterLottery: async () => { await delay(300); return { message: 'Entered lottery' }; },
     confirmPickup: async () => { await delay(300); return { message: 'Pickup confirmed' }; },
     markPickedUp: async () => { await delay(300); return { message: 'Marked as picked up' }; },

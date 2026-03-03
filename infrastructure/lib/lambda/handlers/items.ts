@@ -27,6 +27,8 @@ export async function handler(event: any): Promise<APIGatewayProxyResult> {
       return await getItemById(event, pathParams.itemId);
     } else if (method === 'GET' && path === '/items') {
       return await listItems(event);
+    } else if (method === 'DELETE' && pathParams.itemId) {
+      return await deleteItemById(event, pathParams.itemId);
     } else if (method === 'POST' && path.includes('/lottery')) {
       return await enterLottery(event, pathParams.itemId!);
     } else if (method === 'POST' && path.includes('/confirm-pickup')) {
@@ -307,4 +309,30 @@ async function markPickedUp(event: APIGatewayProxyEvent, itemId: string): Promis
   );
 
   return successResponse({ message: 'Item marked as picked up' });
+}
+
+/**
+ * DELETE /items/{itemId} - Delete item (seller only, Available status only)
+ */
+async function deleteItemById(event: APIGatewayProxyEvent, itemId: string): Promise<APIGatewayProxyResult> {
+  const userId = event.requestContext.authorizer?.jwt?.claims?.sub || event.requestContext.authorizer?.claims?.sub;
+
+  const item = await getItem(`ITEM#${itemId}`, 'METADATA');
+  if (!item) {
+    return errorResponse('Item not found', 404);
+  }
+
+  if (item.sellerId !== userId) {
+    return errorResponse('Unauthorized: You can only delete your own items', 403);
+  }
+
+  if (item.status !== 'Available') {
+    return errorResponse('Cannot delete item: Only available items can be deleted', 400);
+  }
+
+  // Delete item from DynamoDB
+  const { deleteItem: deleteItemFromDB } = await import('../shared/dynamodb.js');
+  await deleteItemFromDB(`ITEM#${itemId}`, 'METADATA');
+
+  return successResponse({ message: 'Item deleted successfully' });
 }

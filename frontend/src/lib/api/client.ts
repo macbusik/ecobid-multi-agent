@@ -94,6 +94,9 @@ export const items = USE_MOCK ? mockApi.items : {
     return apiRequest<ListItemsResponse>(`/items?${query}`);
   },
 
+  delete: (itemId: string) =>
+    apiRequest<{ message: string }>(`/items/${itemId}`, { method: 'DELETE' }),
+
   enterLottery: (itemId: string) =>
     apiRequest<{ message: string }>(`/items/${itemId}/lottery`, { method: 'POST' }),
 

@@ -116,6 +116,13 @@ export class ApiConstruct extends Construct {
     });
 
     this.api.addRoutes({
+      path: '/items/{itemId}',
+      methods: [apigatewayv2.HttpMethod.DELETE],
+      integration: itemsIntegration,
+      authorizer,
+    });
+
+    this.api.addRoutes({
       path: '/items/{itemId}/lottery',
       methods: [apigatewayv2.HttpMethod.POST],
       integration: itemsIntegration,
