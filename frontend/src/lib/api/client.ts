@@ -16,10 +16,14 @@ import { mockApi } from './mock-client';
 const API_URL = import.meta.env.VITE_API_URL!;
 const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
-async function getAuthToken(): Promise<string> {
+async function getAuthToken(): Promise<string | null> {
   if (USE_MOCK) return 'mock-token';
-  const session = await fetchAuthSession();
-  return session.tokens?.idToken?.toString() || '';
+  try {
+    const session = await fetchAuthSession();
+    return session.tokens?.idToken?.toString() || null;
+  } catch {
+    return null;
+  }
 }
 
 async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -31,14 +35,20 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     hasToken: !!token,
     tokenPreview: token ? `${token.substring(0, 20)}...` : 'none',
   });
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...options.headers as Record<string, string>,
+  };
+
+  // Only add Authorization header if we have a token
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    },
+    headers,
   });
 
   console.log('📡 API Response:', {
