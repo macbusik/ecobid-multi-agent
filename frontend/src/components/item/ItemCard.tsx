@@ -1,13 +1,11 @@
-'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Item } from '../lib/types';
-import { useAuth } from '../lib/auth/AuthContext';
-import { useToast } from '../lib/toast/ToastContext';
-import { useFavorites } from '../lib/favorites/FavoritesContext';
+import { useNavigate } from 'react-router-dom';
+import { Item } from '../../lib/types';
+import { useAuth } from '../../lib/auth/AuthContext';
+import { useToast } from '../../lib/toast/ToastContext';
+import { useFavorites } from '../../lib/favorites/FavoritesContext';
 
 interface ItemCardProps {
   item: Item;
@@ -16,11 +14,11 @@ interface ItemCardProps {
 export default function ItemCard({ item }: ItemCardProps) {
   const { user } = useAuth();
   const { showToast } = useToast();
-  const { isFavorited, addFavorite, removeFavorite } = useFavorites();
-  const router = useRouter();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const favorited = isFavorited(item.itemId);
+  const favorited = isFavorite(item.itemId);
 
   const timeLeft = new Date(item.lotteryCloseTime).getTime() - Date.now();
   const hoursLeft = Math.max(0, Math.floor(timeLeft / (1000 * 60 * 60)));
@@ -31,17 +29,17 @@ export default function ItemCard({ item }: ItemCardProps) {
     e.stopPropagation();
 
     if (!user) {
-      router.push('/auth/login');
+      navigate('/auth/login');
       return;
     }
 
     setLoading(true);
     try {
       if (favorited) {
-        await removeFavorite(item.itemId);
+        await toggleFavorite(item.itemId);
         showToast('Removed from favorites', 'success');
       } else {
-        await addFavorite(item.itemId);
+        await toggleFavorite(item.itemId);
         showToast('Added to favorites', 'success');
       }
     } catch (error: any) {

@@ -1,4 +1,3 @@
-'use client';
 
 interface CategoryFilterProps {
   selected: string;

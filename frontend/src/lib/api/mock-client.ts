@@ -8,7 +8,7 @@ import type {
   Item,
   User,
   Message,
-} from '../lib/types';
+} from '../types';
 import { mockItems, mockUsers, mockMessages } from './mock-data';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

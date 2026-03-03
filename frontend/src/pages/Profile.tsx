@@ -1,4 +1,4 @@
-import { useAuth } from '../lib/hooks/useAuth';
+import { useAuth } from '../lib/auth/AuthContext';
 import Button from '../components/ui/Button';
 
 export default function Profile() {
@@ -17,11 +17,11 @@ export default function Profile() {
           <p className="text-lg">{user.email}</p>
         </div>
         <div>
-          <label className="text-sm text-gray-600">Name</label>
-          <p className="text-lg">{user.name || 'Not set'}</p>
+          <label className="text-sm text-gray-600">User ID</label>
+          <p className="text-lg font-mono text-sm">{user.userId}</p>
         </div>
         <div className="pt-4">
-          <Button onClick={signOut} variant="secondary" className="w-full">
+          <Button onClick={signOut} className="w-full">
             Sign Out
           </Button>
         </div>

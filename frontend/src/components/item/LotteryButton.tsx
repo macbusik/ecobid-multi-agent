@@ -1,7 +1,6 @@
-'use client';
 
-import Button from '../components/ui/Button';
-import { ItemStatus } from '../lib/types';
+import Button from '../ui/Button';
+import { ItemStatus } from '../../lib/types';
 
 interface LotteryButtonProps {
   status: ItemStatus;

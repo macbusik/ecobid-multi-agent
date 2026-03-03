@@ -1,12 +1,14 @@
-'use client';
+import { useNavigate } from 'react-router-dom';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
+import Input from '../ui/Input';
+import Button from '../ui/Button';
+
+const navigate = useNavigate();
 
 export default function LoginForm() {
-  const router = useRouter();
+  const router = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +23,7 @@ export default function LoginForm() {
       // TODO: Integrate with Cognito
       // For now, mock successful login
       await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/');
+      navigate('/');
     } catch (err) {
       setError('Invalid email or password');
     } finally {

@@ -10,11 +10,11 @@ import type {
   ListItemsResponse,
   SendMessageRequest,
   ListMessagesResponse,
-} from '../lib/types';
+} from '../types';
 import { mockApi } from './mock-client';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL!;
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
+const API_URL = import.meta.env.VITE_API_URL!;
+const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 async function getAuthToken(): Promise<string> {
   if (USE_MOCK) return 'mock-token';

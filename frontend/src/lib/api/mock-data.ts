@@ -1,4 +1,4 @@
-import type { Item, User, Message, ItemCategory, ItemStatus } from '../lib/types';
+import type { Item, User, Message, ItemCategory, ItemStatus } from '../types';
 
 const categories: ItemCategory[] = ['Electronics', 'Furniture', 'Clothing', 'Books', 'Toys', 'Sports', 'Other'];
 const cities = ['Warsaw', 'Krakow', 'Gdansk', 'Wroclaw', 'Poznan'];

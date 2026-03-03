@@ -6,9 +6,15 @@ import Input from '../components/ui/Input';
 
 export default function NewItem() {
   const navigate = useNavigate();
-  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
+  const handlePhotoSelect = (file: File, preview: string) => {
+    setPhotoFile(file);
+    setPhotoPreview(preview);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +26,10 @@ export default function NewItem() {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">List New Item</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <PhotoUpload onPhotoUploaded={setPhotoUrl} />
+        <PhotoUpload onPhotoSelect={handlePhotoSelect} />
+        {photoPreview && (
+          <img src={photoPreview} alt="Preview" className="w-full h-64 object-cover rounded-lg" />
+        )}
         <Input
           label="Title"
           value={title}

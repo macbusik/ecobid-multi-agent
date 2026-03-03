@@ -1,15 +1,16 @@
-'use client';
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from '../lib/auth/AuthContext';
-import { favorites } from '../lib/api/client';
+import { useAuth } from '../auth/AuthContext';
+import { favorites } from '../api/client';
+import { Item } from '../types';
 
 interface FavoritesContextType {
   favoriteIds: Set<string>;
-  isLoading: boolean;
+  favorites: Item[];
+  loading: boolean;
   addFavorite: (itemId: string) => Promise<void>;
   removeFavorite: (itemId: string) => Promise<void>;
-  isFavorited: (itemId: string) => boolean;
+  isFavorite: (itemId: string) => boolean;
+  toggleFavorite: (itemId: string) => Promise<void>;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
@@ -17,32 +18,32 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
-  const [isLoading, setIsLoading] = useState(false);
+  const [favoriteItems, setFavoriteItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // Load favorites when user logs in
   useEffect(() => {
-    console.log('❤️ FavoritesContext: User changed', { hasUser: !!user, userId: user?.userId });
     if (user) {
       loadFavorites();
     } else {
       setFavoriteIds(new Set());
+      setFavoriteItems([]);
     }
   }, [user]);
 
   const loadFavorites = async () => {
     if (!user) return;
     
-    console.log('❤️ FavoritesContext: Loading favorites for user', user.userId);
-    setIsLoading(true);
+    setLoading(true);
     try {
       const items = await favorites.list(user.userId);
-      const ids = new Set(items.map(item => item.itemId));
-      console.log('✅ FavoritesContext: Loaded favorites', { count: ids.size, ids: Array.from(ids) });
+      const ids = new Set(items.map((item: Item) => item.itemId));
       setFavoriteIds(ids);
+      setFavoriteItems(items);
     } catch (error) {
-      console.error('❌ FavoritesContext: Failed to load favorites', error);
+      console.error('Failed to load favorites', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -64,10 +65,26 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const isFavorited = (itemId: string) => favoriteIds.has(itemId);
+  const isFavorite = (itemId: string) => favoriteIds.has(itemId);
+  
+  const toggleFavorite = async (itemId: string) => {
+    if (isFavorite(itemId)) {
+      await removeFavorite(itemId);
+    } else {
+      await addFavorite(itemId);
+    }
+  };
 
   return (
-    <FavoritesContext.Provider value={{ favoriteIds, isLoading, addFavorite, removeFavorite, isFavorited }}>
+    <FavoritesContext.Provider value={{ 
+      favoriteIds, 
+      favorites: favoriteItems,
+      loading, 
+      addFavorite, 
+      removeFavorite, 
+      isFavorite,
+      toggleFavorite
+    }}>
       {children}
     </FavoritesContext.Provider>
   );

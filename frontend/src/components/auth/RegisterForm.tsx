@@ -1,12 +1,14 @@
-'use client';
+import { useNavigate } from 'react-router-dom';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
+import Input from '../ui/Input';
+import Button from '../ui/Button';
+
+const navigate = useNavigate();
 
 export default function RegisterForm() {
-  const router = useRouter();
+  const router = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -30,7 +32,7 @@ export default function RegisterForm() {
     try {
       // TODO: Integrate with Cognito
       await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/');
+      navigate('/');
     } catch (err) {
       setError('Registration failed. Please try again.');
     } finally {

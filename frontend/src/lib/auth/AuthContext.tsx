@@ -1,4 +1,3 @@
-'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Amplify } from 'aws-amplify';
@@ -8,15 +7,15 @@ import { signIn, signUp, signOut, getCurrentUser, fetchUserAttributes, confirmSi
 Amplify.configure({
   Auth: {
     Cognito: {
-      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID || '',
-      userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID || '',
+      userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID || '',
+      userPoolClientId: import.meta.env.VITE_COGNITO_USER_POOL_CLIENT_ID || '',
       signUpVerificationMethod: 'code' as const,
       loginWith: {
         email: true,
       },
     },
   },
-}, { ssr: true });
+});
 
 interface User {
   userId: string;
@@ -32,6 +31,7 @@ interface AuthContextType {
   register: (email: string, password: string, name: string, city: string) => Promise<void>;
   confirmRegistration: (email: string, code: string) => Promise<void>;
   logout: () => Promise<void>;
+  signOut: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -106,7 +106,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, confirmRegistration, logout, refreshUser }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isLoading, 
+      login, 
+      register, 
+      confirmRegistration, 
+      logout, 
+      signOut: logout,
+      refreshUser 
+    }}>
       {children}
     </AuthContext.Provider>
   );

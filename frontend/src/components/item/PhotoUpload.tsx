@@ -1,10 +1,10 @@
-'use client';
 
 import { useState, useRef } from 'react';
-import Button from '../components/ui/Button';
+import Button from '../ui/Button';
 
 interface PhotoUploadProps {
   onPhotoSelect: (file: File, preview: string) => void;
+  onPhotoUploaded?: (url: string) => void;
 }
 
 export default function PhotoUpload({ onPhotoSelect }: PhotoUploadProps) {

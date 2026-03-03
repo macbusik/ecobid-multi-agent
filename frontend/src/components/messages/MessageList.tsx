@@ -1,6 +1,5 @@
-'use client';
 
-import { Message } from '../lib/types';
+import { Message } from '../../lib/types';
 
 interface MessageListProps {
   messages: Message[];
