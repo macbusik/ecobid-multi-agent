@@ -16,6 +16,7 @@
     "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@aws-amplify/adapter-nextjs": "^1.7.2",
     "@aws-amplify/backend": "^1.21.0",
     "@aws-amplify/backend-cli": "^1.8.2",
     "@tailwindcss/postcss": "^4",

@@ -3,12 +3,12 @@ frontend:
   phases:
     preBuild:
       commands:
-        - bash scripts/amplify-build.sh
+        - cd frontend && npm ci --cache .npm --prefer-offline
     build:
       commands:
-        - echo "Build completed in preBuild phase"
+        - cd frontend && npm run build
   artifacts:
-    baseDirectory: frontend
+    baseDirectory: frontend/.next
     files:
       - '**/*'
   cache:
