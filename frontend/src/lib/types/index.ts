@@ -13,6 +13,7 @@ export interface User {
 // Item status types
 export type ItemStatus = 
   | 'Draft' 
+  | 'Available'
   | 'Active' 
   | 'Lottery_Closed' 
   | 'Reserved' 

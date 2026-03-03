@@ -94,7 +94,7 @@ export default function Profile() {
                   <p className="text-sm text-gray-600">{item.category} • {item.city}</p>
                   <p className="text-sm">
                     <span className={`inline-block px-2 py-1 rounded text-xs ${
-                      item.status === 'Active' ? 'bg-green-100 text-green-800' :
+                      item.status === 'Available' ? 'bg-green-100 text-green-800' :
                       item.status === 'Lottery_Closed' ? 'bg-yellow-100 text-yellow-800' :
                       item.status === 'Reserved' ? 'bg-blue-100 text-blue-800' :
                       'bg-gray-100 text-gray-800'
@@ -107,15 +107,20 @@ export default function Profile() {
                   <Link to={`/items/${item.itemId}`}>
                     <Button variant="secondary">View</Button>
                   </Link>
-                  {item.status === 'Active' && (
-                    <Button 
-                      variant="secondary" 
-                      onClick={() => handleDelete(item.itemId)}
-                      disabled={deleting === item.itemId}
-                      className="text-red-600 hover:bg-red-50"
-                    >
-                      {deleting === item.itemId ? 'Deleting...' : 'Delete'}
-                    </Button>
+                  {item.status === 'Available' && (
+                    <>
+                      <Link to={`/items/${item.itemId}/edit`}>
+                        <Button variant="secondary">Edit</Button>
+                      </Link>
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => handleDelete(item.itemId)}
+                        disabled={deleting === item.itemId}
+                        className="text-red-600 hover:bg-red-50"
+                      >
+                        {deleting === item.itemId ? 'Deleting...' : 'Delete'}
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>

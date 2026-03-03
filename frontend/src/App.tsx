@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ItemDetail from './pages/ItemDetail'
 import NewItem from './pages/NewItem'
+import EditItem from './pages/EditItem'
 import Favorites from './pages/Favorites'
 import Profile from './pages/Profile'
 
@@ -23,6 +24,7 @@ function App() {
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/register" element={<Register />} />
               <Route path="/items/:id" element={<ItemDetail />} />
+              <Route path="/items/:id/edit" element={<EditItem />} />
               <Route path="/items/new" element={<NewItem />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/profile" element={<Profile />} />

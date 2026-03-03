@@ -111,6 +111,11 @@ async function updateItemDetails(event: APIGatewayProxyEvent, itemId: string): P
     return errorResponse('Unauthorized', 403);
   }
 
+  // Only allow editing Available items
+  if (existingItem.status !== 'Available') {
+    return errorResponse('Cannot edit item: Only available items can be edited', 400);
+  }
+
   // Update item and publish
   const now = new Date().toISOString();
   const updatedItem = await updateItem(
