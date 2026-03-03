@@ -308,6 +308,156 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 
 ---
 
+### 2026-03-03 - Amplify Deployment Fix & Manual Workflow
+
+**Issue:** Amplify auto-build was enabled but no GitHub repo connected, causing manual deployments to hang in PENDING state.
+
+**Root Cause:**
+- After merging `feature/vite-migration` to `main`, Amplify branch config still had auto-build enabled
+- Manual deployments via `create-deployment` API conflicted with auto-build
+- Jobs #9 and #10 stuck in PENDING indefinitely
+
+**Solution:**
+1. Cancelled stuck jobs (#9, #10)
+2. Disabled auto-build: `aws amplify update-branch --no-enable-auto-build`
+3. Established manual deployment workflow
+
+**Manual Deployment Process:**
+```bash
+cd frontend && npm run build
+cd dist && zip -r ../../frontend-dist.zip .
+aws amplify create-deployment --app-id d1wltv562fx0fx --branch-name main
+curl -X PUT "<uploadUrl>" --data-binary @frontend-dist.zip
+aws amplify start-deployment --app-id d1wltv562fx0fx --branch-name main --job-id <JOB_ID>
+```
+
+**Configuration:**
+- App: ecobid-vite (d1wltv562fx0fx)
+- Branch: main (PRODUCTION)
+- Platform: WEB (manual deployment)
+- Auto-build: DISABLED ✅
+
+**Outcome:** Stable manual deployments, Job #11+ succeeding consistently
+
+---
+
+### 2026-03-03 - ITER4.1 Complete: Full CRUD for Items
+
+**Milestone:** Completed item management with Create, Read, Update, Delete operations
+
+**Features Delivered:**
+- ✅ **My Items Section** - Profile page shows all user's listings
+- ✅ **Edit Item Page** - Update title, description, category, city
+- ✅ **Delete Item** - Confirmation dialog, only for Available items
+- ✅ **Owner Actions** - Edit/Delete buttons on item detail page
+- ✅ **Status Consistency** - Fixed 'Available' vs 'Active' mismatch
+
+**Implementation:**
+- Backend: `DELETE /items/{itemId}` endpoint with authorization
+- Backend: Status validation (only Available items can be edited/deleted)
+- Frontend: EditItem page with pre-filled form
+- Frontend: Owner detection on item detail page
+- Frontend: Enhanced favorites button with hover animation
+
+**UX Improvements:**
+- Owner sees Edit/Delete buttons (gray box) on their items
+- Buyer sees Enter Lottery button on others' items
+- Status badge visible on detail page
+- Favorites work from detail page
+
+**Status:** ✅ COMPLETE (7 tasks)
+
+**Note:** ⚠️ These tasks were implemented ad-hoc without prior task creation, violating SDD workflow. This was the last time.
+
+---
+
+### 2026-03-03 - SDD Enforcement: Pre-Commit Hook & Strict Rules
+
+**Milestone:** Implemented automated enforcement of Spec-Driven Development workflow
+
+**Problem Identified:**
+- ITER4.1 features (My Items, Edit, Delete) were implemented without creating tasks first
+- Violated our own SDD methodology
+- No automated checks to prevent ad-hoc coding
+
+**Solution Implemented:**
+
+**1. Updated AGENTS.md with CRITICAL RULE:**
+```
+Before implementing ANY feature or fix, you MUST:
+1. Create a task in tasks.md with acceptance criteria
+2. Get user approval
+3. ONLY THEN implement the code
+4. Mark task as complete after verification
+
+NO AD-HOC CODING: If the user requests a feature that is not 
+in tasks.md, you MUST stop and create the task specification 
+FIRST, then wait for approval before coding.
+```
+
+**2. Pre-Commit Hook:**
+- Blocks commits with code changes but no `tasks.md` update
+- Checks: `.ts`, `.tsx`, `.js`, `.jsx` files
+- Excludes: test, spec, config, type definition files
+- Bypass: `[skip-sdd]` flag for emergencies only
+- Clear error messages with fix instructions
+
+**3. Setup Infrastructure:**
+- `scripts/hooks/pre-commit` - Hook source (version controlled)
+- `scripts/setup-hooks.sh` - One-command installer
+- `scripts/hooks/README.md` - Full documentation
+- Updated README.md with setup instructions
+
+**Testing:**
+- ✅ Code-only change → BLOCKED
+- ✅ Code + tasks.md → ALLOWED
+- ✅ Docs-only change → ALLOWED
+- ✅ Bypass flag → ALLOWED
+
+**Enforcement:**
+```bash
+# ✅ CORRECT
+git add .kiro/specs/ecobid-marketplace/tasks.md
+git add frontend/src/pages/NewFeature.tsx
+git commit -m "feat: Add feature (ITER5-1)"
+
+# ❌ BLOCKED
+git add frontend/src/pages/NewFeature.tsx
+git commit -m "feat: Add feature"
+# Error: SDD VIOLATION DETECTED
+```
+
+**Philosophy:**
+> "If it's not in tasks.md, it doesn't exist."
+
+**Impact:**
+- No more ad-hoc coding
+- All work tracked and documented
+- Forces planning before implementation
+- Creates audit trail of decisions
+- Maintains project discipline
+
+**Post-Factum Documentation:**
+- ITER4.1 tasks documented retroactively (7 tasks)
+- Marked as SDD violation in tasks.md
+- Lesson learned section added
+
+**Going Forward:**
+- ALL code changes require task creation first
+- Hook runs automatically on every commit
+- Emergency bypass available but discouraged
+- This is now the standard workflow
+
+**Files:**
+- `AGENTS.md` - Updated with strict SDD rule
+- `scripts/hooks/pre-commit` - Enforcement hook
+- `scripts/hooks/README.md` - Full documentation
+- `.kiro/specs/ecobid-marketplace/tasks.md` - ITER4.1 post-factum tasks
+
+**Status:** ✅ ENFORCED - No more violations possible
+
+---
+
 ### 2026-02-24 - Iteration 3.2 Complete: Session & Favorites Persistence
 
 **Milestone:** Fixed favorites loading and verified session persistence
