@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../lib/auth/AuthContext';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,11 +18,10 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      // TODO: Integrate with Cognito
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await login(email, password);
       navigate('/');
-    } catch (err) {
-      setError('Invalid email or password');
+    } catch (err: any) {
+      setError(err.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }
