@@ -290,6 +290,12 @@ MIT License - Built for AWS 10,000 AIdeas Competition
 - Total flow: <30 seconds
 - Cost per listing: ~$0.02
 
+**Critical Bugfix (Nova Lite IAM):**
+- Issue: 500 errors on AI analysis due to cross-region inference profile routing
+- Root cause: Inference profile `eu.amazon.nova-lite-v1:0` routes to model in different region
+- Solution: Use full ARN with account ID + wildcard IAM policy for `bedrock:InvokeModel`
+- Result: ✅ Working with ~2-3 second latency
+
 **Testing:**
 - Tested with 10+ different item types
 - AI accuracy: >85% for common household items

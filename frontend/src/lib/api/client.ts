@@ -171,4 +171,55 @@ export const photos = {
       body: JSON.stringify({ s3Key }),
     });
   },
+
+  // Lottery methods
+  enterLottery: async (itemId: string) => {
+    return apiRequest<{ success: boolean }>(`/items/${itemId}/lottery`, {
+      method: 'POST',
+    });
+  },
+
+  listLotteryEntries: async () => {
+    return apiRequest<{ itemIds: string[] }>('/lottery/entries', {
+      method: 'GET',
+    });
+  },
+
+  getWonItems: async () => {
+    return apiRequest<Item[]>('/lottery/won', {
+      method: 'GET',
+    });
+  },
+
+  confirmPickup: async (itemId: string) => {
+    return apiRequest<{ success: boolean }>(`/items/${itemId}/confirm-pickup`, {
+      method: 'POST',
+    });
+  },
+
+  markPickedUp: async (itemId: string) => {
+    return apiRequest<{ success: boolean }>(`/items/${itemId}/mark-picked-up`, {
+      method: 'POST',
+    });
+  },
+};
+
+// Unified API client export
+export const apiClient = {
+  ...items,
+  getWonItems: async () => {
+    return apiRequest<Item[]>('/lottery/won', {
+      method: 'GET',
+    });
+  },
+  confirmPickup: async (itemId: string) => {
+    return apiRequest<{ success: boolean }>(`/items/${itemId}/confirm-pickup`, {
+      method: 'POST',
+    });
+  },
+  markPickedUp: async (itemId: string) => {
+    return apiRequest<{ success: boolean }>(`/items/${itemId}/mark-picked-up`, {
+      method: 'POST',
+    });
+  },
 };

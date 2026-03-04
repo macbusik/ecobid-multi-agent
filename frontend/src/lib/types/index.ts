@@ -41,8 +41,10 @@ export interface Item {
   status: ItemStatus;
   city: string;
   lotteryWindowHours: number;
-  lotteryEndTime: string; // Changed from lotteryCloseTime
+  lotteryEndTime: string;
+  winnerId?: string;
   winnerUserId?: string;
+  reservationExpiry?: string;
   reservationExpiryTime?: string;
   createdAt: string;
   updatedAt: string;

@@ -68,59 +68,181 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 
 ---
 
-## Iteration 4: Create Item Functionality
+## Iteration 4: AI-Powered Item Creation ✅
 
-**Timeline:** 1-2 weeks  
+**Timeline:** 1 week  
 **Priority:** P0 (Core MVP feature)  
-**Status:** Next Up
+**Status:** Complete
 
-### Goals
-1. Manual item creation form (title, description, category, city, photos)
-2. Photo upload to S3 with presigned URLs
-3. Item listing management (edit/delete own items)
-4. Form validation and error handling
+### Completed Features
+- ✅ Photo upload with preview (5MB max, JPEG/PNG)
+- ✅ AI analysis using Amazon Nova Lite multimodal vision
+- ✅ Auto-generated title, description, and category
+- ✅ User can edit AI suggestions before publishing
+- ✅ Lottery window selection (3-24 hours)
+- ✅ Complete end-to-end flow in <30 seconds
+- ✅ My Items section (view all listings)
+- ✅ Edit item functionality
+- ✅ Delete item functionality
 
-### User Stories
-- As a seller, I want to create a new item listing with photos
-- As a seller, I want to edit my item listings
-- As a seller, I want to delete my item listings
-- As a seller, I want to see all my active listings
+### Performance Achieved
+- Photo upload: <5 seconds ✅
+- AI analysis: <10 seconds ✅
+- Total listing time: <30 seconds ✅
+- Cost per listing: ~$0.02 ✅
 
-### Option A: Manual Form (Simpler, faster)
-- Standard form with text inputs
-- Manual photo upload
-- User writes title/description
-- Estimated: 3-4 days
-
-### Option B: AI-Powered Listing (More impressive)
-- Upload photo → AI generates title/description
-- Amazon Rekognition for object detection
-- Amazon Bedrock (Claude Haiku) for text generation
-- Estimated: 5-7 days
-
-**Detailed tasks:** See `tasks.md` (ITER4-* tasks)
+**Detailed tasks:** See `tasks.md` (ITER4-* tasks marked complete)
 
 ---
 
 ## Iteration 5: Lottery System + Reservations
 
-**Timeline:** 2 weeks  
-**Priority:** P1 (Core MVP feature)  
-**Status:** Planned
+**Timeline:** 1 week  
+**Priority:** P0 (Core MVP feature - CRITICAL)  
+**Status:** Next Up (Backend Complete, Frontend Needed)
 
 ### Goals
-1. Automated lottery system for fair distribution
-2. 24-hour reservation window for winners
-3. Email notifications for winners
-4. Automatic re-listing if reservation expires
+Complete the core marketplace flow by implementing lottery and reservation UI. This is the **most critical remaining MVP feature** - without it, items cannot be claimed.
+
+### Current State
+**Backend:** ✅ 100% Complete
+- ✅ `POST /items/{itemId}/lottery` - Enter lottery endpoint
+- ✅ `POST /items/{itemId}/confirm-pickup` - Confirm pickup endpoint
+- ✅ `POST /items/{itemId}/mark-picked-up` - Mark as picked up endpoint
+- ✅ EventBridge Scheduler for automated lottery execution
+- ✅ Reservation expiry handler (24-hour window)
+- ✅ Email notifications (SES integration)
+
+**Frontend:** ❌ Not Implemented
+- ❌ "Enter Lottery" button on item detail page
+- ❌ "You're in lottery" state indicator
+- ❌ Countdown timer (lottery closes in X hours)
+- ❌ Winner notification UI
+- ❌ "Confirm Pickup" button for winners
+- ❌ Reservation countdown (24 hours remaining)
+- ❌ "Mark as Picked Up" button for sellers
 
 ### User Stories
-- As a buyer, I want to enter a lottery for items I'm interested in
-- As a winner, I want to receive email notification and confirm pickup
-- As a seller, I want automated winner selection after lottery closes
-- As a seller, I want items automatically re-listed if winner doesn't confirm
 
-**Detailed tasks:** See `tasks.md` (ITER5-* tasks)
+#### US-5.1: Enter Lottery (Buyer)
+**As a buyer**, I want to enter a lottery for an item I'm interested in, so that I have a fair chance to claim it.
+
+**Acceptance Criteria:**
+- [ ] Item detail page shows "Enter Lottery" button when status is "Available"
+- [ ] Button shows countdown timer: "Lottery closes in 3h 45m"
+- [ ] Clicking button calls `POST /items/{itemId}/lottery`
+- [ ] After entering, button changes to "You're in lottery ✓" (disabled, green)
+- [ ] Toast notification: "You're in the lottery! Winner announced in X hours"
+- [ ] If lottery closed, show "Lottery Closed" badge
+
+#### US-5.2: Lottery Countdown Timer
+**As a buyer**, I want to see how much time is left to enter the lottery, so I can decide if I want to participate.
+
+**Acceptance Criteria:**
+- [ ] Item cards in feed show countdown: "3h 45m left"
+- [ ] Item detail page shows countdown: "Lottery closes in 3 hours 45 minutes"
+- [ ] Timer updates every minute
+- [ ] When <1 hour left, show in red: "45m left"
+- [ ] When lottery closes, timer shows "Closed"
+
+#### US-5.3: Winner Notification (Buyer)
+**As a winner**, I want to be notified immediately and see my reserved item, so I can confirm pickup.
+
+**Acceptance Criteria:**
+- [ ] Winner sees banner on home page: "🎉 You won [Item Title]! Confirm pickup within 24 hours"
+- [ ] Banner links to item detail page
+- [ ] Item detail page shows "Reserved for You" badge
+- [ ] Item detail page shows "Confirm Pickup" button (green, prominent)
+- [ ] Item detail page shows countdown: "Reservation expires in 23h 15m"
+- [ ] Email notification sent (backend already implemented)
+
+#### US-5.4: Confirm Pickup (Winner)
+**As a winner**, I want to confirm that I will pick up the item, so the seller knows I'm coming.
+
+**Acceptance Criteria:**
+- [ ] "Confirm Pickup" button calls `POST /items/{itemId}/confirm-pickup`
+- [ ] After confirmation, button changes to "Pickup Confirmed ✓" (disabled)
+- [ ] Status badge changes to "Pickup Confirmed"
+- [ ] Toast notification: "Pickup confirmed! Contact seller to arrange details"
+- [ ] Seller receives email notification (backend already implemented)
+
+#### US-5.5: Mark as Picked Up (Seller)
+**As a seller**, I want to mark an item as picked up after the winner collects it, so the transaction is complete.
+
+**Acceptance Criteria:**
+- [ ] Seller sees "Mark as Picked Up" button on item detail page when status is "Pickup_Confirmed"
+- [ ] Button calls `POST /items/{itemId}/mark-picked-up`
+- [ ] After marking, status changes to "Picked_Up"
+- [ ] Item removed from "My Items" active list
+- [ ] Toast notification: "Item marked as picked up. Thanks for using EcoBid!"
+
+#### US-5.6: Reservation Expiry (Automatic)
+**As a seller**, if the winner doesn't confirm pickup within 24 hours, I want the item automatically re-listed, so I don't lose the opportunity to give it away.
+
+**Acceptance Criteria:**
+- [ ] Backend automatically re-lists item if reservation expires (already implemented)
+- [ ] Item status changes back to "Available"
+- [ ] New lottery window starts (default 6 hours)
+- [ ] Previous lottery entries are cleared
+- [ ] Seller receives email notification (backend already implemented)
+
+### Technical Implementation
+
+#### Frontend Components to Create
+```
+frontend/src/components/lottery/
+├── LotteryButton.tsx        # Enter lottery button with state management
+├── LotteryCountdown.tsx     # Countdown timer component
+├── WinnerBanner.tsx         # Winner notification banner
+├── ReservationCard.tsx      # Reservation status card
+└── PickupActions.tsx        # Confirm/Mark picked up buttons
+```
+
+#### API Client Methods to Add
+```typescript
+// frontend/src/lib/api/client.ts
+export const items = {
+  // ... existing methods
+  enterLottery: async (itemId: string) => {
+    return apiRequest(`/items/${itemId}/lottery`, { method: 'POST' });
+  },
+  confirmPickup: async (itemId: string) => {
+    return apiRequest(`/items/${itemId}/confirm-pickup`, { method: 'POST' });
+  },
+  markPickedUp: async (itemId: string) => {
+    return apiRequest(`/items/${itemId}/mark-picked-up`, { method: 'POST' });
+  },
+};
+```
+
+#### State Management
+- Use React Context for lottery entries (similar to FavoritesContext)
+- Store user's lottery entries in local state
+- Poll for status updates when user has active lottery entries
+
+### Performance Requirements
+- Lottery entry: <500ms
+- Countdown timer: Update every 60 seconds (no performance impact)
+- Winner check: Poll every 30 seconds when user has active entries
+- Confirm pickup: <500ms
+
+### Testing Checklist
+- [ ] Enter lottery for item
+- [ ] See "You're in lottery" state
+- [ ] Wait for lottery to close (or manually trigger via backend)
+- [ ] Winner sees notification banner
+- [ ] Winner can confirm pickup
+- [ ] Seller can mark as picked up
+- [ ] Reservation expiry works (24-hour timeout)
+- [ ] Item re-lists if winner doesn't confirm
+
+### Success Criteria
+- ✅ Complete item lifecycle: listing → lottery → reservation → pickup
+- ✅ MVP feature-complete
+- ✅ Ready for beta testing
+- ✅ All user flows working end-to-end
+
+**Detailed tasks:** See `tasks.md` (ITER5-* tasks to be created)
 
 ---
 
@@ -205,6 +327,47 @@ EcoBid is a mobile-first serverless marketplace for free household item giveaway
 2. Launch beta testing
 3. Gather user feedback
 4. Prepare competition submission
+
+---
+
+---
+
+## V2 Backlog: Future User Actions
+
+### Seller Actions (Post-MVP)
+- Pause/unpause listing
+- Extend lottery window
+- View item analytics (views, favorites, entries)
+- Bulk delete items
+- Export item history
+- Set pickup location on map
+- Add multiple photos (up to 5)
+- Schedule listing (publish later)
+- View lottery entries list
+- Cancel lottery before close
+- Edit item details after publish
+
+### Buyer Actions (Post-MVP)
+- Save searches
+- Get alerts for new items (category/keyword)
+- View item history (past winners)
+- Report inappropriate items
+- Block sellers
+- Share items (social media)
+- Request similar items
+- View seller reputation
+- Cancel lottery entry before close
+- View how many people entered lottery
+
+### Both Users (Post-MVP)
+- Edit profile (name, city, bio, photo)
+- View reputation score breakdown
+- View transaction history
+- Enable push notifications
+- Set notification preferences
+- Delete account
+- Export personal data (GDPR)
+- Two-factor authentication
 
 ---
 

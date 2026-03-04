@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ItemCard from '../components/item/ItemCard';
 import CategoryFilter from '../components/item/CategoryFilter';
 import Input from '../components/ui/Input';
+import { WinnerBanner } from '../components/lottery/WinnerBanner';
 import { items as itemsApi } from '../lib/api/client';
 import { Item } from '../lib/types';
 
@@ -50,6 +51,8 @@ export default function Home() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <WinnerBanner />
+      
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           Browse Free Items

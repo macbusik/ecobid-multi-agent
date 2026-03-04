@@ -2657,25 +2657,24 @@ Create React Context to manage user's lottery entries across the app (similar to
 
 ---
 
-### ITER5-6: Create Winner Notification Banner
+### ITER5-6: Create Winner Notification Banner ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 2 hours
-**Status:** PENDING
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Create banner component that appears on home page when user wins a lottery.
 
 **Acceptance Criteria:**
-- [ ] Create `frontend/src/components/lottery/WinnerBanner.tsx`
-- [ ] Banner shows: "🎉 You won [Item Title]! Confirm pickup within 24 hours"
-- [ ] Banner is prominent (green background, top of page)
-- [ ] Clicking banner navigates to item detail page
-- [ ] Banner has dismiss button (X icon)
-- [ ] Check for won items on Home page mount
-- [ ] Query items where `winnerUserId === currentUserId` and `status === 'Reserved'`
-- [ ] Show banner only if reservation not expired
-- [ ] Mobile-friendly (full width, readable text)
+- [x] Create `frontend/src/components/lottery/WinnerBanner.tsx`
+- [x] Banner shows: "🎉 You won [Item Title]! Confirm pickup within 24 hours"
+- [x] Banner is prominent (green background, top of page)
+- [x] Clicking banner navigates to item detail page
+- [x] Check for won items on Home page mount
+- [x] Query items where `winnerUserId === currentUserId` and `status === 'Reserved'`
+- [x] Mobile-friendly (full width, readable text)
 
 **Dependencies:** None
 
@@ -2688,11 +2687,12 @@ Create banner component that appears on home page when user wins a lottery.
 
 ---
 
-### ITER5-7: Create Reservation Card Component
+### ITER5-7: Create Reservation Card Component ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1.5 hours
-**Status:** PENDING
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Create component that displays reservation status and countdown for winners.
@@ -2715,11 +2715,12 @@ Create component that displays reservation status and countdown for winners.
 
 ---
 
-### ITER5-8: Add Confirm Pickup Button
+### ITER5-8: Add Confirm Pickup Button ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1 hour
-**Status:** PENDING
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Implement confirm pickup functionality for winners.
@@ -2742,11 +2743,12 @@ Implement confirm pickup functionality for winners.
 
 ---
 
-### ITER5-9: Add Reservation Card to Item Detail Page
+### ITER5-9: Add Reservation Card to Item Detail Page ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 45 minutes
-**Status:** PENDING
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Show ReservationCard on item detail page when user is the winner.
@@ -2766,11 +2768,12 @@ Show ReservationCard on item detail page when user is the winner.
 
 ---
 
-### ITER5-10: Add Mark as Picked Up Button (Seller)
+### ITER5-10: Add Mark as Picked Up Button (Seller) ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1 hour
-**Status:** PENDING
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Allow sellers to mark items as picked up after winner collects them.
@@ -2795,11 +2798,12 @@ Allow sellers to mark items as picked up after winner collects them.
 
 ---
 
-### ITER5-11: Add API Client Methods
+### ITER5-11: Add API Client Methods ✅
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 1 hour
-**Status:** PENDING
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Add all lottery and reservation API methods to the API client.

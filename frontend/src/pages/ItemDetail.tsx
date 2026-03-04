@@ -1,25 +1,31 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { items as itemsApi } from '../lib/api/client';
+import { items as itemsApi, apiClient } from '../lib/api/client';
 import { Item } from '../lib/types';
 import Button from '../components/ui/Button';
 import { useFavorites } from '../lib/favorites/FavoritesContext';
 import { useLottery } from '../lib/lottery/LotteryContext';
 import { useAuth } from '../lib/auth/AuthContext';
+import { useToast } from '../lib/toast/ToastContext';
 import { LotteryButton } from '../components/lottery/LotteryButton';
 import { LotteryCountdown } from '../components/lottery/LotteryCountdown';
+import { ReservationCard } from '../components/lottery/ReservationCard';
 
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isInLottery, loadLotteryEntries } = useLottery();
+  const { showToast } = useToast();
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [markingPickedUp, setMarkingPickedUp] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const isOwner = user && item && item.sellerId === user.userId;
+  const isWinner = user && item && item.winnerId === user.userId;
+  const isReserved = item?.status === 'Reserved';
 
   useEffect(() => {
     const loadItem = async () => {
@@ -46,6 +52,22 @@ export default function ItemDetail() {
     } catch (error: any) {
       alert(error.message || 'Failed to delete item');
       setDeleting(false);
+    }
+  };
+
+  const handleMarkPickedUp = async () => {
+    if (!confirm('Confirm that the item has been picked up?')) return;
+    
+    setMarkingPickedUp(true);
+    try {
+      await apiClient.markPickedUp(id!);
+      showToast('Item marked as picked up!', 'success');
+      const data = await itemsApi.getById(id!);
+      setItem(data);
+    } catch (error) {
+      showToast('Failed to mark as picked up', 'error');
+    } finally {
+      setMarkingPickedUp(false);
     }
   };
 
@@ -107,6 +129,31 @@ export default function ItemDetail() {
                 {deleting ? 'Deleting...' : 'Delete Item'}
               </Button>
             </div>
+          )}
+
+          {/* Seller Actions - Mark Picked Up */}
+          {isOwner && isReserved && (
+            <div className="mb-6">
+              <Button
+                onClick={handleMarkPickedUp}
+                disabled={markingPickedUp}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                {markingPickedUp ? 'Marking...' : 'Mark as Picked Up'}
+              </Button>
+            </div>
+          )}
+
+          {/* Winner Reservation Card */}
+          {isWinner && isReserved && item.reservationExpiry && (
+            <ReservationCard
+              itemId={item.itemId}
+              reservationExpiry={item.reservationExpiry}
+              onConfirmSuccess={async () => {
+                const data = await itemsApi.getById(id!);
+                setItem(data);
+              }}
+            />
           )}
 
           {/* Buyer Actions */}
