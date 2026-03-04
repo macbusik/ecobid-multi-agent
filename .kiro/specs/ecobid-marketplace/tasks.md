@@ -2830,7 +2830,8 @@ Add all lottery and reservation API methods to the API client.
 **Agent:** `frontend_engineer` + `ux_ui_expert`
 **Priority:** P0 (Blocker)
 **Estimated Time:** 3 hours
-**Status:** PENDING
+**Status:** IN PROGRESS
+**Started:** 2026-03-04
 
 **Description:**
 Test complete lottery and reservation flow end-to-end and deploy to production.
