@@ -1,10 +1,10 @@
 #!/bin/bash
-# Setup script to install SDD pre-commit hook
+# Setup script to install SDD git hooks
 # Run this after cloning the repository
 
 set -e
 
-echo "🔧 Setting up SDD pre-commit hook..."
+echo "🔧 Setting up SDD git hooks..."
 
 # Check if .git directory exists
 if [ ! -d ".git" ]; then
@@ -12,23 +12,37 @@ if [ ! -d ".git" ]; then
   exit 1
 fi
 
-# Copy pre-commit hook
-HOOK_SOURCE="scripts/hooks/pre-commit"
-HOOK_DEST=".git/hooks/pre-commit"
+# Install pre-commit hook
+PRECOMMIT_SOURCE="scripts/hooks/pre-commit"
+PRECOMMIT_DEST=".git/hooks/pre-commit"
 
-if [ ! -f "$HOOK_SOURCE" ]; then
-  echo "❌ Error: Hook source not found at $HOOK_SOURCE"
+if [ ! -f "$PRECOMMIT_SOURCE" ]; then
+  echo "❌ Error: pre-commit hook not found at $PRECOMMIT_SOURCE"
   exit 1
 fi
 
-cp "$HOOK_SOURCE" "$HOOK_DEST"
-chmod +x "$HOOK_DEST"
+cp "$PRECOMMIT_SOURCE" "$PRECOMMIT_DEST"
+chmod +x "$PRECOMMIT_DEST"
+echo "✅ pre-commit hook installed"
 
-echo "✅ Pre-commit hook installed"
+# Install post-commit hook
+POSTCOMMIT_SOURCE="scripts/hooks/post-commit"
+POSTCOMMIT_DEST=".git/hooks/post-commit"
+
+if [ ! -f "$POSTCOMMIT_SOURCE" ]; then
+  echo "❌ Error: post-commit hook not found at $POSTCOMMIT_SOURCE"
+  exit 1
+fi
+
+cp "$POSTCOMMIT_SOURCE" "$POSTCOMMIT_DEST"
+chmod +x "$POSTCOMMIT_DEST"
+echo "✅ post-commit hook installed"
+
 echo ""
-echo "The hook will:"
-echo "  - Check if code changes have corresponding tasks.md updates"
-echo "  - Block commits that violate SDD workflow"
-echo "  - Allow bypass with [skip-sdd] in commit message (emergency only)"
+echo "🎉 SDD hooks installed successfully!"
 echo ""
-echo "To test: Try committing code without updating tasks.md"
+echo "Hooks installed:"
+echo "  - pre-commit: Blocks code changes without task updates"
+echo "  - post-commit: Verifies task status and acceptance criteria"
+echo ""
+echo "To bypass pre-commit: Use [skip-sdd] in commit message (emergency only)"

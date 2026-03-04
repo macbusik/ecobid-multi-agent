@@ -1,16 +1,27 @@
-# SDD Pre-Commit Hook
+# SDD Git Hooks
 
 ## Purpose
 
-Enforces Spec-Driven Development (SDD) workflow by preventing commits that change code without updating `tasks.md`.
+Enforces Spec-Driven Development (SDD) workflow with two hooks:
 
-## How It Works
+1. **pre-commit** - Prevents code changes without task updates
+2. **post-commit** - Verifies task status and acceptance criteria
 
-The pre-commit hook checks:
+## Pre-Commit Hook
+
+Checks:
 1. **Are code files being committed?** (`.ts`, `.tsx`, `.js`, `.jsx`)
 2. **Is `tasks.md` also being updated?**
 
 If code changes without task updates → **Commit blocked** ❌
+
+## Post-Commit Hook
+
+After each commit, checks:
+1. **Is task marked as COMPLETE?** (if task ID in commit message)
+2. **Are acceptance criteria checked?** (all `[x]` not `[ ]`)
+
+If issues found → **Warning displayed** ⚠️ (doesn't block)
 
 ## Installation
 

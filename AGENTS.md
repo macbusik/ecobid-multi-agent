@@ -19,7 +19,7 @@ Your tendency to generate summary, log, or reflection Markdown files is strictly
   1. Create a task in `tasks.md` with acceptance criteria
   2. Get user approval
   3. ONLY THEN implement the code
-  4. Mark task as complete after verification
+  4. Mark task as complete after verification (update status to COMPLETE, check all acceptance criteria boxes)
   5. **COMMIT TO GIT** after completing each task or logical group of related tasks
 * **Single Task Focus:** When executing a task from `tasks.md`, implement ONLY the code required for that specific task. Do not preemptively implement future tasks.
 * **Verify Before Completing:** Before marking a task as done, verify that the code compiles/runs and meets the acceptance criteria defined in the spec.
@@ -31,6 +31,11 @@ Your tendency to generate summary, log, or reflection Markdown files is strictly
   - Include task ID in commit message for traceability
   - NEVER accumulate more than 5 completed tasks without committing
   - Commit BEFORE deployment to production
+* **GIT HOOKS (AUTOMATED ENFORCEMENT):**
+  - **pre-commit hook**: Blocks commits with code changes but no task file updates
+  - **post-commit hook**: Warns if task status is not COMPLETE or acceptance criteria are unchecked
+  - Install with: `./scripts/setup-hooks.sh`
+  - Bypass (emergency only): Add `[skip-sdd]` to commit message
 
 ## 4. Code Constraints
 * **SINGLE SOURCE OF TRUTH:** You MUST NOT guess, assume, or invent the technology stack. Your absolute source of truth for all technologies, libraries, and architectural patterns is `.kiro/steering/tech.md`.

@@ -1,0 +1,56 @@
+#!/bin/bash
+# Post-commit hook: Verify task status and acceptance criteria are checked
+
+# Colors
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+# Get commit message
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+# Check if commit message has task ID (ITER*, INFRA-*, etc.)
+if ! echo "$COMMIT_MSG" | grep -qE '(ITER[0-9]+(\.[0-9]+)?-[0-9]+|INFRA-[0-9]+|FRONT-[0-9]+)'; then
+    # No task ID, skip check
+    exit 0
+fi
+
+# Extract task ID
+TASK_ID=$(echo "$COMMIT_MSG" | grep -oE '(ITER[0-9]+(\.[0-9]+)?-[0-9]+|INFRA-[0-9]+|FRONT-[0-9]+)' | head -1)
+
+echo "🔍 Checking task status for: $TASK_ID"
+
+# Find which task file contains this task
+TASK_FILE=""
+for file in .kiro/specs/ecobid-marketplace/tasks/*.md; do
+    if grep -q "### $TASK_ID:" "$file" 2>/dev/null; then
+        TASK_FILE="$file"
+        break
+    fi
+done
+
+if [ -z "$TASK_FILE" ]; then
+    echo -e "${YELLOW}⚠️  Warning: Task $TASK_ID not found in any task file${NC}"
+    exit 0
+fi
+
+# Check if task is marked as COMPLETE
+if ! grep -A 3 "### $TASK_ID:" "$TASK_FILE" | grep -q "**Status:** COMPLETE"; then
+    echo -e "${YELLOW}⚠️  Warning: Task $TASK_ID is not marked as COMPLETE${NC}"
+    echo -e "${YELLOW}   Please update status in: $TASK_FILE${NC}"
+fi
+
+# Check if acceptance criteria have unchecked boxes
+UNCHECKED_COUNT=$(grep -A 50 "### $TASK_ID:" "$TASK_FILE" | grep -c "^- \[ \]" || true)
+if [ "$UNCHECKED_COUNT" -gt 0 ]; then
+    echo -e "${YELLOW}⚠️  Warning: Task $TASK_ID has $UNCHECKED_COUNT unchecked acceptance criteria${NC}"
+    echo -e "${YELLOW}   Please check boxes in: $TASK_FILE${NC}"
+fi
+
+# If everything is good
+if grep -A 3 "### $TASK_ID:" "$TASK_FILE" | grep -q "**Status:** COMPLETE" && [ "$UNCHECKED_COUNT" -eq 0 ]; then
+    echo -e "${GREEN}✅ Task $TASK_ID is properly documented${NC}"
+fi
+
+exit 0
