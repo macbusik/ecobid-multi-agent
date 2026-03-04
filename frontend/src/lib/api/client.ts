@@ -175,8 +175,7 @@ export const photos = {
   // Lottery methods
   enterLottery: async (itemId: string) => {
     if (USE_MOCK) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { success: true };
+      return mockApi.items.enterLottery(itemId);
     }
     return apiRequest<{ success: boolean }>(`/items/${itemId}/lottery`, {
       method: 'POST',
@@ -185,8 +184,7 @@ export const photos = {
 
   listLotteryEntries: async () => {
     if (USE_MOCK) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { itemIds: [] };
+      return mockApi.items.listLotteryEntries();
     }
     return apiRequest<{ itemIds: string[] }>('/lottery/entries', {
       method: 'GET',
@@ -205,8 +203,7 @@ export const photos = {
 
   confirmPickup: async (itemId: string) => {
     if (USE_MOCK) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { success: true };
+      return mockApi.items.confirmPickup(itemId);
     }
     return apiRequest<{ success: boolean }>(`/items/${itemId}/confirm-pickup`, {
       method: 'POST',
@@ -215,8 +212,7 @@ export const photos = {
 
   markPickedUp: async (itemId: string) => {
     if (USE_MOCK) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { success: true };
+      return mockApi.items.markPickedUp(itemId);
     }
     return apiRequest<{ success: boolean }>(`/items/${itemId}/mark-picked-up`, {
       method: 'POST',
@@ -224,22 +220,5 @@ export const photos = {
   },
 };
 
-// Unified API client export
-export const apiClient = {
-  ...items,
-  getWonItems: async () => {
-    return apiRequest<Item[]>('/lottery/won', {
-      method: 'GET',
-    });
-  },
-  confirmPickup: async (itemId: string) => {
-    return apiRequest<{ success: boolean }>(`/items/${itemId}/confirm-pickup`, {
-      method: 'POST',
-    });
-  },
-  markPickedUp: async (itemId: string) => {
-    return apiRequest<{ success: boolean }>(`/items/${itemId}/mark-picked-up`, {
-      method: 'POST',
-    });
-  },
-};
+// Unified API client export (same as items for now)
+export const apiClient = items;

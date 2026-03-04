@@ -13,6 +13,32 @@ import { mockItems, mockUsers, mockMessages } from './mock-data';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// LocalStorage keys for mock persistence
+const STORAGE_KEYS = {
+  LOTTERY_ENTRIES: 'ecobid_lottery_entries',
+  FAVORITES: 'ecobid_favorites',
+};
+
+// Mock lottery entries storage
+const getLotteryEntries = (): string[] => {
+  const stored = localStorage.getItem(STORAGE_KEYS.LOTTERY_ENTRIES);
+  return stored ? JSON.parse(stored) : [];
+};
+
+const saveLotteryEntry = (itemId: string): void => {
+  const entries = getLotteryEntries();
+  if (!entries.includes(itemId)) {
+    entries.push(itemId);
+    localStorage.setItem(STORAGE_KEYS.LOTTERY_ENTRIES, JSON.stringify(entries));
+  }
+};
+
+const removeLotteryEntry = (itemId: string): void => {
+  const entries = getLotteryEntries();
+  const filtered = entries.filter(id => id !== itemId);
+  localStorage.setItem(STORAGE_KEYS.LOTTERY_ENTRIES, JSON.stringify(filtered));
+};
+
 export const mockApi = {
   auth: {
     register: async () => { await delay(500); },
@@ -62,9 +88,26 @@ export const mockApi = {
       return { message: 'Item deleted' }; 
     },
 
-    enterLottery: async () => { await delay(300); return { message: 'Entered lottery' }; },
-    confirmPickup: async () => { await delay(300); return { message: 'Pickup confirmed' }; },
-    markPickedUp: async () => { await delay(300); return { message: 'Marked as picked up' }; },
+    enterLottery: async (itemId: string) => { 
+      await delay(300);
+      saveLotteryEntry(itemId);
+      return { success: true }; 
+    },
+    
+    listLotteryEntries: async () => {
+      await delay(300);
+      return { itemIds: getLotteryEntries() };
+    },
+    
+    confirmPickup: async (itemId: string) => { 
+      await delay(300); 
+      return { success: true }; 
+    },
+    
+    markPickedUp: async (itemId: string) => { 
+      await delay(300); 
+      return { success: true }; 
+    },
   },
 
   messages: {

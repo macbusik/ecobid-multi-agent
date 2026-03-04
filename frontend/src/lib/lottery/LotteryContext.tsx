@@ -23,8 +23,9 @@ export function LotteryProvider({ children }: { children: ReactNode }) {
 
     try {
       console.log('🎲 Loading lottery entries for user:', user.userId);
-      // TODO: Add API endpoint to list user's lottery entries
-      // For now, we'll track locally after entering
+      const response = await (api.items as any).listLotteryEntries();
+      setLotteryEntries(new Set(response.itemIds));
+      console.log('🎲 Loaded lottery entries:', response.itemIds);
     } catch (error) {
       console.error('🎲 Failed to load lottery entries:', error);
     }
