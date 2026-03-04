@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useToast } from '../../lib/toast/ToastContext';
+import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { apiClient } from '../../lib/api/client';
 
 interface LotteryButtonProps {
@@ -10,6 +11,7 @@ interface LotteryButtonProps {
   lotteryEndTime: string;
   isUserInLottery: boolean;
   onEnterSuccess?: () => void;
+  onLeaveSuccess?: () => void;
 }
 
 export function LotteryButton({
@@ -18,11 +20,28 @@ export function LotteryButton({
   lotteryEndTime,
   isUserInLottery,
   onEnterSuccess,
+  onLeaveSuccess,
 }: LotteryButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasEntered, setHasEntered] = useState(isUserInLottery);
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const { user } = useAuth();
   const { showToast } = useToast();
+
+  const handleLeaveLottery = async () => {
+    setIsLoading(true);
+    try {
+      await (apiClient as any).leaveLottery(itemId);
+      setHasEntered(false);
+      showToast("You've left the lottery", 'success');
+      onLeaveSuccess?.();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to leave lottery', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+    setShowLeaveDialog(false);
+  };
 
   const handleEnterLottery = async () => {
     if (!user) {
@@ -57,13 +76,34 @@ export function LotteryButton({
   // Show "You're in lottery" if already entered
   if (hasEntered) {
     return (
-      <button
-        disabled
-        className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg font-medium flex items-center justify-center gap-2 opacity-75 cursor-not-allowed"
-      >
-        <span>You're in lottery</span>
-        <span className="text-lg">✓</span>
-      </button>
+      <>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button
+            disabled
+            className="flex-1 sm:flex-none px-6 py-3 bg-green-600 text-white rounded-lg font-medium flex items-center justify-center gap-2 opacity-75 cursor-not-allowed"
+          >
+            <span>You're in lottery</span>
+            <span className="text-lg">✓</span>
+          </button>
+          <button
+            onClick={() => setShowLeaveDialog(true)}
+            disabled={isLoading}
+            className="px-4 py-3 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg font-medium transition-colors disabled:opacity-50 min-h-[48px]"
+          >
+            Leave
+          </button>
+        </div>
+        <ConfirmDialog
+          isOpen={showLeaveDialog}
+          title="Leave Lottery"
+          message="Are you sure you want to leave this lottery? You can re-enter before it closes."
+          confirmText="Leave Lottery"
+          cancelText="Stay In"
+          variant="danger"
+          onConfirm={handleLeaveLottery}
+          onCancel={() => setShowLeaveDialog(false)}
+        />
+      </>
     );
   }
 

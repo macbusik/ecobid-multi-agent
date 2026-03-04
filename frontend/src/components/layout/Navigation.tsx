@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../lib/auth/AuthContext';
+import { WinnerNotificationBadge } from '../lottery/WinnerNotificationBadge';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +32,7 @@ export default function Navigation() {
             </Link>
             {user ? (
               <>
+                <WinnerNotificationBadge />
                 <Link to="/profile" className={`${isActive('/profile')} px-3 py-2`} aria-label="View profile">
                   Profile
                 </Link>

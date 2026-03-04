@@ -212,6 +212,7 @@ export default function ItemDetail() {
                   lotteryEndTime={item.lotteryEndTime}
                   isUserInLottery={isInLottery(item.itemId)}
                   onEnterSuccess={loadLotteryEntries}
+                  onLeaveSuccess={loadLotteryEntries}
                 />
               </div>
             </ErrorBoundary>

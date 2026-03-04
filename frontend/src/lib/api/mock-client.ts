@@ -93,6 +93,14 @@ export const mockApi = {
       saveLotteryEntry(itemId);
       return { success: true }; 
     },
+
+    leaveLottery: async (itemId: string) => {
+      await delay(300);
+      const entries = getLotteryEntries();
+      const filtered = entries.filter(id => id !== itemId);
+      localStorage.setItem(STORAGE_KEYS.LOTTERY_ENTRIES, JSON.stringify(filtered));
+      return { success: true };
+    },
     
     listLotteryEntries: async () => {
       await delay(300);

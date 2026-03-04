@@ -182,6 +182,15 @@ export const photos = {
     });
   },
 
+  leaveLottery: async (itemId: string) => {
+    if (USE_MOCK) {
+      return mockApi.items.leaveLottery(itemId);
+    }
+    return apiRequest<{ success: boolean }>(`/items/${itemId}/lottery`, {
+      method: 'DELETE',
+    });
+  },
+
   listLotteryEntries: async () => {
     if (USE_MOCK) {
       return mockApi.items.listLotteryEntries();

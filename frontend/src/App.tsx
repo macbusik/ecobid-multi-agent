@@ -12,6 +12,7 @@ import NewItem from './pages/NewItem'
 import EditItem from './pages/EditItem'
 import Favorites from './pages/Favorites'
 import Profile from './pages/Profile'
+import Wins from './pages/Wins'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/items/:id" element={<ItemDetail />} />
                 <Route path="/items/:id/edit" element={<EditItem />} />
                 <Route path="/items/new" element={<NewItem />} />
+                <Route path="/wins" element={<Wins />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>

@@ -7,7 +7,7 @@ interface LotteryCountdownProps {
 
 export function LotteryCountdown({ endTime, compact = false }: LotteryCountdownProps) {
   const [timeLeft, setTimeLeft] = useState<string>('');
-  const [isUrgent, setIsUrgent] = useState(false);
+  const [colorClass, setColorClass] = useState('text-gray-600');
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -17,46 +17,51 @@ export function LotteryCountdown({ endTime, compact = false }: LotteryCountdownP
 
       if (diff <= 0) {
         setTimeLeft('Closed');
+        setColorClass('text-gray-600');
         return;
       }
 
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-      // Mark as urgent if less than 1 hour left
-      setIsUrgent(hours < 1);
+      // Format as HH:MM:SS
+      const hh = String(hours).padStart(2, '0');
+      const mm = String(minutes).padStart(2, '0');
+      const ss = String(seconds).padStart(2, '0');
+      const formatted = `${hh}:${mm}:${ss}`;
+
+      // Set color based on time remaining
+      if (diff < 5 * 60 * 1000) {
+        setColorClass('text-red-600'); // <5 minutes
+      } else if (diff < 30 * 60 * 1000) {
+        setColorClass('text-yellow-600'); // <30 minutes
+      } else {
+        setColorClass('text-gray-600');
+      }
 
       if (compact) {
-        if (hours > 0) {
-          setTimeLeft(`${hours}h ${minutes}m left`);
-        } else {
-          setTimeLeft(`${minutes}m left`);
-        }
+        setTimeLeft(formatted);
       } else {
-        if (hours > 0) {
-          setTimeLeft(`Lottery closes in ${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${minutes !== 1 ? 's' : ''}`);
-        } else {
-          setTimeLeft(`Lottery closes in ${minutes} minute${minutes !== 1 ? 's' : ''}`);
-        }
+        setTimeLeft(`Closes in: ${formatted}`);
       }
     };
 
     // Calculate immediately
     calculateTimeLeft();
 
-    // Update every minute
-    const interval = setInterval(calculateTimeLeft, 60000);
+    // Update every second
+    const interval = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(interval);
   }, [endTime, compact]);
 
   if (!timeLeft) return null;
 
-  const textColor = isUrgent ? 'text-red-600' : 'text-gray-600';
   const fontSize = compact ? 'text-sm' : 'text-base';
 
   return (
-    <span className={`${textColor} ${fontSize} font-medium`}>
+    <span className={`${colorClass} ${fontSize} font-medium font-mono`}>
       {timeLeft}
     </span>
   );
