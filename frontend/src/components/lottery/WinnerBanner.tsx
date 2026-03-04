@@ -1,28 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiClient } from '../../lib/api/client';
+import { useAuth } from '../../lib/auth/AuthContext';
 import type { Item } from '../../lib/types';
 
 export function WinnerBanner() {
-  const [wonItems, setWonItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [wonItems] = useState<Item[]>([]); // Empty for now - backend not implemented
+  const { user } = useAuth();
 
-  useEffect(() => {
-    loadWonItems();
-  }, []);
-
-  const loadWonItems = async () => {
-    try {
-      const items = await apiClient.getWonItems();
-      setWonItems(items);
-    } catch (error) {
-      console.error('Failed to load won items:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading || wonItems.length === 0) return null;
+  // Skip loading - backend endpoint not implemented yet
+  if (!user || wonItems.length === 0) return null;
 
   return (
     <div className="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
