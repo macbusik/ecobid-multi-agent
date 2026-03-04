@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { items as itemsApi, apiClient } from '../lib/api/client';
 import { Item } from '../lib/types';
 import Button from '../components/ui/Button';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useFavorites } from '../lib/favorites/FavoritesContext';
 import { useLottery } from '../lib/lottery/LotteryContext';
 import { useAuth } from '../lib/auth/AuthContext';
@@ -21,6 +22,8 @@ export default function ItemDetail() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [markingPickedUp, setMarkingPickedUp] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showPickupDialog, setShowPickupDialog] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const isOwner = user && item && item.sellerId === user.userId;
@@ -43,21 +46,18 @@ export default function ItemDetail() {
   }, [id]);
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this item?')) return;
-    
     setDeleting(true);
     try {
       await itemsApi.delete(id!);
       navigate('/profile');
     } catch (error: any) {
-      alert(error.message || 'Failed to delete item');
+      showToast(error.message || 'Failed to delete item', 'error');
       setDeleting(false);
     }
+    setShowDeleteDialog(false);
   };
 
   const handleMarkPickedUp = async () => {
-    if (!confirm('Confirm that the item has been picked up?')) return;
-    
     setMarkingPickedUp(true);
     try {
       await apiClient.markPickedUp(id!);
@@ -69,6 +69,7 @@ export default function ItemDetail() {
     } finally {
       setMarkingPickedUp(false);
     }
+    setShowPickupDialog(false);
   };
 
   if (loading) {
@@ -85,7 +86,33 @@ export default function ItemDetail() {
         <img src={item.photoUrl} alt={item.title} className="w-full h-96 object-cover" />
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">
-            <h1 className="text-3xl font-bold">{item.title}</h1>
+            <div>
+              <h1 className="text-3xl font-bold">{item.title}</h1>
+              {item.status !== 'Available' && (
+                <div className="mt-2">
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
+                    item.status === 'Reserved' ? 'bg-orange-100 text-orange-800' :
+                    item.status === 'Lottery_Closed' ? 'bg-yellow-100 text-yellow-800' :
+                    item.status === 'Pickup_Confirmed' ? 'bg-blue-100 text-blue-800' :
+                    item.status === 'Picked_Up' ? 'bg-gray-100 text-gray-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    <span className={`w-2 h-2 rounded-full ${
+                      item.status === 'Reserved' ? 'bg-orange-500' :
+                      item.status === 'Lottery_Closed' ? 'bg-yellow-500' :
+                      item.status === 'Pickup_Confirmed' ? 'bg-blue-500' :
+                      item.status === 'Picked_Up' ? 'bg-gray-500' :
+                      'bg-gray-500'
+                    }`}></span>
+                    {item.status === 'Reserved' ? 'Reserved' :
+                     item.status === 'Lottery_Closed' ? 'Selecting Winner...' :
+                     item.status === 'Pickup_Confirmed' ? 'Pickup Confirmed' :
+                     item.status === 'Picked_Up' ? 'Completed' :
+                     item.status}
+                  </span>
+                </div>
+              )}
+            </div>
             <button
               onClick={() => toggleFavorite(item.itemId)}
               className="text-2xl hover:scale-110 transition-transform"
@@ -122,7 +149,7 @@ export default function ItemDetail() {
               </Link>
               <Button 
                 variant="secondary" 
-                onClick={handleDelete}
+                onClick={() => setShowDeleteDialog(true)}
                 disabled={deleting}
                 className="flex-1 text-red-600 hover:bg-red-50"
               >
@@ -135,7 +162,7 @@ export default function ItemDetail() {
           {isOwner && isReserved && (
             <div className="mb-6">
               <Button
-                onClick={handleMarkPickedUp}
+                onClick={() => setShowPickupDialog(true)}
                 disabled={markingPickedUp}
                 className="w-full bg-green-600 hover:bg-green-700"
               >
@@ -181,6 +208,29 @@ export default function ItemDetail() {
           )}
         </div>
       </div>
+
+      {/* Confirmation Dialogs */}
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        title="Delete Item"
+        message="Are you sure you want to delete this item? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteDialog(false)}
+      />
+
+      <ConfirmDialog
+        isOpen={showPickupDialog}
+        title="Mark as Picked Up"
+        message="Confirm that the item has been picked up?"
+        confirmText="Confirm"
+        cancelText="Cancel"
+        variant="success"
+        onConfirm={handleMarkPickedUp}
+        onCancel={() => setShowPickupDialog(false)}
+      />
     </div>
   );
 }

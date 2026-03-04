@@ -5,6 +5,7 @@ import { Item } from '../../lib/types';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useToast } from '../../lib/toast/ToastContext';
 import { useFavorites } from '../../lib/favorites/FavoritesContext';
+import { useLottery } from '../../lib/lottery/LotteryContext';
 import { LotteryCountdown } from '../lottery/LotteryCountdown';
 
 interface ItemCardProps {
@@ -15,10 +16,12 @@ export default function ItemCard({ item }: ItemCardProps) {
   const { user } = useAuth();
   const { showToast } = useToast();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { isInLottery } = useLottery();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const favorited = isFavorite(item.itemId);
+  const entered = isInLottery(item.itemId);
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -53,20 +56,31 @@ export default function ItemCard({ item }: ItemCardProps) {
             className="w-full h-full object-cover"
           />
           <div className="absolute top-2 right-2 flex gap-2">
+            {entered && item.status === 'Available' && (
+              <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1">
+                <span>✓</span>
+                <span>Entered</span>
+              </div>
+            )}
             <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
               {item.category}
             </div>
             {item.status !== 'Available' && (
-              <div className={`text-white text-xs px-2 py-1 rounded-full ${
-                item.status === 'Reserved' ? 'bg-yellow-600' :
-                item.status === 'Lottery_Closed' ? 'bg-orange-600' :
-                item.status === 'Picked_Up' ? 'bg-gray-600' :
-                'bg-blue-600'
+              <div className={`text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 ${
+                item.status === 'Reserved' ? 'bg-orange-500' :
+                item.status === 'Lottery_Closed' ? 'bg-yellow-500' :
+                item.status === 'Pickup_Confirmed' ? 'bg-blue-500' :
+                item.status === 'Picked_Up' ? 'bg-gray-500' :
+                'bg-gray-500'
               }`}>
-                {item.status === 'Reserved' ? '🎉 Reserved' :
-                 item.status === 'Lottery_Closed' ? '⏰ Closed' :
-                 item.status === 'Picked_Up' ? '✅ Completed' :
-                 item.status}
+                <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                <span>
+                  {item.status === 'Reserved' ? 'Reserved' :
+                   item.status === 'Lottery_Closed' ? 'Closed' :
+                   item.status === 'Pickup_Confirmed' ? 'Confirmed' :
+                   item.status === 'Picked_Up' ? 'Completed' :
+                   item.status}
+                </span>
               </div>
             )}
           </div>

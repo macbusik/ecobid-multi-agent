@@ -1,6 +1,6 @@
 # Phase 10: Iteration 5.1 - Marketplace UX Polish
 
-**Status:** 2/8 tasks complete  
+**Status:** 6/8 tasks complete  
 **Focus:** Essential marketplace patterns and user experience improvements
 
 ### ITER5.1-1: Require Login to Enter Lottery
@@ -63,12 +63,12 @@ Item owners should not be able to enter their own lottery.
 Visually indicate which lotteries user has entered on item cards in feed.
 
 **Acceptance Criteria:**
-- [ ] Add green checkmark badge to item cards: "✓ Entered"
-- [ ] Badge appears on top-right corner of item image
-- [ ] Use LotteryContext to check if user entered
-- [ ] Badge only shows for Available items
-- [ ] Badge is visible but doesn't block image
-- [ ] Mobile-friendly size and positioning
+- [x] Add green checkmark badge to item cards: "✓ Entered"
+- [x] Badge appears on top-right corner of item image
+- [x] Use LotteryContext to check if user entered
+- [x] Badge only shows for Available items
+- [x] Badge is visible but doesn't block image
+- [x] Mobile-friendly size and positioning
 
 **Dependencies:** None
 
@@ -87,12 +87,12 @@ Visually indicate which lotteries user has entered on item cards in feed.
 Add friendly empty states for key pages.
 
 **Acceptance Criteria:**
-- [ ] **Home page (no items):** "No items available yet. Be the first to list something!"
-- [ ] **Favorites (empty):** "No favorites yet. Browse items and tap ❤️ to save them here."
-- [ ] **Profile - My Items (empty):** "You haven't listed any items yet. Tap 'New Item' to get started!"
-- [ ] **Profile - My Lottery Entries (empty):** "You haven't entered any lotteries yet. Browse items and join a lottery!"
-- [ ] Each empty state has icon, heading, and call-to-action button
-- [ ] Mobile-friendly centered layout
+- [x] **Home page (no items):** "No items available yet. Be the first to list something!"
+- [x] **Favorites (empty):** "No favorites yet. Browse items and tap ❤️ to save them here."
+- [x] **Profile - My Items (empty):** "You haven't listed any items yet. Tap 'New Item' to get started!"
+- [x] **Profile - My Lottery Entries (empty):** "You haven't entered any lotteries yet. Browse items and join a lottery!"
+- [x] Each empty state has icon, heading, and call-to-action button
+- [x] Mobile-friendly centered layout
 
 **Dependencies:** None
 
@@ -143,14 +143,14 @@ Replace "Loading..." text with skeleton screens for better perceived performance
 Improve visual clarity of item status across the app.
 
 **Acceptance Criteria:**
-- [ ] **Available:** Green dot + "Active Lottery"
-- [ ] **Lottery_Closed:** Yellow dot + "Selecting Winner..."
-- [ ] **Reserved:** Orange dot + "Reserved"
-- [ ] **Pickup_Confirmed:** Blue dot + "Pickup Confirmed"
-- [ ] **Picked_Up:** Gray dot + "Completed"
-- [ ] Status badge appears on item cards and detail page
-- [ ] Use consistent color scheme across app
-- [ ] Mobile-friendly badge size
+- [x] **Available:** Green dot + "Active Lottery"
+- [x] **Lottery_Closed:** Yellow dot + "Selecting Winner..."
+- [x] **Reserved:** Orange dot + "Reserved"
+- [x] **Pickup_Confirmed:** Blue dot + "Pickup Confirmed"
+- [x] **Picked_Up:** Gray dot + "Completed"
+- [x] Status badge appears on item cards and detail page
+- [x] Use consistent color scheme across app
+- [x] Mobile-friendly badge size
 
 **Dependencies:** None
 
@@ -170,13 +170,13 @@ Improve visual clarity of item status across the app.
 Replace browser `confirm()` with custom modal dialogs for better UX.
 
 **Acceptance Criteria:**
-- [ ] Create `frontend/src/components/ui/ConfirmDialog.tsx`
-- [ ] Modal has title, message, Cancel button, Confirm button
-- [ ] Confirm button is red for destructive actions (delete)
-- [ ] Confirm button is green for positive actions (mark picked up)
-- [ ] Modal is centered, has backdrop, and is mobile-friendly
-- [ ] Replace all `confirm()` calls with ConfirmDialog
-- [ ] Test on delete item, mark picked up, confirm pickup
+- [x] Create `frontend/src/components/ui/ConfirmDialog.tsx`
+- [x] Modal has title, message, Cancel button, Confirm button
+- [x] Confirm button is red for destructive actions (delete)
+- [x] Confirm button is green for positive actions (mark picked up)
+- [x] Modal is centered, has backdrop, and is mobile-friendly
+- [x] Replace all `confirm()` calls with ConfirmDialog
+- [x] Test on delete item, mark picked up, confirm pickup
 
 **Dependencies:** None
 

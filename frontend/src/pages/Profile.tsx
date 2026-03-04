@@ -89,8 +89,16 @@ export default function Profile() {
         <h2 className="text-2xl font-bold mb-4">My Lottery Entries</h2>
         
         {lotteryItems.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-gray-500">You haven't entered any lotteries yet</p>
+          <div className="text-center py-12">
+            <div className="text-5xl mb-4">🎲</div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No lottery entries yet</h3>
+            <p className="text-gray-600 mb-6">Browse items and join a lottery!</p>
+            <a
+              href="/"
+              className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+            >
+              Browse Items
+            </a>
           </div>
         ) : (
           <div className="space-y-4">
@@ -143,8 +151,10 @@ export default function Profile() {
         {loading ? (
           <p className="text-gray-500">Loading...</p>
         ) : myItems.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-gray-500 mb-4">You haven't listed any items yet</p>
+          <div className="text-center py-12">
+            <div className="text-5xl mb-4">📝</div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No items listed yet</h3>
+            <p className="text-gray-600 mb-6">Tap 'New Item' to get started!</p>
             <Link to="/items/new">
               <Button>Create Your First Item</Button>
             </Link>

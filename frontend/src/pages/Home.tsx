@@ -92,8 +92,24 @@ export default function Home() {
           </button>
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No items found</p>
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4">📦</div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            {items.length === 0 ? 'No items available yet' : 'No items found'}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {items.length === 0 
+              ? 'Be the first to list something!' 
+              : 'Try adjusting your filters or search'}
+          </p>
+          {items.length === 0 && (
+            <a
+              href="/items/new"
+              className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+            >
+              List an Item
+            </a>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
