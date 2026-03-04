@@ -106,6 +106,12 @@ export const mockApi = {
       await delay(300);
       return { itemIds: getLotteryEntries() };
     },
+
+    getWonItems: async () => {
+      await delay(300);
+      // Return empty array for mock (no backend lottery execution)
+      return [];
+    },
     
     confirmPickup: async (itemId: string) => { 
       await delay(300); 
