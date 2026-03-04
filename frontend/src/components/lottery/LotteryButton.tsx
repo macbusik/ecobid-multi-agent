@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../lib/auth/AuthContext';
 import { useToast } from '../../lib/toast/ToastContext';
 import { apiClient } from '../../lib/api/client';
 
@@ -19,9 +21,15 @@ export function LotteryButton({
 }: LotteryButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasEntered, setHasEntered] = useState(isUserInLottery);
+  const { user } = useAuth();
   const { showToast } = useToast();
 
   const handleEnterLottery = async () => {
+    if (!user) {
+      showToast('Please log in to enter the lottery', 'error');
+      return;
+    }
+
     setIsLoading(true);
     try {
       await apiClient.enterLottery(itemId);
@@ -59,6 +67,18 @@ export function LotteryButton({
     );
   }
 
+  // Show "Login to Enter Lottery" if not logged in
+  if (!user) {
+    return (
+      <Link
+        to={`/login?redirect=/items/${itemId}`}
+        className="w-full sm:w-auto px-6 py-3 bg-gray-400 text-white rounded-lg font-medium text-center block min-h-[48px] flex items-center justify-center"
+      >
+        Login to Enter Lottery
+      </Link>
+    );
+  }
+
   // Show "Enter Lottery" button
   return (
     <button
@@ -79,15 +99,4 @@ export function LotteryButton({
       )}
     </button>
   );
-}
-
-// Helper function to get auth token
-async function getAuthToken(): Promise<string | null> {
-  try {
-    const { fetchAuthSession } = await import('aws-amplify/auth');
-    const session = await fetchAuthSession();
-    return session.tokens?.idToken?.toString() || null;
-  } catch {
-    return null;
-  }
 }

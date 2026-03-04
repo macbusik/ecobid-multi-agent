@@ -1,24 +1,25 @@
 # Phase 10: Iteration 5.1 - Marketplace UX Polish
 
-**Status:** 0/8 tasks complete  
+**Status:** 1/8 tasks complete  
 **Focus:** Essential marketplace patterns and user experience improvements
 
 ### ITER5.1-1: Require Login to Enter Lottery
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Critical)
 **Estimated Time:** 30 minutes
-**Status:** TODO
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Prevent unauthenticated users from entering lottery. Show login prompt instead.
 
 **Acceptance Criteria:**
-- [ ] Check if user is logged in before showing "Enter Lottery" button
-- [ ] If not logged in, show "Login to Enter Lottery" button (gray, disabled style)
-- [ ] Clicking button shows toast: "Please log in to enter the lottery"
-- [ ] Button links to `/login` page
-- [ ] After login, redirect back to item detail page
-- [ ] Same check on item cards (don't show countdown if not logged in)
+- [x] Check if user is logged in before showing "Enter Lottery" button
+- [x] If not logged in, show "Login to Enter Lottery" button (gray, disabled style)
+- [x] Clicking button shows toast: "Please log in to enter the lottery"
+- [x] Button links to `/login` page
+- [x] After login, redirect back to item detail page
+- [x] Same check on item cards (don't show countdown if not logged in)
 
 **Dependencies:** None
 
