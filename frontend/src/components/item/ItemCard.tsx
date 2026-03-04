@@ -52,8 +52,23 @@ export default function ItemCard({ item }: ItemCardProps) {
             alt={item.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
-            {item.category}
+          <div className="absolute top-2 right-2 flex gap-2">
+            <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+              {item.category}
+            </div>
+            {item.status !== 'Available' && (
+              <div className={`text-white text-xs px-2 py-1 rounded-full ${
+                item.status === 'Reserved' ? 'bg-yellow-600' :
+                item.status === 'Lottery_Closed' ? 'bg-orange-600' :
+                item.status === 'Picked_Up' ? 'bg-gray-600' :
+                'bg-blue-600'
+              }`}>
+                {item.status === 'Reserved' ? '🎉 Reserved' :
+                 item.status === 'Lottery_Closed' ? '⏰ Closed' :
+                 item.status === 'Picked_Up' ? '✅ Completed' :
+                 item.status}
+              </div>
+            )}
           </div>
           <button
             onClick={handleFavoriteClick}

@@ -10,7 +10,7 @@ export const mockUsers: User[] = [
 ];
 
 export const mockItems: Item[] = [
-  // Scenario 1: Ending very soon (5 seconds) - for testing countdown
+  // ACTIVE LOTTERY #1 - Ending in 2 minutes
   {
     itemId: 'item-001',
     sellerId: 'user-seller-1',
@@ -20,12 +20,13 @@ export const mockItems: Item[] = [
     photoUrl: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=800',
     status: 'Available',
     city: 'Berlin',
-    lotteryWindowHours: 6,
-    lotteryEndTime: new Date(Date.now() + 5 * 1000).toISOString(), // 5 seconds
-    createdAt: '2026-03-04T10:00:00Z',
-    updatedAt: '2026-03-04T10:00:00Z',
+    lotteryWindowHours: 2,
+    lotteryEndTime: new Date(Date.now() + 2 * 60 * 1000).toISOString(), // 2 minutes - ACTIVE
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
   },
-  // Scenario 2: Fresh listing (30 seconds) - shows full countdown
+  
+  // ACTIVE LOTTERY #2 - Ending in 5 minutes
   {
     itemId: 'item-002',
     sellerId: 'user-seller-2',
@@ -35,27 +36,29 @@ export const mockItems: Item[] = [
     photoUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800',
     status: 'Available',
     city: 'Munich',
-    lotteryWindowHours: 12,
-    lotteryEndTime: new Date(Date.now() + 30 * 1000).toISOString(), // 30 seconds
-    createdAt: '2026-03-04T11:00:00Z',
-    updatedAt: '2026-03-04T11:00:00Z',
+    lotteryWindowHours: 2,
+    lotteryEndTime: new Date(Date.now() + 5 * 60 * 1000).toISOString(), // 5 minutes - ACTIVE
+    createdAt: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString(),
   },
-  // Scenario 3: Kids items bundle
+  
+  // ACTIVE LOTTERY #3 - Just started (1 hour 50 minutes left)
   {
     itemId: 'item-003',
     sellerId: 'user-seller-3',
-    title: 'Kids Books Collection (Ages 5-8)',
-    description: '15 children books including Harry Potter series, Roald Dahl classics. All in great condition. Kids outgrew them.',
-    category: 'Books',
-    photoUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800',
+    title: 'Nespresso Coffee Machine',
+    description: 'Barely used Nespresso Vertuo. Switched to manual espresso. Includes milk frother and 20 capsules. Works perfectly.',
+    category: 'Electronics',
+    photoUrl: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=800',
     status: 'Available',
     city: 'Hamburg',
-    lotteryWindowHours: 6,
-    lotteryEndTime: new Date(Date.now() + 15 * 1000).toISOString(), // 15 seconds
-    createdAt: '2026-03-04T09:00:00Z',
-    updatedAt: '2026-03-04T09:00:00Z',
+    lotteryWindowHours: 2,
+    lotteryEndTime: new Date(Date.now() + 110 * 60 * 1000).toISOString(), // 1h 50min - ACTIVE
+    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
   },
-  // Scenario 4: Sports equipment
+  
+  // LOTTERY CLOSED - Winner selected (Reserved status)
   {
     itemId: 'item-004',
     sellerId: 'user-seller-1',
@@ -63,27 +66,47 @@ export const mockItems: Item[] = [
     description: 'Premium yoga mat (6mm thick) with 2 cork blocks and carrying strap. Used only few times. Switching to Pilates.',
     category: 'Sports',
     photoUrl: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800',
-    status: 'Available',
+    status: 'Reserved',
     city: 'Berlin',
-    lotteryWindowHours: 6,
-    lotteryEndTime: new Date(Date.now() + 20 * 1000).toISOString(), // 20 seconds
-    createdAt: '2026-03-04T12:00:00Z',
-    updatedAt: '2026-03-04T12:00:00Z',
+    lotteryWindowHours: 2,
+    lotteryEndTime: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // Ended 30 min ago
+    winnerId: 'user-winner-1',
+    reservationExpiry: new Date(Date.now() + 23.5 * 60 * 60 * 1000).toISOString(), // 23.5 hours left
+    createdAt: new Date(Date.now() - 2.5 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
   },
-  // Scenario 5: Kitchen appliance
+  
+  // LOTTERY CLOSED - Just ended (Lottery_Closed status)
   {
     itemId: 'item-005',
     sellerId: 'user-seller-4',
-    title: 'Nespresso Coffee Machine',
-    description: 'Barely used Nespresso Vertuo. Switched to manual espresso. Includes milk frother and 20 capsules. Works perfectly.',
-    category: 'Electronics',
-    photoUrl: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=800',
-    status: 'Available',
+    title: 'Kids Books Collection (Ages 5-8)',
+    description: '15 children books including Harry Potter series, Roald Dahl classics. All in great condition. Kids outgrew them.',
+    category: 'Books',
+    photoUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800',
+    status: 'Lottery_Closed',
     city: 'Frankfurt',
-    lotteryWindowHours: 6,
-    lotteryEndTime: new Date(Date.now() + 25 * 1000).toISOString(), // 25 seconds
-    createdAt: '2026-03-04T08:00:00Z',
-    updatedAt: '2026-02-23T07:00:00Z',
+    lotteryWindowHours: 2,
+    lotteryEndTime: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // Ended 5 min ago
+    createdAt: new Date(Date.now() - 2.08 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+  },
+  
+  // COMPLETED - Picked up
+  {
+    itemId: 'item-006',
+    sellerId: 'user-seller-2',
+    title: 'Vintage Leather Armchair',
+    description: 'Classic brown leather armchair. Some wear on armrests but very comfortable. Perfect for reading corner.',
+    category: 'Furniture',
+    photoUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800',
+    status: 'Picked_Up',
+    city: 'Munich',
+    lotteryWindowHours: 2,
+    lotteryEndTime: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(), // Ended yesterday
+    winnerId: 'user-winner-2',
+    createdAt: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
   },
 ];
 

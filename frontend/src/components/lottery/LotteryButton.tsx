@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useToast } from '../../lib/toast/ToastContext';
+import { apiClient } from '../../lib/api/client';
 
 interface LotteryButtonProps {
   itemId: string;
@@ -23,23 +24,11 @@ export function LotteryButton({
   const handleEnterLottery = async () => {
     setIsLoading(true);
     try {
-      const token = await getAuthToken();
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/items/${itemId}/lottery`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to enter lottery');
-      }
-
+      await apiClient.enterLottery(itemId);
+      
       setHasEntered(true);
       const hoursLeft = Math.floor((new Date(lotteryEndTime).getTime() - Date.now()) / (1000 * 60 * 60));
-      showToast(`You're in the lottery! Winner announced in ${hoursLeft} hours`, 'success');
+      showToast(`You're in the lottery! Winner announced in ${hoursLeft > 0 ? hoursLeft + ' hours' : 'soon'}`, 'success');
       onEnterSuccess?.();
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'Failed to enter lottery', 'error');

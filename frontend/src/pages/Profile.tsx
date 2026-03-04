@@ -1,21 +1,26 @@
 import { useAuth } from '../lib/auth/AuthContext';
 import Button from '../components/ui/Button';
 import { items } from '../lib/api/client';
+import { useLottery } from '../lib/lottery/LotteryContext';
 import { Item } from '../lib/types';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { LotteryCountdown } from '../components/lottery/LotteryCountdown';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
+  const { lotteryEntries } = useLottery();
   const [myItems, setMyItems] = useState<Item[]>([]);
+  const [lotteryItems, setLotteryItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
       loadMyItems();
+      loadLotteryItems();
     }
-  }, [user]);
+  }, [user, lotteryEntries]);
 
   const loadMyItems = async () => {
     try {
@@ -27,6 +32,17 @@ export default function Profile() {
       console.error('Failed to load items:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadLotteryItems = async () => {
+    try {
+      const response = await items.list({ limit: 50 });
+      // Filter items user entered lottery for
+      const enteredItems = response.items.filter(item => lotteryEntries.has(item.itemId));
+      setLotteryItems(enteredItems);
+    } catch (error) {
+      console.error('Failed to load lottery items:', error);
     }
   };
 
@@ -66,6 +82,59 @@ export default function Profile() {
             Sign Out
           </Button>
         </div>
+      </div>
+
+      {/* My Lottery Entries */}
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <h2 className="text-2xl font-bold mb-4">My Lottery Entries</h2>
+        
+        {lotteryItems.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">You haven't entered any lotteries yet</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {lotteryItems.map(item => (
+              <Link key={item.itemId} to={`/items/${item.itemId}`}>
+                <div className="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                  <img 
+                    src={item.photoUrl} 
+                    alt={item.title}
+                    className="w-20 h-20 object-cover rounded"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold">{item.title}</h3>
+                    <p className="text-sm text-gray-600">{item.category} • {item.city}</p>
+                    {item.status === 'Available' && item.lotteryEndTime && (
+                      <div className="mt-1">
+                        <LotteryCountdown endTime={item.lotteryEndTime} compact />
+                      </div>
+                    )}
+                    {item.status === 'Lottery_Closed' && (
+                      <p className="text-sm text-orange-600 mt-1">⏰ Lottery closed - waiting for results</p>
+                    )}
+                    {item.status === 'Reserved' && (
+                      <p className="text-sm text-yellow-600 mt-1">🎉 Winner selected</p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      item.status === 'Available' ? 'bg-green-100 text-green-800' :
+                      item.status === 'Lottery_Closed' ? 'bg-orange-100 text-orange-800' :
+                      item.status === 'Reserved' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {item.status === 'Available' ? 'Active' :
+                       item.status === 'Lottery_Closed' ? 'Closed' :
+                       item.status === 'Reserved' ? 'Reserved' :
+                       item.status}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-6">

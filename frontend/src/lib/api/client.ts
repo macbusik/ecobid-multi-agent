@@ -174,30 +174,50 @@ export const photos = {
 
   // Lottery methods
   enterLottery: async (itemId: string) => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { success: true };
+    }
     return apiRequest<{ success: boolean }>(`/items/${itemId}/lottery`, {
       method: 'POST',
     });
   },
 
   listLotteryEntries: async () => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { itemIds: [] };
+    }
     return apiRequest<{ itemIds: string[] }>('/lottery/entries', {
       method: 'GET',
     });
   },
 
   getWonItems: async () => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return [];
+    }
     return apiRequest<Item[]>('/lottery/won', {
       method: 'GET',
     });
   },
 
   confirmPickup: async (itemId: string) => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { success: true };
+    }
     return apiRequest<{ success: boolean }>(`/items/${itemId}/confirm-pickup`, {
       method: 'POST',
     });
   },
 
   markPickedUp: async (itemId: string) => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { success: true };
+    }
     return apiRequest<{ success: boolean }>(`/items/${itemId}/mark-picked-up`, {
       method: 'POST',
     });
