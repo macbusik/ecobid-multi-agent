@@ -1,6 +1,6 @@
 # Phase 10: Iteration 5.1 - Marketplace UX Polish
 
-**Status:** 1/8 tasks complete  
+**Status:** 2/8 tasks complete  
 **Focus:** Essential marketplace patterns and user experience improvements
 
 ### ITER5.1-1: Require Login to Enter Lottery
@@ -33,17 +33,18 @@ Prevent unauthenticated users from entering lottery. Show login prompt instead.
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Critical)
 **Estimated Time:** 20 minutes
-**Status:** TODO
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Item owners should not be able to enter their own lottery.
 
 **Acceptance Criteria:**
-- [ ] Check if current user is item owner
-- [ ] If owner, hide "Enter Lottery" button completely
-- [ ] Show message: "You can't enter your own lottery"
-- [ ] Owner sees countdown timer but no action button
-- [ ] Test with owner and non-owner accounts
+- [x] Check if current user is item owner
+- [x] If owner, hide "Enter Lottery" button completely
+- [x] Show message: "You can't enter your own lottery"
+- [x] Owner sees countdown timer but no action button
+- [x] Test with owner and non-owner accounts
 
 **Dependencies:** None
 

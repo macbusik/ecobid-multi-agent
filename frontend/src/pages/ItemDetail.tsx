@@ -169,6 +169,16 @@ export default function ItemDetail() {
               />
             </div>
           )}
+
+          {/* Owner Message */}
+          {isOwner && item.status === 'Available' && (
+            <div className="mt-6 space-y-3">
+              <LotteryCountdown endTime={item.lotteryEndTime} />
+              <div className="px-4 py-3 bg-gray-100 text-gray-600 rounded-lg text-sm">
+                You can't enter your own lottery
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
