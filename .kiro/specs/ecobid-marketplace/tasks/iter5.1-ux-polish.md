@@ -1,6 +1,6 @@
 # Phase 10: Iteration 5.1 - Marketplace UX Polish
 
-**Status:** 6/8 tasks complete  
+**Status:** 8/8 tasks complete ✅  
 **Focus:** Essential marketplace patterns and user experience improvements
 
 ### ITER5.1-1: Require Login to Enter Lottery
@@ -107,19 +107,20 @@ Add friendly empty states for key pages.
 **Agent:** `frontend_engineer`
 **Priority:** P2 (Medium)
 **Estimated Time:** 1 hour
-**Status:** TODO
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Replace "Loading..." text with skeleton screens for better perceived performance.
 
 **Acceptance Criteria:**
-- [ ] Create `frontend/src/components/ui/ItemCardSkeleton.tsx`
-- [ ] Skeleton matches ItemCard layout (image, title, description, countdown)
-- [ ] Use gray animated pulse effect
-- [ ] Show 6 skeletons on Home page while loading
-- [ ] Show 1 skeleton on ItemDetail page while loading
-- [ ] Show 4 skeletons on Favorites page while loading
-- [ ] Mobile-friendly responsive layout
+- [x] Create `frontend/src/components/ui/ItemCardSkeleton.tsx`
+- [x] Skeleton matches ItemCard layout (image, title, description, countdown)
+- [x] Use gray animated pulse effect
+- [x] Show 6 skeletons on Home page while loading
+- [x] Show 1 skeleton on ItemDetail page while loading
+- [x] Show 4 skeletons on Favorites page while loading
+- [x] Mobile-friendly responsive layout
 
 **Dependencies:** None
 
@@ -193,18 +194,19 @@ Replace browser `confirm()` with custom modal dialogs for better UX.
 **Agent:** `frontend_engineer`
 **Priority:** P2 (Medium)
 **Estimated Time:** 45 minutes
-**Status:** TODO
+**Status:** COMPLETE
+**Completed:** 2026-03-04
 
 **Description:**
 Prevent lottery component errors from crashing the entire app.
 
 **Acceptance Criteria:**
-- [ ] Wrap LotteryButton in error boundary
-- [ ] Wrap LotteryCountdown in error boundary
-- [ ] Wrap ReservationCard in error boundary
-- [ ] On error, show fallback: "Unable to load lottery info. Please refresh."
-- [ ] Log errors to console for debugging
-- [ ] App remains functional even if lottery components fail
+- [x] Wrap LotteryButton in error boundary
+- [x] Wrap LotteryCountdown in error boundary
+- [x] Wrap ReservationCard in error boundary
+- [x] On error, show fallback: "Unable to load lottery info. Please refresh."
+- [x] Log errors to console for debugging
+- [x] App remains functional even if lottery components fail
 
 **Dependencies:** None
 

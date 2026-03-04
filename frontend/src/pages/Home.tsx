@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import ItemCard from '../components/item/ItemCard';
+import { ItemCardSkeleton } from '../components/ui/ItemCardSkeleton';
+import { ErrorBoundary } from '../components/ui/ErrorBoundary';
 import CategoryFilter from '../components/item/CategoryFilter';
 import Input from '../components/ui/Input';
 import { WinnerBanner } from '../components/lottery/WinnerBanner';
@@ -51,7 +53,9 @@ export default function Home() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-      <WinnerBanner />
+      <ErrorBoundary>
+        <WinnerBanner />
+      </ErrorBoundary>
       
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
@@ -78,7 +82,7 @@ export default function Home() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-gray-200 rounded-xl h-80 animate-pulse" />
+            <ItemCardSkeleton key={i} />
           ))}
         </div>
       ) : error ? (

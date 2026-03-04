@@ -4,6 +4,7 @@ import { items as itemsApi, apiClient } from '../lib/api/client';
 import { Item } from '../lib/types';
 import Button from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { ErrorBoundary } from '../components/ui/ErrorBoundary';
 import { useFavorites } from '../lib/favorites/FavoritesContext';
 import { useLottery } from '../lib/lottery/LotteryContext';
 import { useAuth } from '../lib/auth/AuthContext';
@@ -73,7 +74,22 @@ export default function ItemDetail() {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="w-full h-96 bg-gray-200 animate-pulse" />
+          <div className="p-6 space-y-4">
+            <div className="h-8 bg-gray-200 rounded w-3/4 animate-pulse" />
+            <div className="h-4 bg-gray-200 rounded w-full animate-pulse" />
+            <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse" />
+            <div className="flex gap-4 mt-6">
+              <div className="h-12 bg-gray-200 rounded flex-1 animate-pulse" />
+              <div className="h-12 bg-gray-200 rounded flex-1 animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!item) {
@@ -173,38 +189,44 @@ export default function ItemDetail() {
 
           {/* Winner Reservation Card */}
           {isWinner && isReserved && item.reservationExpiry && (
-            <ReservationCard
-              itemId={item.itemId}
-              reservationExpiry={item.reservationExpiry}
-              onConfirmSuccess={async () => {
-                const data = await itemsApi.getById(id!);
-                setItem(data);
-              }}
-            />
+            <ErrorBoundary fallback={<div className="mb-6 p-4 bg-yellow-50 text-yellow-700 rounded-lg text-sm">Unable to load reservation info. Please refresh.</div>}>
+              <ReservationCard
+                itemId={item.itemId}
+                reservationExpiry={item.reservationExpiry}
+                onConfirmSuccess={async () => {
+                  const data = await itemsApi.getById(id!);
+                  setItem(data);
+                }}
+              />
+            </ErrorBoundary>
           )}
 
           {/* Buyer Actions */}
           {!isOwner && item.status === 'Available' && (
-            <div className="mt-6 space-y-3">
-              <LotteryCountdown endTime={item.lotteryEndTime} />
-              <LotteryButton
-                itemId={item.itemId}
-                status={item.status}
-                lotteryEndTime={item.lotteryEndTime}
-                isUserInLottery={isInLottery(item.itemId)}
-                onEnterSuccess={loadLotteryEntries}
-              />
-            </div>
+            <ErrorBoundary fallback={<div className="mt-6 p-4 bg-yellow-50 text-yellow-700 rounded-lg text-sm">Unable to load lottery info. Please refresh.</div>}>
+              <div className="mt-6 space-y-3">
+                <LotteryCountdown endTime={item.lotteryEndTime} />
+                <LotteryButton
+                  itemId={item.itemId}
+                  status={item.status}
+                  lotteryEndTime={item.lotteryEndTime}
+                  isUserInLottery={isInLottery(item.itemId)}
+                  onEnterSuccess={loadLotteryEntries}
+                />
+              </div>
+            </ErrorBoundary>
           )}
 
           {/* Owner Message */}
           {isOwner && item.status === 'Available' && (
-            <div className="mt-6 space-y-3">
-              <LotteryCountdown endTime={item.lotteryEndTime} />
-              <div className="px-4 py-3 bg-gray-100 text-gray-600 rounded-lg text-sm">
-                You can't enter your own lottery
+            <ErrorBoundary>
+              <div className="mt-6 space-y-3">
+                <LotteryCountdown endTime={item.lotteryEndTime} />
+                <div className="px-4 py-3 bg-gray-100 text-gray-600 rounded-lg text-sm">
+                  You can't enter your own lottery
+                </div>
               </div>
-            </div>
+            </ErrorBoundary>
           )}
         </div>
       </div>
