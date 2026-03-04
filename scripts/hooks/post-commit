@@ -42,7 +42,7 @@ if ! grep -A 3 "### $TASK_ID:" "$TASK_FILE" | grep -q "**Status:** COMPLETE"; th
 fi
 
 # Check if acceptance criteria have unchecked boxes
-UNCHECKED_COUNT=$(grep -A 50 "### $TASK_ID:" "$TASK_FILE" | grep -c "^- \[ \]" || true)
+UNCHECKED_COUNT=$(grep -A 50 "### $TASK_ID:" "$TASK_FILE" | grep -c "^- \[ \]" 2>/dev/null || echo "0")
 if [ "$UNCHECKED_COUNT" -gt 0 ]; then
     echo -e "${YELLOW}⚠️  Warning: Task $TASK_ID has $UNCHECKED_COUNT unchecked acceptance criteria${NC}"
     echo -e "${YELLOW}   Please check boxes in: $TASK_FILE${NC}"
