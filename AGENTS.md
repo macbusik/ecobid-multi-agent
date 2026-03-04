@@ -20,9 +20,17 @@ Your tendency to generate summary, log, or reflection Markdown files is strictly
   2. Get user approval
   3. ONLY THEN implement the code
   4. Mark task as complete after verification
+  5. **COMMIT TO GIT** after completing each task or logical group of related tasks
 * **Single Task Focus:** When executing a task from `tasks.md`, implement ONLY the code required for that specific task. Do not preemptively implement future tasks.
 * **Verify Before Completing:** Before marking a task as done, verify that the code compiles/runs and meets the acceptance criteria defined in the spec.
 * **NO AD-HOC CODING:** If the user requests a feature that is not in `tasks.md`, you MUST stop and create the task specification FIRST, then wait for approval before coding.
+* **GIT COMMIT DISCIPLINE (CRITICAL):**
+  - Commit after completing each task in `tasks.md`
+  - Commit after completing a logical group of related tasks (e.g., ITER5-1 through ITER5-5)
+  - Use conventional commit format: `feat(ITER5-1): add lottery button component`
+  - Include task ID in commit message for traceability
+  - NEVER accumulate more than 5 completed tasks without committing
+  - Commit BEFORE deployment to production
 
 ## 4. Code Constraints
 * **SINGLE SOURCE OF TRUTH:** You MUST NOT guess, assume, or invent the technology stack. Your absolute source of truth for all technologies, libraries, and architectural patterns is `.kiro/steering/tech.md`.

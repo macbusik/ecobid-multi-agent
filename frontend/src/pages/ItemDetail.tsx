@@ -4,12 +4,16 @@ import { items as itemsApi } from '../lib/api/client';
 import { Item } from '../lib/types';
 import Button from '../components/ui/Button';
 import { useFavorites } from '../lib/favorites/FavoritesContext';
+import { useLottery } from '../lib/lottery/LotteryContext';
 import { useAuth } from '../lib/auth/AuthContext';
+import { LotteryButton } from '../components/lottery/LotteryButton';
+import { LotteryCountdown } from '../components/lottery/LotteryCountdown';
 
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isInLottery, loadLotteryEntries } = useLottery();
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
@@ -107,8 +111,15 @@ export default function ItemDetail() {
 
           {/* Buyer Actions */}
           {!isOwner && item.status === 'Available' && (
-            <div className="mt-6">
-              <Button className="w-full">Enter Lottery</Button>
+            <div className="mt-6 space-y-3">
+              <LotteryCountdown endTime={item.lotteryEndTime} />
+              <LotteryButton
+                itemId={item.itemId}
+                status={item.status}
+                lotteryEndTime={item.lotteryEndTime}
+                isUserInLottery={isInLottery(item.itemId)}
+                onEnterSuccess={loadLotteryEntries}
+              />
             </div>
           )}
         </div>

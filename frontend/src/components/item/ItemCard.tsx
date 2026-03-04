@@ -5,6 +5,7 @@ import { Item } from '../../lib/types';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useToast } from '../../lib/toast/ToastContext';
 import { useFavorites } from '../../lib/favorites/FavoritesContext';
+import { LotteryCountdown } from '../lottery/LotteryCountdown';
 
 interface ItemCardProps {
   item: Item;
@@ -18,10 +19,6 @@ export default function ItemCard({ item }: ItemCardProps) {
   const [loading, setLoading] = useState(false);
 
   const favorited = isFavorite(item.itemId);
-
-  const timeLeft = new Date(item.lotteryCloseTime).getTime() - Date.now();
-  const hoursLeft = Math.max(0, Math.floor(timeLeft / (1000 * 60 * 60)));
-  const minutesLeft = Math.max(0, Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)));
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -98,10 +95,8 @@ export default function ItemCard({ item }: ItemCardProps) {
           
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500">📍 {item.city}</span>
-            {item.status === 'Active' && (
-              <span className="text-green-600 font-medium">
-                ⏱️ {hoursLeft}h {minutesLeft}m left
-              </span>
+            {item.status === 'Available' && item.lotteryEndTime && (
+              <LotteryCountdown endTime={item.lotteryEndTime} compact />
             )}
           </div>
         </div>
