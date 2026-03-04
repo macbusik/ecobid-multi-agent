@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../lib/toast/ToastContext';
 
 interface LotteryButtonProps {
   itemId: string;
