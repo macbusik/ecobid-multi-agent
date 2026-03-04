@@ -10,13 +10,14 @@
 **Phase 8 (Iteration 4 - AI Listing):** 15/15 ✅ COMPLETE  
 **Phase 8.1 (Iteration 4.1 - CRUD):** 7/7 ✅ COMPLETE  
 **Phase 9 (Iteration 5 - Lottery):** 12/12 ✅ COMPLETE  
-**Phase 10 (Iteration 5.1 - UX Polish):** 8/8 ✅ COMPLETE
+**Phase 10 (Iteration 5.1 - UX Polish):** 8/8 ✅ COMPLETE  
+**Phase 11 (Iteration 5.2 - Advanced Lottery):** 0/4 🆕 TODO
 
-**Total Progress:** 99/99 tasks complete (100%) 🎉
+**Total Progress:** 99/103 tasks complete (96%)
 
-**Current Status:** Iteration 5 complete. Starting Iteration 5.1 (UX polish) - 8 tasks focusing on authentication guards, empty states, loading skeletons, and confirmation dialogs.
+**Current Status:** Iteration 5.1 complete (100%). Starting Iteration 5.2 (Advanced Lottery Features) - 4 tasks focusing on user control (leave lottery), urgency (HH:MM:SS countdown), and awareness (winner notifications).
 
-**Next Milestone:** Complete ITER5.1 to achieve production-ready marketplace UX.
+**Next Milestone:** Complete ITER5.2 to achieve production-ready lottery system with full user control.
 
 ---
 
@@ -33,3 +34,4 @@
 - [Phase 8: Iteration 4 - AI-Powered Item Listing](./tasks/iter4-ai-listing.md)
 - [Phase 9: Iteration 5 - Lottery & Reservation System](./tasks/iter5-lottery.md)
 - [Phase 10: Iteration 5.1 - Marketplace UX Polish](./tasks/iter5.1-ux-polish.md)
+- [Phase 11: Iteration 5.2 - Advanced Lottery Features](./tasks/iter5.2-advanced-lottery.md)
