@@ -49,13 +49,29 @@ export const mockApi = {
   items: {
     create: async (data: CreateItemRequest): Promise<CreateItemResponse> => {
       await delay(1500);
+      const newItem: Item = {
+        itemId: `item-${Date.now()}`,
+        sellerId: 'current-user',
+        title: data.title,
+        description: data.description,
+        category: data.category as any,
+        city: data.city,
+        photoUrl: data.photoUrl,
+        status: 'Available',
+        lotteryWindowHours: data.lotteryWindowHours,
+        lotteryEndTime: new Date(Date.now() + data.lotteryWindowHours * 60 * 60 * 1000).toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      // Add to mock items list
+      mockItems.unshift(newItem);
       return {
-        itemId: `item${Date.now()}`,
-        photoUrl: 'https://picsum.photos/400/300',
+        itemId: newItem.itemId,
+        photoUrl: newItem.photoUrl,
         aiSuggestions: {
-          title: 'Vintage Wooden Chair',
-          description: 'Beautiful vintage wooden chair in excellent condition.',
-          category: 'Furniture',
+          title: data.title,
+          description: data.description,
+          category: data.category as any,
         },
       };
     },

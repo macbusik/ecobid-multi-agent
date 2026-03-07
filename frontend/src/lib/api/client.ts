@@ -140,6 +140,14 @@ export const favorites = USE_MOCK ? mockApi.favorites : {
 // Photo upload methods
 export const photos = {
   getUploadUrl: async (fileName: string, fileType: string) => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return {
+        uploadUrl: 'mock-upload-url',
+        s3Key: `mock-photos/${Date.now()}-${fileName}`,
+        expiresIn: 3600
+      };
+    }
     return apiRequest<{ uploadUrl: string; s3Key: string; expiresIn: number }>('/items/upload-url', {
       method: 'POST',
       body: JSON.stringify({ fileName, fileType }),
@@ -147,6 +155,10 @@ export const photos = {
   },
 
   upload: async (uploadUrl: string, file: File) => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return; // Mock upload - do nothing
+    }
     const response = await fetch(uploadUrl, {
       method: 'PUT',
       body: file,
@@ -161,6 +173,15 @@ export const photos = {
   },
 
   analyze: async (s3Key: string) => {
+    if (USE_MOCK) {
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate AI processing
+      return {
+        title: 'Vintage Wooden Chair',
+        description: 'Beautiful vintage wooden chair in excellent condition. Perfect for dining room or home office. Solid construction with comfortable seat.',
+        category: 'Furniture',
+        aiGenerated: true
+      };
+    }
     return apiRequest<{
       title: string;
       description: string;
