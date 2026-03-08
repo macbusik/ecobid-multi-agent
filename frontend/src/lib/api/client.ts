@@ -17,7 +17,7 @@ const API_URL = import.meta.env.VITE_API_URL!;
 const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 async function getAuthToken(): Promise<string | null> {
-  if (USE_MOCK) return 'mock-token';
+  // Always get real token (needed for S3 and AI endpoints)
   try {
     const session = await fetchAuthSession();
     return session.tokens?.idToken?.toString() || null;
