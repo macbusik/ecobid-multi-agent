@@ -59,16 +59,13 @@ export default function NewItem() {
   };
 
   const handlePublish = async () => {
-    if (!photo || !user) return;
+    if (!photo?.s3Key || !user) return;
 
     setLoading(true);
     setError('');
     
     try {
-      const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
-      const photoUrl = USE_MOCK 
-        ? photo.preview // Use preview URL in mock mode
-        : `https://${import.meta.env.VITE_S3_BUCKET}.s3.${import.meta.env.VITE_S3_REGION}.amazonaws.com/${photo.s3Key}`;
+      const photoUrl = `https://${import.meta.env.VITE_S3_BUCKET}.s3.${import.meta.env.VITE_S3_REGION}.amazonaws.com/${photo.s3Key}`;
       
       await items.create({
         title: formData.title,
