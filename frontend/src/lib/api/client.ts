@@ -137,8 +137,8 @@ export const favorites = USE_MOCK ? mockApi.favorites : {
     apiRequest<{ message: string }>(`/users/${userId}/favorites/${itemId}`, { method: 'DELETE' }),
 };
 
-// Photo upload methods
-export const photos = USE_MOCK ? mockApi.photos : {
+// Photo upload methods - ALWAYS use real S3 and AI (never mocked)
+export const photos = {
   getUploadUrl: async (fileName: string, fileType: string) => {
     return apiRequest<{ uploadUrl: string; s3Key: string; expiresIn: number }>('/items/upload-url', {
       method: 'POST',
