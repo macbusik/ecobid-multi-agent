@@ -192,4 +192,27 @@ export const mockApi = {
       return { message: 'Removed from favorites' }; 
     },
   },
+
+  photos: {
+    getUploadUrl: async (fileName: string, fileType: string) => {
+      await delay(500);
+      return {
+        uploadUrl: 'mock-upload-url',
+        s3Key: `mock-${Date.now()}-${fileName}`,
+        expiresIn: 3600,
+      };
+    },
+    upload: async (uploadUrl: string, file: File) => {
+      await delay(1000);
+    },
+    analyze: async (s3Key: string) => {
+      await delay(2000);
+      return {
+        title: 'Vintage Wooden Chair',
+        description: 'A beautiful vintage wooden chair in good condition, perfect for dining room or office.',
+        category: 'furniture' as const,
+        aiGenerated: true,
+      };
+    },
+  },
 };

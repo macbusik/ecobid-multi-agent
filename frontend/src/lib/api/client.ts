@@ -138,7 +138,7 @@ export const favorites = USE_MOCK ? mockApi.favorites : {
 };
 
 // Photo upload methods
-export const photos = {
+export const photos = USE_MOCK ? mockApi.photos : {
   getUploadUrl: async (fileName: string, fileType: string) => {
     return apiRequest<{ uploadUrl: string; s3Key: string; expiresIn: number }>('/items/upload-url', {
       method: 'POST',
