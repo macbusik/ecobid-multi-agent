@@ -1,6 +1,6 @@
 # Phase 12: Iteration 5.3 - Lottery Bug Fixes
 
-**Status:** 0/4 tasks complete  
+**Status:** 4/4 tasks complete ✅  
 **Focus:** Fix critical lottery functionality issues found in testing  
 **Priority:** P0 (Critical - Blocking Demo)
 
@@ -20,7 +20,7 @@ These must be fixed before demo to Product Owner.
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Critical)
 **Estimated Time:** 30 minutes
-**Status:** TODO
+**Status:** ✅ COMPLETE
 
 **Description:**
 Created items don't appear in Profile → My Items section because mock API sets `sellerId: 'current-user'` but Profile filters by real Cognito UUID.
@@ -41,12 +41,12 @@ item.sellerId === user?.userId  // Real Cognito UUID like "abc-123-..."
 - Appears broken to Product Owner
 
 **Acceptance Criteria:**
-- [ ] Pass `sellerId` in `CreateItemRequest` interface
-- [ ] Update `NewItem.tsx` to include `sellerId: user.userId` in create request
-- [ ] Update `mock-client.ts` to use `data.sellerId` instead of hardcoded value
-- [ ] Test: Create item → Navigate to Profile → See item in "My Items"
-- [ ] Test: Edit button works on own items
-- [ ] Test: Delete button works on own items
+- [x] Pass `sellerId` in `CreateItemRequest` interface
+- [x] Update `NewItem.tsx` to include `sellerId: user.userId` in create request
+- [x] Update `mock-client.ts` to use `data.sellerId` instead of hardcoded value
+- [x] Test: Create item → Navigate to Profile → See item in "My Items"
+- [x] Test: Edit button works on own items
+- [x] Test: Delete button works on own items
 
 **Files to Modify:**
 - `frontend/src/lib/types/index.ts` - Add `sellerId` to `CreateItemRequest`
@@ -87,7 +87,7 @@ sellerId: data.sellerId, // ✅ Use from request, not hardcoded
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Critical)
 **Estimated Time:** 1 hour
-**Status:** TODO
+**Status:** ✅ COMPLETE
 
 **Description:**
 Winner notification badge and "My Wins" page call `getWonItems()` which doesn't exist in mock API, causing errors and empty states.
@@ -107,15 +107,15 @@ const items = await (apiClient as any).getWonItems(); // ❌ Doesn't exist
 - "My Wins" page is broken
 
 **Acceptance Criteria:**
-- [ ] Add `WON_ITEMS` localStorage key for storing won item IDs
-- [ ] Add `getWonItems()` helper function (get from localStorage)
-- [ ] Add `markAsWinner()` helper function (add to localStorage)
-- [ ] Add `getWonItems()` method to `mockApi.items`
-- [ ] Method returns items where user is winner (status: Reserved)
-- [ ] Export `markAsWinner()` for manual testing (dev tool)
-- [ ] Test: Mark item as won → Notification badge appears
-- [ ] Test: Click badge → See won item in dropdown
-- [ ] Test: Navigate to /wins → See won item
+- [x] Add `WON_ITEMS` localStorage key for storing won item IDs
+- [x] Add `getWonItems()` helper function (get from localStorage)
+- [x] Add `markAsWinner()` helper function (add to localStorage)
+- [x] Add `getWonItems()` method to `mockApi.items`
+- [x] Method returns items where user is winner (status: Reserved)
+- [x] Export `markAsWinner()` for manual testing (dev tool)
+- [x] Test: Mark item as won → Notification badge appears
+- [x] Test: Click badge → See won item in dropdown
+- [x] Test: Navigate to /wins → See won item
 
 **Files to Modify:**
 - `frontend/src/lib/api/mock-client.ts` - Add getWonItems() and helpers
@@ -172,7 +172,7 @@ markAsWinner('item-123', 'current-user-id'); // Mark as winner
 **Agent:** `frontend_engineer`
 **Priority:** P0 (Critical)
 **Estimated Time:** 30 minutes
-**Status:** TODO
+**Status:** ✅ COMPLETE
 
 **Description:**
 Winner notification badge calls `apiClient.getWonItems()` but should call `items.getWonItems()` from the items API.
@@ -191,13 +191,13 @@ const wonItems = await items.getWonItems();
 - Users miss pickup opportunities
 
 **Acceptance Criteria:**
-- [ ] Update `WinnerNotificationBadge.tsx` to import `items` from client
-- [ ] Change `apiClient.getWonItems()` to `items.getWonItems()`
-- [ ] Remove `(apiClient as any)` type assertion
-- [ ] Update `Wins.tsx` page with same fix
-- [ ] Test: Mark item as won → Badge appears with count
-- [ ] Test: Click badge → Dropdown shows won item
-- [ ] Test: Navigate to /wins → Won item appears
+- [x] Update `WinnerNotificationBadge.tsx` to import `items` from client
+- [x] Change `apiClient.getWonItems()` to `items.getWonItems()`
+- [x] Remove `(apiClient as any)` type assertion
+- [x] Update `Wins.tsx` page with same fix
+- [x] Test: Mark item as won → Badge appears with count
+- [x] Test: Click badge → Dropdown shows won item
+- [x] Test: Navigate to /wins → Won item appears
 
 **Dependencies:** ITER5.3-2 (getWonItems must exist first)
 
@@ -227,7 +227,7 @@ const loadWonItems = async () => {
 **Agent:** `frontend_engineer`
 **Priority:** P1 (High)
 **Estimated Time:** 30 minutes
-**Status:** TODO
+**Status:** ✅ COMPLETE
 
 **Description:**
 Profile page "My Lottery Entries" section doesn't show if user won or lost after lottery closes. All items just show "Closed" status with no winner indication.
@@ -238,14 +238,14 @@ Profile page "My Lottery Entries" section doesn't show if user won or lost after
 - Poor UX
 
 **Acceptance Criteria:**
-- [ ] Check if user won each lottery entry (compare winnerId with userId)
-- [ ] Show "🎉 You won! Confirm pickup" badge for won items
-- [ ] Show "Not selected this time" for lost lotteries
-- [ ] Won items have green background highlight
-- [ ] Lost items have gray text
-- [ ] Click won item → Navigate to detail page
-- [ ] Test: Mark as winner → Entry shows "You won!"
-- [ ] Test: Lottery closed without win → Entry shows "Not selected"
+- [x] Check if user won each lottery entry (compare winnerId with userId)
+- [x] Show "🎉 You won! Confirm pickup" badge for won items
+- [x] Show "Not selected this time" for lost lotteries
+- [x] Won items have green background highlight
+- [x] Lost items have gray text
+- [x] Click won item → Navigate to detail page
+- [x] Test: Mark as winner → Entry shows "You won!"
+- [x] Test: Lottery closed without win → Entry shows "Not selected"
 
 **Dependencies:** ITER5.3-2 (winnerId must be set)
 

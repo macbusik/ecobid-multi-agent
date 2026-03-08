@@ -68,6 +68,7 @@ export interface CreateItemRequest {
   city: string;
   photoUrl: string;
   lotteryWindowHours: number;
+  sellerId: string;
   aiGenerated?: boolean;
 }
 

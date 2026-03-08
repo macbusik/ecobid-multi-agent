@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth/AuthContext';
-import { apiClient } from '../lib/api/client';
+import { items } from '../lib/api/client';
 import { Item } from '../lib/types';
 import { LotteryCountdown } from '../components/lottery/LotteryCountdown';
 
@@ -14,8 +14,8 @@ export default function Wins() {
     const loadWonItems = async () => {
       if (!user) return;
       try {
-        const items = await (apiClient as any).getWonItems();
-        setWonItems(items);
+        const wonItemsList = await (items as any).getWonItems();
+        setWonItems(wonItemsList);
       } catch (error) {
         console.error('Failed to load won items:', error);
       } finally {

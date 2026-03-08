@@ -74,6 +74,7 @@ export default function NewItem() {
         city: user.city || 'Unknown',
         photoUrl,
         lotteryWindowHours: parseInt(lotteryHours),
+        sellerId: user.userId,
         aiGenerated: aiSuggestions?.aiGenerated || false,
       });
       

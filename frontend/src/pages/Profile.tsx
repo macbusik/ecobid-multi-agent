@@ -104,7 +104,9 @@ export default function Profile() {
           <div className="space-y-4">
             {lotteryItems.map(item => (
               <Link key={item.itemId} to={`/items/${item.itemId}`}>
-                <div className="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                <div className={`flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors ${
+                  item.status === 'Reserved' && item.winnerId === user?.userId ? 'bg-green-50 border-green-200' : ''
+                }`}>
                   <img 
                     src={item.photoUrl} 
                     alt={item.title}
@@ -118,23 +120,28 @@ export default function Profile() {
                         <LotteryCountdown endTime={item.lotteryEndTime} compact />
                       </div>
                     )}
-                    {item.status === 'Lottery_Closed' && (
-                      <p className="text-sm text-orange-600 mt-1">⏰ Lottery closed - waiting for results</p>
+                    {item.status === 'Lottery_Closed' && !item.winnerId && (
+                      <p className="text-sm text-orange-600 mt-1">⏰ Selecting winner...</p>
                     )}
-                    {item.status === 'Reserved' && (
-                      <p className="text-sm text-yellow-600 mt-1">🎉 Winner selected</p>
+                    {item.status === 'Reserved' && item.winnerId === user?.userId && (
+                      <p className="text-sm text-green-600 font-semibold mt-1">🎉 You won! Confirm pickup</p>
+                    )}
+                    {item.status === 'Reserved' && item.winnerId && item.winnerId !== user?.userId && (
+                      <p className="text-sm text-gray-500 mt-1">Not selected this time</p>
                     )}
                   </div>
                   <div className="text-right">
                     <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
                       item.status === 'Available' ? 'bg-green-100 text-green-800' :
                       item.status === 'Lottery_Closed' ? 'bg-orange-100 text-orange-800' :
-                      item.status === 'Reserved' ? 'bg-yellow-100 text-yellow-800' :
+                      item.status === 'Reserved' && item.winnerId === user?.userId ? 'bg-green-100 text-green-800' :
+                      item.status === 'Reserved' ? 'bg-gray-100 text-gray-600' :
                       'bg-gray-100 text-gray-800'
                     }`}>
                       {item.status === 'Available' ? 'Active' :
                        item.status === 'Lottery_Closed' ? 'Closed' :
-                       item.status === 'Reserved' ? 'Reserved' :
+                       item.status === 'Reserved' && item.winnerId === user?.userId ? 'Won' :
+                       item.status === 'Reserved' ? 'Lost' :
                        item.status}
                     </span>
                   </div>

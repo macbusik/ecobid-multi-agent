@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../lib/auth/AuthContext';
-import { apiClient } from '../../lib/api/client';
+import { items } from '../../lib/api/client';
 import { Item } from '../../lib/types';
 
 export function WinnerNotificationBadge() {
@@ -14,9 +14,9 @@ export function WinnerNotificationBadge() {
 
     const loadWonItems = async () => {
       try {
-        const items = await (apiClient as any).getWonItems();
+        const wonItemsList = await (items as any).getWonItems();
         // Only show items that are Reserved (not yet confirmed)
-        const pending = items.filter((item: Item) => item.status === 'Reserved');
+        const pending = wonItemsList.filter((item: Item) => item.status === 'Reserved');
         setWonItems(pending);
       } catch (error) {
         console.error('Failed to load won items:', error);

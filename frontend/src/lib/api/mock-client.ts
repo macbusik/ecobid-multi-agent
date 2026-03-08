@@ -17,6 +17,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const STORAGE_KEYS = {
   LOTTERY_ENTRIES: 'ecobid_lottery_entries',
   FAVORITES: 'ecobid_favorites',
+  WON_ITEMS: 'ecobid_won_items',
 };
 
 // Mock lottery entries storage
@@ -39,6 +40,27 @@ const removeLotteryEntry = (itemId: string): void => {
   localStorage.setItem(STORAGE_KEYS.LOTTERY_ENTRIES, JSON.stringify(filtered));
 };
 
+// Mock won items storage
+const getWonItemIds = (): string[] => {
+  const stored = localStorage.getItem(STORAGE_KEYS.WON_ITEMS);
+  return stored ? JSON.parse(stored) : [];
+};
+
+export const markAsWinner = (itemId: string, userId: string): void => {
+  const wonIds = getWonItemIds();
+  if (!wonIds.includes(itemId)) {
+    wonIds.push(itemId);
+    localStorage.setItem(STORAGE_KEYS.WON_ITEMS, JSON.stringify(wonIds));
+  }
+  
+  // Update item status in mockItems
+  const item = mockItems.find(i => i.itemId === itemId);
+  if (item) {
+    item.status = 'Reserved';
+    item.winnerId = userId;
+  }
+};
+
 export const mockApi = {
   auth: {
     register: async () => { await delay(500); },
@@ -51,7 +73,7 @@ export const mockApi = {
       await delay(1500);
       const newItem: Item = {
         itemId: `item-${Date.now()}`,
-        sellerId: 'current-user',
+        sellerId: data.sellerId,
         title: data.title,
         description: data.description,
         category: data.category as any,
@@ -122,11 +144,11 @@ export const mockApi = {
       await delay(300);
       return { itemIds: getLotteryEntries() };
     },
-
-    getWonItems: async () => {
+    
+    getWonItems: async (): Promise<Item[]> => {
       await delay(300);
-      // Return empty array for mock (no backend lottery execution)
-      return [];
+      const wonIds = getWonItemIds();
+      return mockItems.filter(item => wonIds.includes(item.itemId));
     },
     
     confirmPickup: async (itemId: string) => { 
