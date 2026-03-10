@@ -10,6 +10,7 @@ import { useLottery } from '../lib/lottery/LotteryContext';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useToast } from '../lib/toast/ToastContext';
 import { LotteryButton } from '../components/lottery/LotteryButton';
+import { LotteryStatus } from '../components/lottery/LotteryStatus';
 import { LotteryCountdown } from '../components/lottery/LotteryCountdown';
 import { ReservationCard } from '../components/lottery/ReservationCard';
 
@@ -216,6 +217,13 @@ export default function ItemDetail() {
                 />
               </div>
             </ErrorBoundary>
+          )}
+
+          {/* Lottery Result Status */}
+          {!isOwner && (item.status === 'Reserved' || item.status === 'Lottery_Closed') && user && (
+            <div className="mt-6">
+              <LotteryStatus item={item} userId={user.userId} />
+            </div>
           )}
 
           {/* Owner Message */}

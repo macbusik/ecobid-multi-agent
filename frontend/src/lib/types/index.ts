@@ -30,6 +30,13 @@ export type ItemCategory =
   | 'Sports' 
   | 'Other';
 
+// Queue user for lottery backup winners
+export interface QueueUser {
+  userId: string;
+  position: number;
+  notifiedAt?: string;
+}
+
 // Item entity
 export interface Item {
   itemId: string;
@@ -44,6 +51,7 @@ export interface Item {
   lotteryEndTime: string;
   winnerId?: string;
   winnerUserId?: string;
+  queueUsers?: QueueUser[];
   reservationExpiry?: string;
   reservationExpiryTime?: string;
   createdAt: string;

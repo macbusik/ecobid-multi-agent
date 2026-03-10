@@ -61,6 +61,25 @@ export const markAsWinner = (itemId: string, userId: string): void => {
   }
 };
 
+export const setLotteryResult = (itemId: string, winnerId: string, queueUserIds: string[]): void => {
+  const item = mockItems.find(i => i.itemId === itemId);
+  if (item) {
+    item.status = 'Reserved';
+    item.winnerId = winnerId;
+    item.queueUsers = queueUserIds.map((userId, index) => ({
+      userId,
+      position: index + 1,
+    }));
+  }
+  
+  // Save winner to localStorage
+  const wonIds = getWonItemIds();
+  if (!wonIds.includes(itemId)) {
+    wonIds.push(itemId);
+    localStorage.setItem(STORAGE_KEYS.WON_ITEMS, JSON.stringify(wonIds));
+  }
+};
+
 export const mockApi = {
   auth: {
     register: async () => { await delay(500); },

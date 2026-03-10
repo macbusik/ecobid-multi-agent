@@ -6,6 +6,7 @@ import { Item } from '../lib/types';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LotteryCountdown } from '../components/lottery/LotteryCountdown';
+import { LotteryStatus } from '../components/lottery/LotteryStatus';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
@@ -120,14 +121,10 @@ export default function Profile() {
                         <LotteryCountdown endTime={item.lotteryEndTime} compact />
                       </div>
                     )}
-                    {item.status === 'Lottery_Closed' && !item.winnerId && (
-                      <p className="text-sm text-orange-600 mt-1">⏰ Selecting winner...</p>
-                    )}
-                    {item.status === 'Reserved' && item.winnerId === user?.userId && (
-                      <p className="text-sm text-green-600 font-semibold mt-1">🎉 You won! Confirm pickup</p>
-                    )}
-                    {item.status === 'Reserved' && item.winnerId && item.winnerId !== user?.userId && (
-                      <p className="text-sm text-gray-500 mt-1">Not selected this time</p>
+                    {(item.status === 'Reserved' || item.status === 'Lottery_Closed') && user && (
+                      <div className="mt-1">
+                        <LotteryStatus item={item} userId={user.userId} compact />
+                      </div>
                     )}
                   </div>
                   <div className="text-right">
@@ -135,12 +132,14 @@ export default function Profile() {
                       item.status === 'Available' ? 'bg-green-100 text-green-800' :
                       item.status === 'Lottery_Closed' ? 'bg-orange-100 text-orange-800' :
                       item.status === 'Reserved' && item.winnerId === user?.userId ? 'bg-green-100 text-green-800' :
+                      item.status === 'Reserved' && item.queueUsers?.some(q => q.userId === user?.userId) ? 'bg-yellow-100 text-yellow-800' :
                       item.status === 'Reserved' ? 'bg-gray-100 text-gray-600' :
                       'bg-gray-100 text-gray-800'
                     }`}>
                       {item.status === 'Available' ? 'Active' :
                        item.status === 'Lottery_Closed' ? 'Closed' :
                        item.status === 'Reserved' && item.winnerId === user?.userId ? 'Won' :
+                       item.status === 'Reserved' && item.queueUsers?.some(q => q.userId === user?.userId) ? 'Queue' :
                        item.status === 'Reserved' ? 'Lost' :
                        item.status}
                     </span>
