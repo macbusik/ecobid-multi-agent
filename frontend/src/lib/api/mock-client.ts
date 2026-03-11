@@ -80,6 +80,50 @@ export const setLotteryResult = (itemId: string, winnerId: string, queueUserIds:
   }
 };
 
+// Auto-execute lottery when time expires
+const executeMockLottery = (itemId: string): void => {
+  const item = mockItems.find(i => i.itemId === itemId);
+  if (!item || item.status !== 'Available') return;
+  
+  // Get all users who entered this lottery
+  const lotteryEntries = getLotteryEntries();
+  if (!lotteryEntries.includes(itemId)) return;
+  
+  // Get current user ID from localStorage (Cognito token)
+  const clientId = import.meta.env.VITE_COGNITO_USER_POOL_CLIENT_ID;
+  if (!clientId) return;
+  
+  const lastAuthUserKey = `CognitoIdentityServiceProvider.${clientId}.LastAuthUser`;
+  const username = localStorage.getItem(lastAuthUserKey);
+  if (!username) return;
+  
+  const userIdKey = `CognitoIdentityServiceProvider.${clientId}.${username}.idToken`;
+  const idToken = localStorage.getItem(userIdKey);
+  if (!idToken) return;
+  
+  try {
+    const payload = JSON.parse(atob(idToken.split('.')[1]));
+    const userId = payload.sub;
+    
+    // User wins (they're the only participant)
+    setLotteryResult(itemId, userId, []);
+    
+    console.log('🎉 Lottery executed! You won item:', itemId);
+    
+    // Trigger a custom event to notify UI
+    window.dispatchEvent(new CustomEvent('lottery-result', { 
+      detail: { itemId, winnerId: userId, status: 'won' }
+    }));
+  } catch (error) {
+    console.error('Failed to execute lottery:', error);
+  }
+};
+
+// Manual trigger for testing (execute lottery immediately)
+export const triggerLotteryNow = (itemId: string): void => {
+  executeMockLottery(itemId);
+};
+
 export const mockApi = {
   auth: {
     register: async () => { await delay(500); },
@@ -106,6 +150,12 @@ export const mockApi = {
       };
       // Add to mock items list
       mockItems.unshift(newItem);
+      
+      // Auto-execute lottery after window expires (for demo)
+      setTimeout(() => {
+        executeMockLottery(newItem.itemId);
+      }, data.lotteryWindowHours * 60 * 60 * 1000);
+      
       return {
         itemId: newItem.itemId,
         photoUrl: newItem.photoUrl,
