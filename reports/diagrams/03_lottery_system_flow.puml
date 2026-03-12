@@ -1,0 +1,36 @@
+@startuml Lottery_System_Flow
+!theme plain
+skinparam backgroundColor white
+
+actor User
+participant "Items Lambda" as Items
+participant EventBridge
+participant "Lottery Lambda" as Lottery
+participant SES
+participant "Expiry Lambda" as Expiry
+participant DynamoDB as DDB
+
+User -> Items: Publish Item
+Items -> EventBridge: Schedule Lottery (6 hours)
+Items -> DDB: Store Item (Available)
+
+note over EventBridge: Wait for lottery window
+
+EventBridge -> Lottery: Trigger Lottery
+Lottery -> DDB: Get Lottery Entries
+Lottery -> DDB: Select Random Winner
+Lottery -> DDB: Update Item (Reserved)
+Lottery -> SES: Email Winner
+Lottery -> SES: Email Seller
+Lottery -> EventBridge: Schedule Expiry (24 hours)
+
+note over EventBridge: Wait for reservation window
+
+EventBridge -> Expiry: Check Reservation
+Expiry -> DDB: Check Pickup Status
+alt Not Confirmed
+    Expiry -> DDB: Update Item (Expired)
+    Expiry -> SES: Email Seller
+end
+
+@enduml

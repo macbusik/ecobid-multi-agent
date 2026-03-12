@@ -1,0 +1,57 @@
+@startuml DynamoDB_Schema
+!theme plain
+skinparam backgroundColor white
+
+package "DynamoDB Single Table Design" {
+    class "Primary Keys" as PK {
+        PK: Partition Key
+        --
+        USER#userId
+        ITEM#itemId
+        MESSAGE#messageId
+    }
+    
+    class "Sort Keys" as SK {
+        SK: Sort Key
+        --
+        PROFILE
+        METADATA
+        LOTTERY#userId
+    }
+    
+    class "GSI1: Status Queries" as GSI1 {
+        GSI1PK: STATUS#Available
+        GSI1SK: createdAt
+        --
+        Purpose: Item Feed
+        Query: All available items
+    }
+    
+    class "GSI2: Category/City" as GSI2 {
+        GSI2PK: CATEGORY#Kitchen#CITY#NYC
+        GSI2SK: createdAt
+        --
+        Purpose: Filtered Search
+        Query: Items by category and city
+    }
+    
+    class "Item Attributes" as Attributes {
+        title: string
+        description: string
+        photoUrl: string
+        status: enum
+        category: enum
+        city: string
+        lotteryEndTime: timestamp
+        winnerUserId: string
+        createdAt: timestamp
+        updatedAt: timestamp
+    }
+}
+
+PK ||--|| GSI1
+SK ||--|| GSI2
+GSI1 ||--|| Attributes
+GSI2 ||--|| Attributes
+
+@enduml

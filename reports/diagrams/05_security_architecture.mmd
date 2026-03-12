@@ -1,0 +1,13 @@
+graph TB
+    subgraph "IAM Security Model"
+        Principle[Principle of Least Privilege<br/>Grant Methods Only<br/>No Wildcard Policies*]
+        Lambda_Roles[Lambda Execution Roles<br/>Function-Specific Permissions<br/>Resource-Scoped Access]
+        API_Auth[API Gateway Authorization<br/>Cognito JWT Validation<br/>User Context Injection]
+        S3_Security[S3 Security<br/>Public Read for Photos<br/>Presigned URLs for Upload<br/>CORS Configuration]
+        DDB_Security[DynamoDB Security<br/>Item-Level Access Control<br/>User-Scoped Queries<br/>GSI Permissions]
+    end
+    
+    Principle --> Lambda_Roles
+    Principle --> API_Auth
+    Principle --> S3_Security
+    Principle --> DDB_Security

@@ -1,0 +1,24 @@
+@startuml Security_Architecture
+!theme plain
+skinparam backgroundColor white
+
+package "IAM Security Model" {
+    component Principle as "Principle of Least Privilege\nGrant Methods Only\nNo Wildcard Policies*"
+    
+    component Lambda_Roles as "Lambda Execution Roles\nFunction-Specific Permissions\nResource-Scoped Access"
+    
+    component API_Auth as "API Gateway Authorization\nCognito JWT Validation\nUser Context Injection"
+    
+    component S3_Security as "S3 Security\nPublic Read for Photos\nPresigned URLs for Upload\nCORS Configuration"
+    
+    component DDB_Security as "DynamoDB Security\nItem-Level Access Control\nUser-Scoped Queries\nGSI Permissions"
+}
+
+Principle --> Lambda_Roles
+Principle --> API_Auth
+Principle --> S3_Security
+Principle --> DDB_Security
+
+note bottom : *Exception: Nova Lite requires\nwildcard due to cross-region\ninference profile routing
+
+@enduml

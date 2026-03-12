@@ -34,8 +34,12 @@ ecobid-multi-agent/
 │       │   ├── backend_engineer.md
 │       │   ├── business_analyst.md
 │       │   ├── frontend_engineer.md
+│       │   ├── qa_engineer.md
 │       │   └── ux_ui_expert.md
 │       └── tech.md                  # Technology stack constraints
+├── reports/                         # Project reports & analysis
+│   ├── README.md                    # Reports directory guide
+│   └── cost-optimization-report.md  # AWS cost analysis
 ├── infrastructure/                  # AWS CDK project
 │   ├── bin/                         # CDK app entry point
 │   ├── lib/

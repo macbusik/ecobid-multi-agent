@@ -1,0 +1,13 @@
+graph TB
+    subgraph "DynamoDB Table Structure"
+        PK[Primary Key: PK<br/>USER#userId<br/>ITEM#itemId<br/>MESSAGE#messageId]
+        SK[Sort Key: SK<br/>PROFILE<br/>METADATA<br/>LOTTERY#userId]
+        GSI1[GSI1: Status Queries<br/>PK: STATUS#Available<br/>SK: createdAt<br/>Purpose: Item Feed]
+        GSI2[GSI2: Category/City<br/>PK: CATEGORY#Kitchen#CITY#NYC<br/>SK: createdAt<br/>Purpose: Filtered Search]
+        Attributes[Attributes<br/>title, description, photoUrl<br/>status, category, city<br/>lotteryEndTime, winnerUserId]
+    end
+    
+    PK --> GSI1
+    SK --> GSI2
+    GSI1 --> Attributes
+    GSI2 --> Attributes

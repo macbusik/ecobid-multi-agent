@@ -1,0 +1,89 @@
+@startuml EcoBid_High_Level_Architecture
+!theme plain
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+
+actor User as "👤 User\nMobile/Desktop Browser"
+
+package "Frontend Hosting" {
+    component Amplify as "AWS Amplify\nStatic Site Hosting\nVite + React + TypeScript"
+}
+
+package "API Layer" {
+    component API as "API Gateway HTTP API\nREST Endpoints\nCORS Enabled"
+    component Auth as "Cognito Authorizer\nJWT Token Validation"
+}
+
+package "Serverless Compute" as Lambda {
+    component Items as "Items Handler\nCRUD Operations\nLottery Management"
+    component Users as "Users Handler\nProfile Management\nAuthentication"
+    component Messages as "Messages Handler\nIn-App Messaging\nNotifications"
+    component Favorites as "Favorites Handler\nUser Preferences\nWishlist Management"
+    component Upload as "Generate Presigned URL\nSecure S3 Upload\nPhoto Processing"
+    component Analyze as "Analyze Item\nAI Vision Processing\nNova Lite Integration"
+    component Lottery as "Lottery Handler\nWinner Selection\nAutomated Scheduling"
+    component Expiry as "Reservation Expiry\nTimeout Management\nRe-listing Logic"
+}
+
+package "Data Storage" {
+    database DDB as "DynamoDB\nSingle Table Design\nGSI1: Status Queries\nGSI2: Category/City"
+    database S3 as "S3 Bucket\nItem Photos\nPublic Read Access\nCORS Configuration"
+}
+
+package "Authentication" {
+    component Cognito as "Cognito User Pool\nEmail/Password Auth\nJWT Tokens\nEmail Verification"
+}
+
+package "AI Services" {
+    component Nova as "Amazon Nova Lite\nMultimodal Vision\nObject Detection\nText Generation"
+}
+
+package "Event-Driven Automation" {
+    component EventBridge as "EventBridge Scheduler\nLottery Timing\nReservation Expiry\nAutomated Triggers"
+}
+
+package "Notifications" {
+    component SES as "Amazon SES\nEmail Notifications\nWinner Alerts\nPickup Reminders"
+}
+
+' User Flow Connections
+User --> Amplify
+Amplify --> API
+API --> Auth
+Auth --> Cognito
+
+' API to Lambda Connections
+API --> Items
+API --> Users
+API --> Messages
+API --> Favorites
+API --> Upload
+API --> Analyze
+
+' Lambda to Data Connections
+Items --> DDB
+Users --> DDB
+Messages --> DDB
+Favorites --> DDB
+Upload --> S3
+Analyze --> S3
+Lottery --> DDB
+Expiry --> DDB
+
+' AI Integration
+Analyze --> Nova
+
+' Event-Driven Connections
+Items --> EventBridge
+EventBridge --> Lottery
+EventBridge --> Expiry
+
+' Notification Connections
+Lottery --> SES
+Messages --> SES
+Expiry --> SES
+
+' Authentication Connections
+Users --> Cognito
+
+@enduml

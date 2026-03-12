@@ -1,0 +1,16 @@
+graph LR
+    subgraph "CI/CD Pipeline"
+        Dev[Developer<br/>Local Development<br/>Kiro CLI + AI Agents]
+        Git[Git Repository<br/>Feature Branches<br/>Pull Requests]
+        Actions[GitHub Actions<br/>OIDC Authentication<br/>Automated Testing]
+        CDK_Deploy[CDK Deploy<br/>Infrastructure Updates<br/>Lambda Deployment]
+        Amplify_Deploy[Amplify Deploy<br/>Frontend Build<br/>Static Site Update]
+        Prod[Production<br/>Live Application<br/>Monitoring & Alerts]
+    end
+    
+    Dev --> Git
+    Git --> Actions
+    Actions --> CDK_Deploy
+    Actions --> Amplify_Deploy
+    CDK_Deploy --> Prod
+    Amplify_Deploy --> Prod

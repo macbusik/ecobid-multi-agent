@@ -1,0 +1,92 @@
+graph TB
+    %% User Layer
+    User[👤 User<br/>Mobile/Desktop Browser]
+    
+    %% Frontend Layer
+    subgraph "Frontend Hosting"
+        Amplify[AWS Amplify<br/>Static Site Hosting<br/>Vite + React + TypeScript]
+    end
+    
+    %% API Gateway Layer
+    subgraph "API Layer"
+        API[API Gateway HTTP API<br/>REST Endpoints<br/>CORS Enabled]
+        Auth[Cognito Authorizer<br/>JWT Token Validation]
+    end
+    
+    %% Lambda Functions Layer
+    subgraph "Serverless Compute (AWS Lambda - Node.js 20.x ARM64)"
+        Items[Items Handler<br/>CRUD Operations<br/>Lottery Management]
+        Users[Users Handler<br/>Profile Management<br/>Authentication]
+        Messages[Messages Handler<br/>In-App Messaging<br/>Notifications]
+        Favorites[Favorites Handler<br/>User Preferences<br/>Wishlist Management]
+        Upload[Generate Presigned URL<br/>Secure S3 Upload<br/>Photo Processing]
+        Analyze[Analyze Item<br/>AI Vision Processing<br/>Nova Lite Integration]
+        Lottery[Lottery Handler<br/>Winner Selection<br/>Automated Scheduling]
+        Expiry[Reservation Expiry<br/>Timeout Management<br/>Re-listing Logic]
+    end
+    
+    %% Data Layer
+    subgraph "Data Storage"
+        DDB[(DynamoDB<br/>Single Table Design<br/>GSI1: Status Queries<br/>GSI2: Category/City)]
+        S3[(S3 Bucket<br/>Item Photos<br/>Public Read Access<br/>CORS Configuration)]
+    end
+    
+    %% Authentication Layer
+    subgraph "Authentication"
+        Cognito[Cognito User Pool<br/>Email/Password Auth<br/>JWT Tokens<br/>Email Verification]
+    end
+    
+    %% AI Services Layer
+    subgraph "AI Services"
+        Nova[Amazon Nova Lite<br/>Multimodal Vision<br/>Object Detection<br/>Text Generation]
+    end
+    
+    %% Automation Layer
+    subgraph "Event-Driven Automation"
+        EventBridge[EventBridge Scheduler<br/>Lottery Timing<br/>Reservation Expiry<br/>Automated Triggers]
+    end
+    
+    %% Notification Layer
+    subgraph "Notifications"
+        SES[Amazon SES<br/>Email Notifications<br/>Winner Alerts<br/>Pickup Reminders]
+    end
+    
+    %% User Flow Connections
+    User --> Amplify
+    Amplify --> API
+    API --> Auth
+    Auth --> Cognito
+    
+    %% API to Lambda Connections
+    API --> Items
+    API --> Users
+    API --> Messages
+    API --> Favorites
+    API --> Upload
+    API --> Analyze
+    
+    %% Lambda to Data Connections
+    Items --> DDB
+    Users --> DDB
+    Messages --> DDB
+    Favorites --> DDB
+    Upload --> S3
+    Analyze --> S3
+    Lottery --> DDB
+    Expiry --> DDB
+    
+    %% AI Integration
+    Analyze --> Nova
+    
+    %% Event-Driven Connections
+    Items --> EventBridge
+    EventBridge --> Lottery
+    EventBridge --> Expiry
+    
+    %% Notification Connections
+    Lottery --> SES
+    Messages --> SES
+    Expiry --> SES
+    
+    %% Authentication Connections
+    Users --> Cognito

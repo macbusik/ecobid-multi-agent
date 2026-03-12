@@ -1,0 +1,33 @@
+@startuml AI_Processing_Flow
+!theme plain
+skinparam backgroundColor white
+
+actor User
+participant Frontend
+participant API
+participant "Upload Lambda" as Upload
+participant S3
+participant "Analyze Lambda" as Analyze
+participant "Amazon Nova Lite" as Nova
+participant "Items Lambda" as Items
+participant DynamoDB as DDB
+
+User -> Frontend: Upload Photo
+Frontend -> API: POST /items/upload-url
+API -> Upload: Generate Presigned URL
+Upload -> S3: Create Presigned URL
+Upload --> Frontend: Return Upload URL
+Frontend -> S3: PUT Photo (Direct Upload)
+Frontend -> API: POST /items/analyze {photoUrl}
+API -> Analyze: Process Photo
+Analyze -> S3: Get Photo
+Analyze -> Nova: Multimodal Analysis
+Nova --> Analyze: {title, description, category}
+Analyze --> Frontend: AI Suggestions
+User -> Frontend: Edit & Confirm
+Frontend -> API: POST /items {finalData}
+API -> Items: Create Item
+Items -> DDB: Store Item
+Items --> Frontend: Success Response
+
+@enduml

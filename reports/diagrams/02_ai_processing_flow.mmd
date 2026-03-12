@@ -1,0 +1,28 @@
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant API
+    participant Upload as Upload Lambda
+    participant S3
+    participant Analyze as Analyze Lambda
+    participant Nova as Amazon Nova Lite
+    participant Items as Items Lambda
+    participant DDB as DynamoDB
+    
+    User->>Frontend: Upload Photo
+    Frontend->>API: POST /items/upload-url
+    API->>Upload: Generate Presigned URL
+    Upload->>S3: Create Presigned URL
+    Upload-->>Frontend: Return Upload URL
+    Frontend->>S3: PUT Photo (Direct Upload)
+    Frontend->>API: POST /items/analyze {photoUrl}
+    API->>Analyze: Process Photo
+    Analyze->>S3: Get Photo
+    Analyze->>Nova: Multimodal Analysis
+    Nova-->>Analyze: {title, description, category}
+    Analyze-->>Frontend: AI Suggestions
+    User->>Frontend: Edit & Confirm
+    Frontend->>API: POST /items {finalData}
+    API->>Items: Create Item
+    Items->>DDB: Store Item
+    Items-->>Frontend: Success Response

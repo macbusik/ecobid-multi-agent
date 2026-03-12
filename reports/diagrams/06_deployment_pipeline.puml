@@ -1,0 +1,21 @@
+@startuml Deployment_Pipeline
+!theme plain
+skinparam backgroundColor white
+
+package "CI/CD Pipeline" {
+    component Dev as "Developer\nLocal Development\nKiro CLI + AI Agents"
+    component Git as "Git Repository\nFeature Branches\nPull Requests"
+    component Actions as "GitHub Actions\nOIDC Authentication\nAutomated Testing"
+    component CDK_Deploy as "CDK Deploy\nInfrastructure Updates\nLambda Deployment"
+    component Amplify_Deploy as "Amplify Deploy\nFrontend Build\nStatic Site Update"
+    component Prod as "Production\nLive Application\nMonitoring & Alerts"
+}
+
+Dev --> Git
+Git --> Actions
+Actions --> CDK_Deploy
+Actions --> Amplify_Deploy
+CDK_Deploy --> Prod
+Amplify_Deploy --> Prod
+
+@enduml
